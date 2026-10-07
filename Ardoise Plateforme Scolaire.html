@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ardoise — Plateforme scolaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F0; --paper-dim:#F3EEDF; --board:#1F3A2E; --board-dark:#152A20; --board-light:#2C4E3C;
+  --chalk:#F4F1E4; --ink:#20201B; --ink-soft:#514C3F; --muted:#8A8270; --line:#DCD4BC;
+  --stamp:#A8322D; --stamp-dim:#F4E1DE; --ochre:#B5541F; --ochre-dim:#F3E3D3;
+  --good:#2F6B4F; --good-dim:#E1EEE5; --shadow: 0 1px 0 rgba(32,32,27,.06);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--paper-dim);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:15px;line-height:1.5;}
+h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;margin:0 0 .3em 0;color:var(--ink);letter-spacing:-.01em;}
+p{margin:.3em 0;}
+a{color:inherit;}
+button{font-family:inherit;font-size:14px;cursor:pointer;}
+input,select,textarea{font-family:inherit;font-size:14px;}
+::selection{background:var(--ochre-dim);}
+
+#app{min-height:100vh;}
+.gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(var(--board),var(--board)),repeating-linear-gradient(0deg,transparent 0 39px,rgba(244,241,228,.035) 39px 40px);padding:32px 16px;}
+.gate-card{width:100%;max-width:460px;background:var(--paper);border-radius:2px;box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden;}
+.gate-head{background:var(--board);color:var(--chalk);padding:28px 30px 22px;position:relative;display:flex;gap:14px;align-items:flex-start;}
+.gate-head .brand{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.gate-head .brand small{font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:12.5px;color:#C9D6CC;}
+.gate-head .sub{color:#C9D6CC;font-size:13.5px;margin-top:6px;max-width:340px;}
+.gate-head .logo-box{width:52px;height:52px;border-radius:4px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.gate-head .logo-box img{max-width:100%;max-height:100%;object-fit:contain;}
+.gate-body{padding:26px 30px 30px;}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:6px;}
+.role-btn{border:1px solid var(--line);background:#fff;border-radius:2px;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);transition:border-color .15s,transform .1s;}
+.role-btn:hover{border-color:var(--ochre);}
+.role-btn.active{border-color:var(--ochre);background:var(--ochre-dim);}
+.role-btn .ic{width:26px;height:26px;}
+.role-btn span{font-size:12.5px;font-weight:600;text-align:center;}
+
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:5px;font-weight:500;}
+.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink);}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--ochre);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.hint{font-size:12px;color:var(--muted);margin-top:4px;}
+.err{font-size:12.5px;color:var(--stamp);margin-top:8px;min-height:1em;}
+
+.logo-drop{border:2px dashed var(--line);border-radius:2px;padding:16px;text-align:center;cursor:pointer;transition:border-color .15s;background:#fff;}
+.logo-drop:hover{border-color:var(--ochre);}
+.logo-drop img{max-height:70px;max-width:120px;}
+.logo-drop .ph{color:var(--muted);font-size:12.5px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:2px;padding:10px 16px;font-weight:600;font-size:13.5px;}
+.btn-primary{background:var(--ochre);color:#fff;}
+.btn-primary:hover{background:#9C4517;}
+.btn-board{background:var(--board);color:var(--chalk);}
+.btn-board:hover{background:var(--board-dark);}
+.btn-outline{background:transparent;border-color:var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--ink);}
+.btn-danger{background:var(--stamp);color:#fff;}
+.btn-ghost{background:transparent;color:var(--ink-soft);border:none;padding:6px 8px;}
+.btn-block{width:100%;}
+.btn-sm{padding:6px 10px;font-size:12.5px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh;}
+.sidebar{background:var(--board);color:var(--chalk);padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.sb-brand{font-family:'Fraunces',serif;font-size:20px;font-weight:700;padding:0 8px 14px;border-bottom:1px solid rgba(244,241,228,.15);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sb-brand .sb-logo{width:32px;height:32px;border-radius:3px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.sb-brand .sb-logo img{max-width:100%;max-height:100%;}
+.sb-user{padding:0 8px 16px;}
+.sb-user .name{font-weight:600;font-size:14px;}
+.sb-user .role{font-size:11.5px;color:#B9C8BE;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:2px;color:#DCE6DF;font-size:13.5px;font-weight:500;border:none;background:none;text-align:left;width:100%;margin-bottom:2px;}
+.nav-item:hover{background:rgba(244,241,228,.08);}
+.nav-item.active{background:var(--ochre);color:#fff;}
+.nav-spacer{flex:1;}
+.nav-bottom{border-top:1px solid rgba(244,241,228,.15);padding-top:10px;margin-top:8px;}
+
+.main{padding:26px 32px 60px;max-width:1180px;}
+.topbar{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap;}
+.topbar .titles h1{font-size:24px;}
+.topbar .titles .crumb{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+.topbar .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:2px;margin-bottom:18px;box-shadow:var(--shadow);}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;border-left:3px solid var(--stamp);}
+.card-head h3{font-size:15.5px;}
+.card-head .meta{font-size:12px;color:var(--muted);}
+.card-body{padding:18px;}
+.card-body.pad-0{padding:0;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.stat{background:#fff;border:1px solid var(--line);border-left:3px solid var(--ochre);border-radius:2px;padding:14px 16px;}
+.stat .n{font-family:'Fraunces',serif;font-size:28px;font-weight:600;line-height:1;}
+.stat .l{font-size:12px;color:var(--muted);margin-top:6px;}
+.stat.alert{border-left-color:var(--stamp);}
+.stat.ok{border-left-color:var(--good);}
+
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600;background:var(--paper-dim);}
+td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FCFAF3;}
+td input[type=number]{width:64px;padding:6px 7px;border:1px solid var(--line);border-radius:2px;text-align:center;}
+.tbl-wrap{overflow-x:auto;}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;}
+.badge-ok{background:var(--good-dim);color:var(--good);}
+.badge-warn{background:var(--ochre-dim);color:var(--ochre);}
+.badge-danger{background:var(--stamp-dim);color:var(--stamp);}
+.badge-muted{background:var(--paper-dim);color:var(--muted);}
+
+.pill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.pill{border:1px solid var(--line);background:#fff;padding:7px 13px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+.pill.active{background:var(--board);color:var(--chalk);border-color:var(--board);}
+
+.empty{padding:40px 20px;text-align:center;color:var(--muted);}
+.empty .ic{font-size:26px;margin-bottom:8px;}
+.empty h4{color:var(--ink-soft);margin-bottom:4px;}
+
+.modal-bg{position:fixed;inset:0;background:rgba(20,24,20,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}
+.modal{background:#fff;border-radius:2px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--ochre);}
+.modal-head h3{font-size:16px;}
+.modal-body{padding:20px;}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;}
+
+.toast-wrap{position:fixed;top:18px;right:18px;z-index:80;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--board);color:var(--chalk);padding:12px 16px;border-radius:2px;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.25);border-left:3px solid var(--ochre);min-width:220px;}
+
+.notif-item{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);}
+.notif-item:last-child{border-bottom:none;}
+.notif-item .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.notif-item .txt .t1{font-size:13.5px;font-weight:600;}
+.notif-item .txt .t2{font-size:12.5px;color:var(--muted);margin-top:2px;}
+.notif-item .txt .t3{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+.checkline{display:flex;align-items:center;gap:8px;}
+.divider{height:1px;background:var(--line);margin:16px 0;}
+
+/* ---------- BULLETIN (format sénégalais) ---------- */
+.bulletin-doc{
+  background:#fff;border:1px solid var(--line);position:relative;overflow:hidden;
+  font-family:'IBM Plex Sans',sans-serif;
+}
+.bulletin-doc .watermark{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);
+  width:110%;height:110%;
+  background-repeat:no-repeat;background-position:center center;background-size:contain;
+  opacity:.055;pointer-events:none;z-index:0;
+}
+.bulletin-doc .b-content{position:relative;z-index:1;padding:18px 22px 22px;}
+
+.b-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:10px;}
+.b-head .b-left{font-size:12px;line-height:1.45;color:var(--ink-soft);}
+.b-head .b-left .sname{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:4px;}
+.b-head .b-left .sline{font-size:11.5px;}
+.b-head .b-logo{max-width:120px;max-height:100px;flex-shrink:0;}
+.b-head .b-logo img{max-width:100%;max-height:100px;object-fit:contain;}
+
+.b-title{text-align:center;padding:8px 0 14px;border-bottom:2.5px solid var(--board);margin-bottom:0;}
+.b-title h2{font-family:'Fraunces',serif;font-size:24px;letter-spacing:.04em;margin:0;text-transform:uppercase;}
+.b-title .tr{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin-top:2px;letter-spacing:.02em;}
+.b-title .an{font-size:12.5px;color:var(--ink-soft);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+
+.b-idbar{display:flex;flex-wrap:wrap;gap:6px 28px;padding:12px 4px;font-size:12.5px;border-bottom:1px solid var(--line);}
+.b-idbar div{white-space:nowrap;}
+.b-idbar b{color:var(--ink);}
+
+.b-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px;}
+.b-table th,.b-table td{border:1px solid #A9A28A;padding:4px 6px;text-align:center;vertical-align:middle;}
+.b-table th{background:var(--paper-dim);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);}
+.b-table td.disc{text-align:left;font-weight:600;font-size:12px;}
+.b-table td.app{text-align:left;font-weight:600;}
+.b-table tr.total-row td{background:var(--paper-dim);font-weight:700;font-size:12px;}
+
+.b-summary{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.b-summary table{width:100%;border-collapse:collapse;font-size:12px;}
+.b-summary th,.b-summary td{border:1px solid #A9A28A;padding:5px 8px;}
+.b-summary th{background:var(--paper-dim);text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em;width:60%;}
+.b-summary td{text-align:right;font-weight:700;}
+.b-summary td.big{font-family:'Fraunces',serif;font-size:15px;}
+
+.b-obs{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:11.5px;}
+.b-obs .obs-box{border:1px solid #A9A28A;padding:8px 10px;}
+.b-obs .obs-box .ttl{font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:6px;}
+.b-obs .obs-box .val{font-family:'Fraunces',serif;font-size:13.5px;font-weight:600;}
+
+.b-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:flex-end;font-size:11.5px;padding-top:10px;}
+.b-foot .sig{text-align:center;min-width:180px;}
+.b-foot .sig .line{border-bottom:1px solid var(--ink-soft);margin-bottom:4px;height:34px;}
+
+@media print{
+  body *{visibility:hidden;}
+  #print-area, #print-area *{visibility:visible;}
+  #print-area{position:absolute;top:0;left:0;width:100%;display:block !important;}
+  #print-area .bulletin-doc{border:none;}
+  .bulletin-doc .watermark{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .bulletin-doc,.bulletin-doc *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{position:relative;height:auto;flex-direction:row;flex-wrap:wrap;padding:14px;}
+  .sb-brand,.sb-user{display:none;}
+  .nav-item{width:auto;}
+  .nav-spacer{display:none;}
+  .main{padding:18px 16px 50px;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .role-grid{grid-template-columns:1fr;}
+  .field-row,.field-row-3{grid-template-columns:1fr;}
+  .b-head{flex-direction:column-reverse;align-items:center;text-align:center;}
+  .b-summary{grid-template-columns:1fr;}
+  .b-obs{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* =========================================================
+   ARDOISE — plateforme scolaire (prototype fonctionnel)
+   ========================================================= */
+const STORAGE_KEY = "ardoise:ecole:v2";
+const NIVEAUX = [
+  {code:"CI",cycle:"Élémentaire"},{code:"CP",cycle:"Élémentaire"},{code:"CE1",cycle:"Élémentaire"},
+  {code:"CE2",cycle:"Élémentaire"},{code:"CM1",cycle:"Élémentaire"},{code:"CM2",cycle:"Élémentaire"},
+  {code:"6e",cycle:"Collège"},{code:"5e",cycle:"Collège"},{code:"4e",cycle:"Collège"},{code:"3e",cycle:"Collège"},
+  {code:"2nde",cycle:"Lycée"},{code:"1ere",cycle:"Lycée"},{code:"Tle",cycle:"Lycée"}
+];
+const TRIMESTRES = ["Trimestre 1","Trimestre 2","Trimestre 3"];
+const MOIS_LABELS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+let S = null;
+let SESSION = null;
+let VIEW = { screen:"gate", tab:"accueil", sub:{} };
+
+/* ---------------- utils ---------------- */
+function uid(p){ return p+"_"+Math.random().toString(36).slice(2,9); }
+function pad2(n){ return String(n).padStart(2,"0"); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+function monthKey(d){ d=d||new Date(); return d.getFullYear()+"-"+pad2(d.getMonth()+1); }
+function anneeScolaire(){
+  const now=new Date(); const y=now.getFullYear(); const m=now.getMonth();
+  return m>=7 ? `${y}-${y+1}` : `${y-1}-${y}`;
+}
+function fmtDateHuman(iso){
+  if(!iso) return "—";
+  const [y,m,d]=iso.split("-");
+  const months=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+  return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+}
+function genMatricule(seq){ return "EL-"+String(seq).padStart(4,"0"); }
+function genPin(){ return String(Math.floor(1000+Math.random()*9000)); }
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function el(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstElementChild; }
+function toast(msg){
+  const w=document.getElementById("toastWrap");
+  const t=el(`<div class="toast">${esc(msg)}</div>`);
+  w.appendChild(t);
+  setTimeout(()=>{ t.style.transition="opacity .4s"; t.style.opacity="0"; setTimeout(()=>t.remove(),400); }, 3200);
+}
+function lireLogo(file, cb){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=420;
+      let w=img.width,h=img.height;
+      if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
+      const c=document.createElement("canvas"); c.width=w; c.height=h;
+      c.getContext("2d").drawImage(img,0,0,w,h);
+      cb(c.toDataURL("image/png"));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---------------- default state ---------------- */
+function defaultState(){
+  return {
+    ecole:{
+      nom:"", ville:"", adresse:"", email:"", telephone:"", logo:null,
+      cycles:["Élémentaire"], tarifMensuel:15000, adminUser:"", adminPass:"",
+      matriculeSeq:0, createdAt:null
+    },
+    classes:[], matieres:[], eleves:[], notes:[], presences:[], paiements:[],
+    convocations:[], notifications:[],
+    meta:{ dernierRappelPaiement:null }
+  };
+}
+
+/* ---------------- storage ---------------- */
+async function loadState(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY, true);
+    if(res && res.value){ S = JSON.parse(res.value); } else { S = defaultState(); }
+  }catch(e){ S = defaultState(); }
+  ensureShape();
+}
+async function saveState(){
+  try{ await window.storage.set(STORAGE_KEY, JSON.stringify(S), true); }
+  catch(e){ console.error(e); toast("⚠ Échec de la sauvegarde"); }
+}
+function ensureShape(){
+  const d = defaultState();
+  for(const k in d){ if(!(k in S)) S[k]=d[k]; }
+  for(const k in d.ecole){ if(!(k in S.ecole)) S.ecole[k]=d.ecole[k]; }
+  if(!S.meta) S.meta = d.meta;
+  // migration notes : ancien "devoir" -> "devoir1"
+  (S.notes||[]).forEach(n=>{
+    if(!("devoir1" in n)){ n.devoir1 = ("devoir" in n) ? n.devoir : null; delete n.devoir; }
+    if(!("devoir2" in n)) n.devoir2 = null;
+  });
+}
+
+/* ---------------- derived helpers ---------------- */
+function classeById(id){ return S.classes.find(c=>c.id===id); }
+function eleveById(id){ return S.eleves.find(e=>e.id===id); }
+function matiereById(id){ return S.matieres.find(m=>m.id===id); }
+function elevesOfClasse(classeId){ return S.eleves.filter(e=>e.classeId===classeId && e.actif!==false); }
+function matieresOfNiveau(niveau){ return S.matieres.filter(m=>m.niveaux.includes(niveau)); }
+function noteFor(eId,mId,tr){ return S.notes.find(n=>n.eleveId===eId&&n.matiereId===mId&&n.trimestre===tr); }
+
+function moyenneMatiere(note){
+  if(!note) return null;
+  const vals=[];
+  if(note.devoir1!=null && note.devoir1!=="") vals.push(parseFloat(note.devoir1));
+  if(note.devoir2!=null && note.devoir2!=="") vals.push(parseFloat(note.devoir2));
+  if(note.composition!=null && note.composition!=="") vals.push(parseFloat(note.composition));
+  if(vals.length===0) return null;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function appreciationMatiere(moy){
+  if(moy==null) return {label:"—",cls:"badge-muted"};
+  if(moy>=16) return {label:"Très Bien",cls:"badge-ok"};
+  if(moy>=14) return {label:"Bien",cls:"badge-ok"};
+  if(moy>=12) return {label:"Assez Bien",cls:"badge-warn"};
+  if(moy>=10) return {label:"Passable",cls:"badge-warn"};
+  if(moy>=8) return {label:"Insuffisant",cls:"badge-danger"};
+  return {label:"Médiocre",cls:"badge-danger"};
+}
+function appreciation(moy){
+  if(moy==null) return {label:"—",cls:"badge-muted"};
+  if(moy>=16) return {label:"Excellent",cls:"badge-ok"};
+  if(moy>=14) return {label:"Très bien",cls:"badge-ok"};
+  if(moy>=12) return {label:"Bien",cls:"badge-warn"};
+  if(moy>=10) return {label:"Passable",cls:"badge-warn"};
+  return {label:"Insuffisant",cls:"badge-danger"};
+}
+function bulletinFor(eleveId,trimestre){
+  const eleve = eleveById(eleveId); if(!eleve) return null;
+  const mats = matieresOfNiveau(eleve.niveau);
+  let sumPond=0, sumCoef=0, totalMoyX=0;
+  const lignes = mats.map(m=>{
+    const note = noteFor(eleveId,m.id,trimestre);
+    const moy = moyenneMatiere(note);
+    const moyX = moy!=null ? moy*m.coefficient : null;
+    if(moy!=null){ sumPond+=moy*m.coefficient; sumCoef+=m.coefficient; totalMoyX+=moy*m.coefficient; }
+    return { matiere:m, note, moyenne:moy, moyX };
+  });
+  const moyenneGenerale = sumCoef>0 ? sumPond/sumCoef : null;
+  return { eleve, trimestre, lignes, moyenneGenerale, totalCoef:sumCoef, totalMoyX };
+}
+function rangClasse(classeId,trimestre){
+  const eleves = elevesOfClasse(classeId);
+  const withAvg = eleves.map(e=>{
+    const b = bulletinFor(e.id,trimestre);
+    return { eleve:e, moyenne: b.moyenneGenerale };
+  }).filter(x=>x.moyenne!=null).sort((a,b)=>b.moyenne-a.moyenne);
+  const map = {};
+  withAvg.forEach((x,i)=>{ map[x.eleve.id]=i+1; });
+  return { rangs:map, total:withAvg.length };
+}
+function paiementStatut(eleveId,mois){
+  const p = S.paiements.find(x=>x.eleveId===eleveId&&x.mois===mois);
+  return p ? p.statut : "impaye";
+}
+function setPaiement(eleveId,mois,statut){
+  let p = S.paiements.find(x=>x.eleveId===eleveId&&x.mois===mois);
+  if(!p){ p={id:uid("pai"),eleveId,mois,statut,datePaiement:null}; S.paiements.push(p); }
+  p.statut = statut;
+  p.datePaiement = statut==="paye" ? todayStr() : null;
+}
+function addNotification(type,eleveId,message){
+  S.notifications.unshift({ id:uid("ntf"), type, eleveId, message, date:todayStr(), createdAt:Date.now(), lu:false });
+}
+function notifsFor(eleveId){ return S.notifications.filter(n=>n.eleveId===eleveId); }
+function childrenOfParent(tel){ return S.eleves.filter(e=>e.parentTel===tel && e.actif!==false); }
+
+function checkAutoRappel(){
+  const now = new Date(); const mk = monthKey(now);
+  if(now.getDate()!==1) return false;
+  if(S.meta.dernierRappelPaiement===mk) return false;
+  let count=0;
+  S.eleves.filter(e=>e.actif!==false).forEach(e=>{
+    if(paiementStatut(e.id,mk)!=="paye"){
+      addNotification("rappel_paiement", e.id, `Rappel : la mensualité de ${MOIS_LABELS[now.getMonth()]} (${S.ecole.tarifMensuel.toLocaleString("fr-FR")} FCFA) est attendue pour ${e.prenom} ${e.nom}.`);
+      count++;
+    }
+  });
+  S.meta.dernierRappelPaiement = mk;
+  return count>0;
+}
+
+/* ---------------- routing ---------------- */
+function go(screen,tab,sub){ VIEW.screen=screen; if(tab) VIEW.tab=tab; VIEW.sub=sub||{}; render(); }
+function setTab(tab,sub){ VIEW.tab=tab; VIEW.sub=sub||{}; render(); }
+
+async function boot(){
+  await loadState();
+  if(S.ecole && S.ecole.createdAt){
+    const ranNow = checkAutoRappel();
+    if(ranNow) await saveState();
+    VIEW.screen = "gate";
+  } else {
+    VIEW.screen = "onboarding";
+  }
+  render();
+}
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  if(VIEW.screen==="onboarding") app.appendChild(renderOnboarding());
+  else if(VIEW.screen==="gate") app.appendChild(renderGate());
+  else if(VIEW.screen==="admin") app.appendChild(renderAdminShell());
+  else if(VIEW.screen==="eleve") app.appendChild(renderEleveShell());
+  else if(VIEW.screen==="parent") app.appendChild(renderParentShell());
+}
+
+/* ================= ONBOARDING ================= */
+function renderOnboarding(){
+  let logoData = null;
+  const wrap = el(`
+  <div class="gate">
+    <div class="gate-card" style="max-width:600px;">
+      <div class="gate-head">
+        <div class="logo-box" id="ob-logo-preview"></div>
+        <div>
+          <div class="brand">Ardoise <small>plateforme scolaire</small></div>
+          <div class="sub">Configurez votre établissement. Cette étape ne se fait qu'une seule fois.</div>
+        </div>
+      </div>
+      <div class="gate-body">
+        <div class="field"><label>Nom de l'établissement</label><input id="ob-nom" placeholder="Ex : Groupe Scolaire PIA"></div>
+        <div class="field-row-3">
+          <div class="field"><label>Ville</label><input id="ob-ville" placeholder="Ex : Dakar"></div>
+          <div class="field"><label>Téléphone</label><input id="ob-tel" placeholder="77 123 45 67"></div>
+          <div class="field"><label>Email</label><input id="ob-email" type="email" placeholder="contact@ecole.sn"></div>
+        </div>
+        <div class="field"><label>Adresse complète</label><input id="ob-adresse" placeholder="Ex : ZAC MBAO, sortie N°9 autoroute à péage"></div>
+        <div class="field-row">
+          <div class="field"><label>Mensualité standard (FCFA)</label><input id="ob-tarif" type="number" value="15000"></div>
+          <div class="field">
+            <label>Logo de l'établissement</label>
+            <div class="logo-drop" id="ob-logo-drop">
+              <div class="ph" id="ob-logo-ph">📷 Cliquez pour choisir une image (PNG, JPG)</div>
+              <img id="ob-logo-img" style="display:none;" alt="">
+            </div>
+            <input type="file" id="ob-logo-file" accept="image/*" style="display:none;">
+          </div>
+        </div>
+        <div class="field">
+          <label>Cycles enseignés</label>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            ${["Élémentaire","Collège","Lycée"].map(c=>`
+              <label class="checkline" style="font-size:13px;"><input type="checkbox" class="ob-cycle" value="${c}" checked> ${c}</label>
+            `).join("")}
+          </div>
+        </div>
+        <div class="divider"></div>
+        <p class="hint" style="margin-bottom:10px;">Compte administrateur (directeur / surveillant)</p>
+        <div class="field-row">
+          <div class="field"><label>Identifiant</label><input id="ob-user" placeholder="Ex : directeur"></div>
+          <div class="field"><label>Mot de passe</label><input id="ob-pass" type="password" placeholder="Min. 4 caractères"></div>
+        </div>
+        <div class="err" id="ob-err"></div>
+        <button class="btn btn-primary btn-block" id="ob-submit">Créer l'établissement</button>
+      </div>
+    </div>
+  </div>`);
+
+  const drop = wrap.querySelector("#ob-logo-drop");
+  const fileInput = wrap.querySelector("#ob-logo-file");
+  const preview = wrap.querySelector("#ob-logo-preview");
+  drop.addEventListener("click", ()=> fileInput.click());
+  fileInput.addEventListener("change", e=>{
+    const f = e.target.files[0]; if(!f) return;
+    lireLogo(f, data=>{
+      logoData = data;
+      wrap.querySelector("#ob-logo-img").src = data;
+      wrap.querySelector("#ob-logo-img").style.display="block";
+      wrap.querySelector("#ob-logo-ph").style.display="none";
+      const pImg = document.createElement("img"); pImg.src = data; preview.innerHTML=""; preview.appendChild(pImg);
+    });
+  });
+
+  wrap.querySelector("#ob-submit").addEventListener("click", async ()=>{
+    const nom = wrap.querySelector("#ob-nom").value.trim();
+    const ville = wrap.querySelector("#ob-ville").value.trim();
+    const adresse = wrap.querySelector("#ob-adresse").value.trim();
+    const email = wrap.querySelector("#ob-email").value.trim();
+    const telephone = wrap.querySelector("#ob-tel").value.trim();
+    const tarif = parseInt(wrap.querySelector("#ob-tarif").value)||15000;
+    const cycles = [...wrap.querySelectorAll(".ob-cycle:checked")].map(c=>c.value);
+    const user = wrap.querySelector("#ob-user").value.trim();
+    const pass = wrap.querySelector("#ob-pass").value;
+    const errBox = wrap.querySelector("#ob-err");
+    if(!nom || !user || pass.length<4 || cycles.length===0){
+      errBox.textContent = "Nom, identifiant, mot de passe (4+) et au moins un cycle sont requis.";
+      return;
+    }
+    S.ecole = { nom, ville, adresse, email, telephone, logo:logoData, cycles, tarifMensuel:tarif, adminUser:user, adminPass:pass, matriculeSeq:0, createdAt:Date.now() };
+    seedMatieres(cycles);
+    await saveState();
+    toast("Établissement créé ✓");
+    go("gate");
+  });
+  return wrap;
+}
+function seedMatieres(cycles){
+  const base = [];
+  if(cycles.includes("Élémentaire")){
+    base.push(
+      {nom:"Français",coefficient:4,niveaux:["CI","CP","CE1","CE2","CM1","CM2"]},
+      {nom:"Mathématiques",coefficient:4,niveaux:["CI","CP","CE1","CE2","CM1","CM2"]},
+      {nom:"Éveil / Sciences",coefficient:2,niveaux:["CE1","CE2","CM1","CM2"]},
+      {nom:"Histoire-Géographie",coefficient:2,niveaux:["CM1","CM2"]},
+      {nom:"Éducation civique",coefficient:1,niveaux:["CE1","CE2","CM1","CM2"]},
+      {nom:"EPS",coefficient:1,niveaux:["CI","CP","CE1","CE2","CM1","CM2"]}
+    );
+  }
+  if(cycles.includes("Collège")){
+    base.push(
+      {nom:"Français",coefficient:4,niveaux:["6e","5e","4e","3e"]},
+      {nom:"Mathématiques",coefficient:4,niveaux:["6e","5e","4e","3e"]},
+      {nom:"Anglais",coefficient:2,niveaux:["6e","5e","4e","3e"]},
+      {nom:"Physique-Chimie",coefficient:2,niveaux:["5e","4e","3e"]},
+      {nom:"SVT",coefficient:2,niveaux:["6e","5e","4e","3e"]},
+      {nom:"Histoire-Géographie",coefficient:2,niveaux:["6e","5e","4e","3e"]},
+      {nom:"EPS",coefficient:1,niveaux:["6e","5e","4e","3e"]}
+    );
+  }
+  if(cycles.includes("Lycée")){
+    base.push(
+      {nom:"Français",coefficient:3,niveaux:["2nde","1ere"]},
+      {nom:"Philosophie",coefficient:3,niveaux:["Tle"]},
+      {nom:"Mathématiques",coefficient:4,niveaux:["2nde","1ere","Tle"]},
+      {nom:"Anglais",coefficient:2,niveaux:["2nde","1ere","Tle"]},
+      {nom:"Physique-Chimie",coefficient:3,niveaux:["2nde","1ere","Tle"]},
+      {nom:"SVT",coefficient:2,niveaux:["2nde","1ere","Tle"]},
+      {nom:"Histoire-Géographie",coefficient:2,niveaux:["2nde","1ere","Tle"]},
+      {nom:"EPS",coefficient:1,niveaux:["2nde","1ere","Tle"]}
+    );
+  }
+  base.forEach(m=> S.matieres.push({ id:uid("mat"), ...m }));
+}
+
+/* ================= GATE ================= */
+function renderGate(){
+  const role = VIEW.sub.role || "admin";
+  const logoHtml = S.ecole.logo ? `<div class="logo-box"><img src="${S.ecole.logo}" alt=""></div>` : "";
+  const wrap = el(`
+  <div class="gate">
+    <div class="gate-card">
+      <div class="gate-head">
+        ${logoHtml}
+        <div>
+          <div class="brand">Ardoise <small>${esc(S.ecole.nom||"plateforme scolaire")}</small></div>
+          <div class="sub">${esc(S.ecole.ville?("Établissement — "+S.ecole.ville):"Connectez-vous selon votre profil.")}</div>
+        </div>
+      </div>
+      <div class="gate-body">
+        <div class="role-grid" id="role-grid">
+          <button class="role-btn ${role==='admin'?'active':''}" data-role="admin">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9-4.6-.6-8-4-8-9V7l8-4z"/></svg>
+            <span>Directeur /<br>Surveillant</span>
+          </button>
+          <button class="role-btn ${role==='eleve'?'active':''}" data-role="eleve">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
+            <span>Élève</span>
+          </button>
+          <button class="role-btn ${role==='parent'?'active':''}" data-role="parent">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M14.5 15.2c2.6.3 4.5 2.1 4.5 4.8"/></svg>
+            <span>Parent</span>
+          </button>
+        </div>
+        <div id="gate-form"></div>
+      </div>
+    </div>
+  </div>`);
+  wrap.querySelectorAll("[data-role]").forEach(b=>{
+    b.addEventListener("click", ()=>{ VIEW.sub.role=b.dataset.role; render(); });
+  });
+  const formHost = wrap.querySelector("#gate-form");
+  if(role==="admin") formHost.appendChild(renderAdminLoginForm());
+  if(role==="eleve") formHost.appendChild(renderEleveLoginForm());
+  if(role==="parent") formHost.appendChild(renderParentLoginForm());
+  return wrap;
+}
+function renderAdminLoginForm(){
+  const f = el(`<div>
+    <div class="divider"></div>
+    <div class="field"><label>Identifiant</label><input id="lg-user"></div>
+    <div class="field"><label>Mot de passe</label><input id="lg-pass" type="password"></div>
+    <div class="err" id="lg-err"></div>
+    <button class="btn btn-primary btn-block" id="lg-submit">Se connecter</button>
+  </div>`);
+  f.querySelector("#lg-submit").addEventListener("click", ()=>{
+    const u=f.querySelector("#lg-user").value.trim(), p=f.querySelector("#lg-pass").value;
+    if(u===S.ecole.adminUser && p===S.ecole.adminPass){ SESSION={role:"admin"}; go("admin","accueil"); }
+    else { f.querySelector("#lg-err").textContent="Identifiant ou mot de passe incorrect."; }
+  });
+  return f;
+}
+function renderEleveLoginForm(){
+  const f = el(`<div>
+    <div class="divider"></div>
+    <div class="field"><label>Matricule</label><input id="lg-mat" placeholder="EL-0001"></div>
+    <div class="field"><label>Code personnel (4 chiffres)</label><input id="lg-pin" maxlength="4"></div>
+    <div class="err" id="lg-err"></div>
+    <button class="btn btn-primary btn-block" id="lg-submit">Voir mes notes</button>
+  </div>`);
+  f.querySelector("#lg-submit").addEventListener("click", ()=>{
+    const mat=f.querySelector("#lg-mat").value.trim().toUpperCase(), pin=f.querySelector("#lg-pin").value.trim();
+    const e = S.eleves.find(x=>x.matricule===mat && x.pin===pin && x.actif!==false);
+    if(e){ SESSION={role:"eleve",id:e.id}; go("eleve","accueil"); }
+    else { f.querySelector("#lg-err").textContent="Matricule ou code incorrect."; }
+  });
+  return f;
+}
+function renderParentLoginForm(){
+  const f = el(`<div>
+    <div class="divider"></div>
+    <div class="field"><label>Numéro de téléphone</label><input id="lg-tel" placeholder="77 123 45 67"></div>
+    <div class="field"><label>Code personnel (4 chiffres)</label><input id="lg-pin" maxlength="4"></div>
+    <div class="err" id="lg-err"></div>
+    <button class="btn btn-primary btn-block" id="lg-submit">Voir mes enfants</button>
+  </div>`);
+  f.querySelector("#lg-submit").addEventListener("click", ()=>{
+    const tel=f.querySelector("#lg-tel").value.trim(), pin=f.querySelector("#lg-pin").value.trim();
+    const kids = S.eleves.filter(x=>x.parentTel===tel && x.parentPin===pin && x.actif!==false);
+    if(kids.length){ SESSION={role:"parent",phone:tel}; go("parent","accueil"); }
+    else { f.querySelector("#lg-err").textContent="Numéro ou code incorrect."; }
+  });
+  return f;
+}
+
+/* ================= SHELL ================= */
+function shellFrame(opts){
+  const logoHtml = S.ecole.logo ? `<div class="sb-logo"><img src="${S.ecole.logo}" alt=""></div>` : "";
+  const frame = el(`
+    <div class="shell">
+      <div class="sidebar">
+        <div class="sb-brand">${logoHtml}<span>Ardoise</span></div>
+        <div class="sb-user"><div class="name">${esc(opts.userName)}</div><div class="role">${esc(opts.userRole)}</div></div>
+        <div id="sb-nav"></div>
+        <div class="nav-spacer"></div>
+        <div class="nav-bottom">
+          <button class="nav-item" id="sb-logout">↩ Se déconnecter</button>
+        </div>
+      </div>
+      <div class="main" id="main-host"></div>
+    </div>`);
+  const nav = frame.querySelector("#sb-nav");
+  opts.navItems.forEach(it=>{
+    const b = el(`<button class="nav-item ${VIEW.tab===it.key?'active':''}">${it.icon||""} ${esc(it.label)}</button>`);
+    b.addEventListener("click", ()=> opts.onNav(it.key));
+    nav.appendChild(b);
+  });
+  frame.querySelector("#sb-logout").addEventListener("click", ()=>{ SESSION=null; go("gate",undefined,{}); });
+  frame.querySelector("#main-host").appendChild(opts.content);
+  return frame;
+}
+function pageHead(title,crumb,actionsHtml){
+  return `<div class="topbar"><div class="titles"><div class="crumb">${esc(crumb)}</div><h1>${esc(title)}</h1></div><div class="actions">${actionsHtml||""}</div></div>`;
+}
+
+/* ================= ADMIN ================= */
+function renderAdminShell(){
+  const items = [
+    {key:"accueil",label:"Vue d'ensemble"},
+    {key:"eleves",label:"Élèves"},
+    {key:"classes",label:"Classes"},
+    {key:"matieres",label:"Matières"},
+    {key:"notes",label:"Saisie des notes"},
+    {key:"bulletins",label:"Bulletins"},
+    {key:"presences",label:"Présences"},
+    {key:"paiements",label:"Paiements"},
+    {key:"convocations",label:"Convocations"},
+    {key:"notifications",label:"Notifications"},
+    {key:"etablissement",label:"Établissement"},
+  ];
+  let content;
+  switch(VIEW.tab){
+    case "eleves": content=adminEleves(); break;
+    case "classes": content=adminClasses(); break;
+    case "matieres": content=adminMatieres(); break;
+    case "notes": content=adminNotes(); break;
+    case "bulletins": content=adminBulletins(); break;
+    case "presences": content=adminPresences(); break;
+    case "paiements": content=adminPaiements(); break;
+    case "convocations": content=adminConvocations(); break;
+    case "notifications": content=adminNotifications(); break;
+    case "etablissement": content=adminEtablissement(); break;
+    default: content=adminAccueil();
+  }
+  return shellFrame({ userName:S.ecole.adminUser, userRole:"Administrateur", navItems:items, content, onNav:(k)=>setTab(k) });
+}
+
+function adminAccueil(){
+  const wrap = document.createElement("div");
+  const totalEleves = S.eleves.filter(e=>e.actif!==false).length;
+  const mk = monthKey();
+  const impayes = S.eleves.filter(e=>e.actif!==false && paiementStatut(e.id,mk)!=="paye").length;
+  const absentsAuj = S.presences.filter(p=>p.date===todayStr() && p.statut==="absent").length;
+  const notifsRecentes = S.notifications.slice(0,6);
+  wrap.innerHTML = pageHead(S.ecole.nom||"Vue d'ensemble","Tableau de bord");
+  const stat = el(`
+    <div class="stat-grid">
+      <div class="stat"><div class="n">${totalEleves}</div><div class="l">Élèves inscrits</div></div>
+      <div class="stat ${absentsAuj>0?'alert':''}"><div class="n">${absentsAuj}</div><div class="l">Absences aujourd'hui</div></div>
+      <div class="stat ${impayes>0?'alert':'ok'}"><div class="n">${impayes}</div><div class="l">Impayés — ${MOIS_LABELS[new Date().getMonth()]}</div></div>
+      <div class="stat"><div class="n">${S.classes.length}</div><div class="l">Classes actives</div></div>
+    </div>`);
+  wrap.appendChild(stat);
+  const card = el(`<div class="card"><div class="card-head"><h3>Notifications récentes</h3><span class="meta">${S.notifications.length} au total</span></div><div class="card-body pad-0" id="recent-list"></div></div>`);
+  const list = card.querySelector("#recent-list");
+  if(notifsRecentes.length===0){ list.appendChild(el(`<div class="empty"><div class="ic">🔔</div><h4>Aucune notification</h4><p>Les absences, convocations et rappels de paiement apparaîtront ici.</p></div>`)); }
+  notifsRecentes.forEach(n=> list.appendChild(notifRow(n)));
+  wrap.appendChild(card);
+  return wrap;
+}
+function notifRow(n){
+  const e = eleveById(n.eleveId);
+  const colors = { absence:"var(--stamp)", convocation:"var(--ochre)", rappel_paiement:"var(--board)" };
+  const labels = { absence:"Absence signalée", convocation:"Convocation parent", rappel_paiement:"Rappel de paiement" };
+  return el(`<div class="notif-item">
+    <div class="dot" style="background:${colors[n.type]||'var(--muted)'}"></div>
+    <div class="txt">
+      <div class="t1">${labels[n.type]||n.type} — ${e?esc(e.prenom+" "+e.nom):"—"}</div>
+      <div class="t2">${esc(n.message)}</div>
+      <div class="t3">${fmtDateHuman(n.date)}</div>
+    </div>
+  </div>`);
+}
+
+/* ---- élèves ---- */
+function adminEleves(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Élèves","Administration",`<button class="btn btn-primary" id="add-eleve">+ Inscrire un élève</button>`);
+  const filterBar = el(`
+    <div class="pill-tabs" id="classe-filter">
+      <button class="pill ${!VIEW.sub.classeFilter?'active':''}" data-c="">Toutes les classes</button>
+      ${S.classes.map(c=>`<button class="pill ${VIEW.sub.classeFilter===c.id?'active':''}" data-c="${c.id}">${esc(c.nom)}</button>`).join("")}
+    </div>`);
+  filterBar.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{ VIEW.sub.classeFilter=b.dataset.c||null; render(); }));
+  wrap.appendChild(filterBar);
+
+  const list = VIEW.sub.classeFilter ? S.eleves.filter(e=>e.classeId===VIEW.sub.classeFilter) : S.eleves;
+  const card = el(`<div class="card"><div class="card-body pad-0"><div class="tbl-wrap" id="tbl-host"></div></div></div>`);
+  const host = card.querySelector("#tbl-host");
+  if(list.length===0){
+    host.appendChild(el(`<div class="empty"><div class="ic">🎓</div><h4>Aucun élève</h4><p>Cliquez sur « Inscrire un élève » pour commencer.</p></div>`));
+  } else {
+    const tbl = el(`<table><thead><tr><th>Matricule</th><th>Nom</th><th>Classe</th><th>Parent</th><th>Accès</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    list.forEach(e=>{
+      const cl = classeById(e.classeId);
+      const row = el(`<tr>
+        <td><span class="badge badge-muted">${esc(e.matricule)}</span></td>
+        <td>${esc(e.prenom)} ${esc(e.nom)}${e.actif===false?' <span class="badge badge-danger">Inactif</span>':''}</td>
+        <td>${cl?esc(cl.nom):"—"}</td>
+        <td>${esc(e.parentNom||"—")}<br><span class="hint">${esc(e.parentTel||"")}</span></td>
+        <td><span class="hint">PIN élève : <b>${esc(e.pin)}</b><br>PIN parent : <b>${esc(e.parentPin)}</b></span></td>
+        <td style="white-space:nowrap;">
+          <button class="btn btn-outline btn-sm" data-edit="${e.id}">Modifier</button>
+          <button class="btn btn-ghost btn-sm" data-del="${e.id}">Retirer</button>
+        </td>
+      </tr>`);
+      tb.appendChild(row);
+    });
+    host.appendChild(tbl);
+    host.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openEleveModal(b.dataset.edit)));
+    host.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", async ()=>{
+      const e = eleveById(b.dataset.del);
+      if(confirm(`Retirer ${e.prenom} ${e.nom} de la liste active ?`)){ e.actif=false; await saveState(); render(); }
+    }));
+  }
+  wrap.appendChild(card);
+  wrap.querySelector("#add-eleve").addEventListener("click", ()=>openEleveModal(null));
+  return wrap;
+}
+function openEleveModal(eleveId){
+  const editing = eleveId ? eleveById(eleveId) : null;
+  if(S.classes.length===0){ toast("Créez d'abord au moins une classe."); return; }
+  const bg = el(`<div class="modal-bg"><div class="modal">
+    <div class="modal-head"><h3>${editing?"Modifier l'élève":"Inscrire un élève"}</h3><button class="btn-ghost" id="m-close">✕</button></div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field"><label>Prénom</label><input id="f-prenom" value="${editing?esc(editing.prenom):""}"></div>
+        <div class="field"><label>Nom</label><input id="f-nom" value="${editing?esc(editing.nom):""}"></div>
+      </div>
+      <div class="field-row-3">
+        <div class="field"><label>Sexe</label>
+          <select id="f-sexe">
+            <option value="F" ${editing&&editing.sexe==='F'?'selected':''}>Fille</option>
+            <option value="M" ${editing&&editing.sexe==='M'?'selected':''}>Garçon</option>
+          </select>
+        </div>
+        <div class="field"><label>Date de naissance</label><input type="date" id="f-ddn" value="${editing?esc(editing.dateNaissance||""):""}"></div>
+        <div class="field"><label>Lieu de naissance</label><input id="f-ldn" value="${editing?esc(editing.lieuNaissance||""):""}" placeholder="Ex : Dakar"></div>
+      </div>
+      <div class="field"><label>Classe</label>
+        <select id="f-classe">${S.classes.map(c=>`<option value="${c.id}" ${editing&&editing.classeId===c.id?'selected':''}>${esc(c.nom)} (${c.niveau})</option>`).join("")}</select>
+      </div>
+      <div class="divider"></div>
+      <p class="hint" style="margin-bottom:10px;">Contact parent — reçoit les notifications</p>
+      <div class="field-row">
+        <div class="field"><label>Nom du parent</label><input id="f-parent-nom" value="${editing?esc(editing.parentNom||""):""}"></div>
+        <div class="field"><label>Téléphone du parent</label><input id="f-parent-tel" value="${editing?esc(editing.parentTel||""):""}" placeholder="77 123 45 67"></div>
+      </div>
+      <div class="err" id="f-err"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" id="m-cancel">Annuler</button>
+      <button class="btn btn-primary" id="m-save">${editing?"Enregistrer":"Inscrire"}</button>
+    </div>
+  </div></div>`);
+  bg.querySelector("#m-close").addEventListener("click",()=>bg.remove());
+  bg.querySelector("#m-cancel").addEventListener("click",()=>bg.remove());
+  bg.querySelector("#m-save").addEventListener("click", async ()=>{
+    const prenom=bg.querySelector("#f-prenom").value.trim();
+    const nom=bg.querySelector("#f-nom").value.trim();
+    const sexe=bg.querySelector("#f-sexe").value;
+    const dateNaissance=bg.querySelector("#f-ddn").value;
+    const lieuNaissance=bg.querySelector("#f-ldn").value.trim();
+    const classeId=bg.querySelector("#f-classe").value;
+    const parentNom=bg.querySelector("#f-parent-nom").value.trim();
+    const parentTel=bg.querySelector("#f-parent-tel").value.trim();
+    if(!prenom||!nom||!classeId||!parentTel){ bg.querySelector("#f-err").textContent="Prénom, nom, classe et téléphone du parent sont requis."; return; }
+    const cl = classeById(classeId);
+    if(editing){
+      Object.assign(editing,{prenom,nom,sexe,dateNaissance,lieuNaissance,classeId,niveau:cl.niveau,parentNom,parentTel});
+    } else {
+      S.ecole.matriculeSeq++;
+      S.eleves.push({
+        id:uid("el"), matricule:genMatricule(S.ecole.matriculeSeq), pin:genPin(),
+        nom,prenom,sexe,dateNaissance,lieuNaissance,niveau:cl.niveau,classeId, parentNom,parentTel, parentPin:genPin(), actif:true
+      });
+    }
+    await saveState(); bg.remove();
+    toast(editing?"Élève mis à jour":"Élève inscrit — codes d'accès générés");
+    render();
+  });
+  document.getElementById("app").appendChild(bg);
+}
+
+/* ---- classes ---- */
+function adminClasses(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Classes","Administration",`<button class="btn btn-primary" id="add-classe">+ Créer une classe</button>`);
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  if(S.classes.length===0){
+    body.appendChild(el(`<div class="empty"><div class="ic">🏫</div><h4>Aucune classe</h4><p>Créez vos classes (ex. CM2 A, 6e B...).</p></div>`));
+  } else {
+    const tbl = el(`<table><thead><tr><th>Classe</th><th>Niveau</th><th>Effectif</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    S.classes.forEach(c=>{
+      const eff = elevesOfClasse(c.id).length;
+      tb.appendChild(el(`<tr><td><b>${esc(c.nom)}</b></td><td>${esc(c.niveau)}</td><td>${eff} élève${eff>1?"s":""}</td>
+        <td><button class="btn btn-ghost btn-sm" data-del="${c.id}">Supprimer</button></td></tr>`));
+    });
+    body.appendChild(tbl);
+    body.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", async ()=>{
+      if(elevesOfClasse(b.dataset.del).length>0){ toast("Impossible : des élèves sont inscrits."); return; }
+      S.classes = S.classes.filter(c=>c.id!==b.dataset.del); await saveState(); render();
+    }));
+  }
+  wrap.appendChild(card);
+  wrap.querySelector("#add-classe").addEventListener("click", ()=>{
+    const bg = el(`<div class="modal-bg"><div class="modal">
+      <div class="modal-head"><h3>Créer une classe</h3><button class="btn-ghost" id="m-close">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Nom de la classe</label><input id="f-nom" placeholder="Ex : CM2 A"></div>
+        <div class="field"><label>Niveau</label>
+          <select id="f-niveau">${S.ecole.cycles.flatMap(cyc=>NIVEAUX.filter(n=>n.cycle===cyc)).map(n=>`<option value="${n.code}">${n.code} — ${n.cycle}</option>`).join("")}</select>
+        </div>
+        <div class="err" id="f-err"></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-outline" id="m-cancel">Annuler</button><button class="btn btn-primary" id="m-save">Créer</button></div>
+    </div></div>`);
+    bg.querySelector("#m-close").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-cancel").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-save").addEventListener("click", async ()=>{
+      const nom=bg.querySelector("#f-nom").value.trim(), niveau=bg.querySelector("#f-niveau").value;
+      if(!nom){ bg.querySelector("#f-err").textContent="Le nom est requis."; return; }
+      S.classes.push({id:uid("cl"),nom,niveau});
+      await saveState(); bg.remove(); render();
+    });
+    document.getElementById("app").appendChild(bg);
+  });
+  return wrap;
+}
+
+/* ---- matières ---- */
+function adminMatieres(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Matières","Administration",`<button class="btn btn-primary" id="add-mat">+ Ajouter une matière</button>`);
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  if(S.matieres.length===0){ body.appendChild(el(`<div class="empty"><div class="ic">📘</div><h4>Aucune matière</h4></div>`)); }
+  else {
+    const tbl = el(`<table><thead><tr><th>Matière</th><th>Coefficient</th><th>Niveaux concernés</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    S.matieres.forEach(m=>{
+      tb.appendChild(el(`<tr><td><b>${esc(m.nom)}</b></td><td>${m.coefficient}</td><td>${m.niveaux.join(", ")}</td>
+        <td><button class="btn btn-ghost btn-sm" data-del="${m.id}">Supprimer</button></td></tr>`));
+    });
+    body.appendChild(tbl);
+    body.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", async ()=>{
+      S.matieres = S.matieres.filter(m=>m.id!==b.dataset.del); await saveState(); render();
+    }));
+  }
+  wrap.appendChild(card);
+  wrap.querySelector("#add-mat").addEventListener("click", ()=>{
+    const bg = el(`<div class="modal-bg"><div class="modal">
+      <div class="modal-head"><h3>Ajouter une matière</h3><button class="btn-ghost" id="m-close">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Nom de la matière</label><input id="f-nom" placeholder="Ex : Éducation musicale"></div>
+        <div class="field"><label>Coefficient</label><input id="f-coef" type="number" value="1" min="1" max="10"></div>
+        <div class="field"><label>Niveaux concernés</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;max-height:160px;overflow-y:auto;border:1px solid var(--line);padding:10px;border-radius:2px;">
+            ${NIVEAUX.filter(n=>S.ecole.cycles.includes(n.cycle)).map(n=>`<label class="checkline" style="font-size:12.5px;"><input type="checkbox" class="f-niveau" value="${n.code}"> ${n.code}</label>`).join("")}
+          </div>
+        </div>
+        <div class="err" id="f-err"></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-outline" id="m-cancel">Annuler</button><button class="btn btn-primary" id="m-save">Ajouter</button></div>
+    </div></div>`);
+    bg.querySelector("#m-close").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-cancel").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-save").addEventListener("click", async ()=>{
+      const nom=bg.querySelector("#f-nom").value.trim();
+      const coef=parseInt(bg.querySelector("#f-coef").value)||1;
+      const niveaux=[...bg.querySelectorAll(".f-niveau:checked")].map(c=>c.value);
+      if(!nom||niveaux.length===0){ bg.querySelector("#f-err").textContent="Nom et au moins un niveau requis."; return; }
+      S.matieres.push({id:uid("mat"),nom,coefficient:coef,niveaux});
+      await saveState(); bg.remove(); render();
+    });
+    document.getElementById("app").appendChild(bg);
+  });
+  return wrap;
+}
+
+/* ---- saisie des notes ---- */
+function adminNotes(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Saisie des notes","Pédagogie");
+  if(S.classes.length===0 || S.matieres.length===0){
+    wrap.appendChild(el(`<div class="card"><div class="card-body"><div class="empty"><div class="ic">✏️</div><h4>Préparez d'abord classes et matières</h4></div></div></div>`));
+    return wrap;
+  }
+  const sub = VIEW.sub;
+  if(!sub.classeId) sub.classeId = S.classes[0].id;
+  if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+  const classe = classeById(sub.classeId);
+  const mats = matieresOfNiveau(classe.niveau);
+  if(!sub.matiereId || !mats.find(m=>m.id===sub.matiereId)) sub.matiereId = mats[0] ? mats[0].id : null;
+
+  const selectors = el(`<div class="card"><div class="card-body">
+    <div class="field-row">
+      <div class="field"><label>Classe</label><select id="s-classe">${S.classes.map(c=>`<option value="${c.id}" ${c.id===sub.classeId?'selected':''}>${esc(c.nom)}</option>`).join("")}</select></div>
+      <div class="field"><label>Matière</label><select id="s-matiere">${mats.map(m=>`<option value="${m.id}" ${m.id===sub.matiereId?'selected':''}>${esc(m.nom)}</option>`).join("")}</select></div>
+    </div>
+    <div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>
+  </div></div>`);
+  selectors.querySelector("#s-classe").addEventListener("change",e=>{ sub.classeId=e.target.value; sub.matiereId=null; render(); });
+  selectors.querySelector("#s-matiere").addEventListener("change",e=>{ sub.matiereId=e.target.value; render(); });
+  selectors.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(selectors);
+
+  if(!sub.matiereId){
+    wrap.appendChild(el(`<div class="card"><div class="card-body"><div class="empty"><h4>Aucune matière pour ce niveau</h4></div></div></div>`));
+    return wrap;
+  }
+  const eleves = elevesOfClasse(sub.classeId);
+  const card = el(`<div class="card"><div class="card-head"><h3>${esc(matiereById(sub.matiereId).nom)} — ${sub.trimestre}</h3><span class="meta">Moyenne = (Devoir 1 + Devoir 2 + Composition) / 3</span></div><div class="card-body pad-0"><div class="tbl-wrap" id="grid"></div></div></div>`);
+  const grid = card.querySelector("#grid");
+  if(eleves.length===0){
+    grid.appendChild(el(`<div class="empty"><h4>Aucun élève dans cette classe</h4></div>`));
+  } else {
+    const tbl = el(`<table><thead><tr><th>Élève</th><th>Devoir 1 /20</th><th>Devoir 2 /20</th><th>Composition /20</th><th>Moyenne</th><th>Appréciation</th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    eleves.forEach(e=>{
+      const note = noteFor(e.id,sub.matiereId,sub.trimestre);
+      const moy = moyenneMatiere(note);
+      const ap = appreciationMatiere(moy);
+      const tr = el(`<tr>
+        <td>${esc(e.prenom)} ${esc(e.nom)}</td>
+        <td><input type="number" min="0" max="20" step="0.25" data-el="${e.id}" data-f="devoir1" value="${note&&note.devoir1!=null?note.devoir1:""}"></td>
+        <td><input type="number" min="0" max="20" step="0.25" data-el="${e.id}" data-f="devoir2" value="${note&&note.devoir2!=null?note.devoir2:""}"></td>
+        <td><input type="number" min="0" max="20" step="0.25" data-el="${e.id}" data-f="composition" value="${note&&note.composition!=null?note.composition:""}"></td>
+        <td class="moy-cell"><b>${moy!=null?moy.toFixed(2):"—"}</b></td>
+        <td class="ap-cell"><span class="badge ${ap.cls}">${ap.label}</span></td>
+      </tr>`);
+      tb.appendChild(tr);
+    });
+    grid.appendChild(tbl);
+    grid.querySelectorAll("input[type=number]").forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        const eid = inp.dataset.el, field = inp.dataset.f;
+        let note = noteFor(eid, sub.matiereId, sub.trimestre);
+        if(!note){ note = {id:uid("nt"),eleveId:eid,matiereId:sub.matiereId,trimestre:sub.trimestre,devoir1:null,devoir2:null,composition:null}; S.notes.push(note); }
+        note[field] = inp.value===""? null : parseFloat(inp.value);
+        const moy = moyenneMatiere(note);
+        const ap = appreciationMatiere(moy);
+        const row = inp.closest("tr");
+        row.querySelector(".moy-cell").innerHTML = `<b>${moy!=null?moy.toFixed(2):"—"}</b>`;
+        row.querySelector(".ap-cell").innerHTML = `<span class="badge ${ap.cls}">${ap.label}</span>`;
+      });
+    });
+  }
+  wrap.appendChild(card);
+  const saveBar = el(`<div style="text-align:right;"><button class="btn btn-primary" id="save-notes">Enregistrer les notes</button></div>`);
+  saveBar.querySelector("#save-notes").addEventListener("click", async ()=>{ await saveState(); toast("Notes enregistrées ✓"); });
+  wrap.appendChild(saveBar);
+  return wrap;
+}
+
+/* ---- bulletins ---- */
+function adminBulletins(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Bulletins","Pédagogie");
+  if(S.classes.length===0){ wrap.appendChild(el(`<div class="card"><div class="card-body"><div class="empty"><h4>Créez d'abord une classe</h4></div></div></div>`)); return wrap; }
+  const sub = VIEW.sub;
+  if(!sub.classeId) sub.classeId = S.classes[0].id;
+  if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+
+  const selectors = el(`<div class="card"><div class="card-body">
+    <div class="field"><label>Classe</label><select id="s-classe">${S.classes.map(c=>`<option value="${c.id}" ${c.id===sub.classeId?'selected':''}>${esc(c.nom)}</option>`).join("")}</select></div>
+    <div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>
+  </div></div>`);
+  selectors.querySelector("#s-classe").addEventListener("change",e=>{ sub.classeId=e.target.value; sub.eleveId=null; render(); });
+  selectors.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(selectors);
+
+  const eleves = elevesOfClasse(sub.classeId);
+  const {rangs,total} = rangClasse(sub.classeId, sub.trimestre);
+
+  if(sub.eleveId){
+    const eleve = eleveById(sub.eleveId);
+    const back = el(`<button class="btn btn-outline btn-sm" style="margin-bottom:14px;">← Retour à la liste</button>`);
+    back.addEventListener("click",()=>{ sub.eleveId=null; render(); });
+    wrap.appendChild(back);
+    wrap.appendChild(renderBulletinDoc(eleve, sub.trimestre, rangs[eleve.id], total));
+    const printBtn = el(`<div style="margin-top:14px;text-align:right;"><button class="btn btn-board" id="print-b">🖨 Imprimer / Enregistrer en PDF</button></div>`);
+    printBtn.querySelector("#print-b").addEventListener("click", ()=>printBulletin(eleve,sub.trimestre,rangs[eleve.id],total));
+    wrap.appendChild(printBtn);
+    return wrap;
+  }
+
+  const card = el(`<div class="card"><div class="card-body pad-0"><div class="tbl-wrap" id="grid"></div></div></div>`);
+  const grid = card.querySelector("#grid");
+  if(eleves.length===0){ grid.appendChild(el(`<div class="empty"><h4>Aucun élève dans cette classe</h4></div>`)); }
+  else {
+    const tbl = el(`<table><thead><tr><th>Rang</th><th>Élève</th><th>Moyenne générale</th><th>Appréciation</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    eleves.slice().sort((a,b)=>(rangs[a.id]||999)-(rangs[b.id]||999)).forEach(e=>{
+      const b = bulletinFor(e.id, sub.trimestre);
+      const app = appreciation(b.moyenneGenerale);
+      tb.appendChild(el(`<tr>
+        <td>${rangs[e.id]?`${rangs[e.id]}${total?" / "+total:""}`:"—"}</td>
+        <td>${esc(e.prenom)} ${esc(e.nom)}</td>
+        <td><b>${b.moyenneGenerale!=null?b.moyenneGenerale.toFixed(2):"—"}</b>/20</td>
+        <td><span class="badge ${app.cls}">${app.label}</span></td>
+        <td><button class="btn btn-outline btn-sm" data-open="${e.id}">Voir le bulletin</button></td>
+      </tr>`));
+    });
+    grid.appendChild(tbl);
+    grid.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>{ sub.eleveId=b.dataset.open; render(); }));
+  }
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ------- RENDU DU BULLETIN (format sénégalais) ------- */
+function renderBulletinDoc(eleve,trimestre,rang,total){
+  const cl = classeById(eleve.classeId);
+  const b = bulletinFor(eleve.id,trimestre);
+  const eff = elevesOfClasse(eleve.classeId).length;
+  const app = appreciation(b.moyenneGenerale);
+
+  // observations conseil
+  let mention = "Doit redoubler d'efforts";
+  if(b.moyenneGenerale!=null){
+    if(b.moyenneGenerale>=14) mention = "Félicitations";
+    else if(b.moyenneGenerale>=12) mention = "Encouragements";
+    else if(b.moyenneGenerale>=10) mention = "Passe en classe supérieure";
+  }
+  const naissance = (eleve.dateNaissance || eleve.lieuNaissance)
+    ? `${eleve.dateNaissance?fmtDateHuman(eleve.dateNaissance):"—"}${eleve.lieuNaissance?(" à "+eleve.lieuNaissance):""}`
+    : "—";
+
+  const ecole = S.ecole;
+  const logoHtml = ecole.logo ? `<div class="b-logo"><img src="${ecole.logo}" alt="Logo"></div>` : `<div class="b-logo"></div>`;
+  const watermarkStyle = ecole.logo ? `style="background-image:url('${ecole.logo}');"` : `style="display:none;"`;
+
+  const lignesHtml = b.lignes.map(l=>{
+    const ap = appreciationMatiere(l.moyenne);
+    const d1 = l.note && l.note.devoir1!=null ? l.note.devoir1 : "—";
+    const d2 = l.note && l.note.devoir2!=null ? l.note.devoir2 : "—";
+    const comp = l.note && l.note.composition!=null ? l.note.composition : "—";
+    const moy = l.moyenne!=null ? l.moyenne.toFixed(2) : "—";
+    const mx = l.moyX!=null ? l.moyX.toFixed(2) : "—";
+    return `<tr>
+      <td class="disc">${esc(l.matiere.nom)}</td>
+      <td>${d1}</td>
+      <td>${d2}</td>
+      <td>${comp}</td>
+      <td><b>${moy}</b></td>
+      <td>${l.matiere.coefficient}</td>
+      <td><b>${mx}</b></td>
+      <td class="app"><span class="badge ${ap.cls}" style="font-size:10px;padding:2px 7px;">${ap.label}</span></td>
+    </tr>`;
+  }).join("");
+
+  const doc = el(`<div class="bulletin-doc" id="bulletin-doc">
+    <div class="watermark" ${watermarkStyle}></div>
+    <div class="b-content">
+      <div class="b-head">
+        <div class="b-left">
+          <div class="sname">${esc(ecole.nom||"Établissement scolaire")}</div>
+          ${ecole.adresse?`<div class="sline">${esc(ecole.adresse)}</div>`:""}
+          ${ecole.ville?`<div class="sline">${esc(ecole.ville)}</div>`:""}
+          ${ecole.telephone?`<div class="sline">Tél : ${esc(ecole.telephone)}</div>`:""}
+          ${ecole.email?`<div class="sline">Email : ${esc(ecole.email)}</div>`:""}
+        </div>
+        ${logoHtml}
+      </div>
+      <div class="b-title">
+        <h2>Bulletin de notes</h2>
+        <div class="tr">${esc(trimestre)}</div>
+        <div class="an">Année scolaire ${anneeScolaire()}</div>
+      </div>
+      <div class="b-idbar">
+        <div>Prénom(s) : <b>${esc(eleve.prenom)}</b></div>
+        <div>Nom : <b>${esc(eleve.nom)}</b></div>
+        <div>Date et lieu de naissance : <b>${esc(naissance)}</b></div>
+        <div>Matricule : <b>${esc(eleve.matricule)}</b></div>
+        <div>Classe : <b>${esc(cl?cl.nom:"—")}</b></div>
+        <div>Nombre d'élèves : <b>${eff}</b></div>
+      </div>
+      <table class="b-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:22%;">Disciplines</th>
+            <th colspan="3">Notes</th>
+            <th rowspan="2">Moy/20</th>
+            <th rowspan="2">Coef</th>
+            <th rowspan="2">Moy ×</th>
+            <th rowspan="2" style="width:16%;">Appréciations</th>
+          </tr>
+          <tr>
+            <th>Devoir 1</th>
+            <th>Devoir 2</th>
+            <th>Comp</th>
+          </tr>
+        </thead>
+        <tbody>${lignesHtml}</tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td class="disc" colspan="4">TOTAL</td>
+            <td>${b.totalCoef>0?(b.totalMoyX/b.totalCoef).toFixed(2):"—"}</td>
+            <td>${b.totalCoef||"—"}</td>
+            <td>${b.totalMoyX>0?b.totalMoyX.toFixed(2):"—"}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="b-summary">
+        <table>
+          <tr><th>Total coefficient</th><td>${b.totalCoef||"—"}</td></tr>
+          <tr><th>Total moyenne</th><td>${b.totalMoyX>0?b.totalMoyX.toFixed(2):"—"}</td></tr>
+          <tr><th>Moyenne générale</th><td class="big">${b.moyenneGenerale!=null?b.moyenneGenerale.toFixed(2):"—"}</td></tr>
+          <tr><th>Rang</th><td class="big">${rang?`${rang}${total?" / "+total:""}`:"—"}</td></tr>
+        </table>
+        <table>
+          <tr><th>Appréciation générale</th><td><span class="badge ${app.cls}">${app.label}</span></td></tr>
+          <tr><th>Décision du conseil</th><td>${esc(mention)}</td></tr>
+          <tr><th>Trimestre</th><td>${esc(trimestre)}</td></tr>
+          <tr><th>Année scolaire</th><td>${anneeScolaire()}</td></tr>
+        </table>
+      </div>
+
+      <div class="b-obs">
+        <div class="obs-box">
+          <div class="ttl">Observations du conseil des professeurs</div>
+          <div class="val">${esc(mention)}</div>
+        </div>
+        <div class="obs-box">
+          <div class="ttl">Appréciation du chef d'établissement</div>
+          <div class="val">${esc(app.label)}</div>
+        </div>
+      </div>
+
+      <div class="b-foot">
+        <div>Fait à ${esc(ecole.ville||"")}, le ${fmtDateHuman(todayStr())}</div>
+        <div class="sig">
+          <div class="line"></div>
+          <div>Le chef d'établissement</div>
+        </div>
+      </div>
+    </div>
+  </div>`);
+  return doc;
+}
+function printBulletin(eleve,trimestre,rang,total){
+  let host = document.getElementById("print-area");
+  if(host) host.remove();
+  host = document.createElement("div");
+  host.id = "print-area";
+  host.style.display="none";
+  document.body.appendChild(host);
+  host.appendChild(renderBulletinDoc(eleve,trimestre,rang,total));
+  const style = document.createElement("style");
+  style.id = "print-style-tmp";
+  style.textContent = "@media print{ #print-area{display:block !important;} }";
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(()=>{ host.remove(); style.remove(); },700);
+}
+
+/* ---- présences ---- */
+function adminPresences(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Présences","Vie scolaire");
+  if(S.classes.length===0){ wrap.appendChild(el(`<div class="card"><div class="card-body"><div class="empty"><h4>Créez d'abord une classe</h4></div></div></div>`)); return wrap; }
+  const sub = VIEW.sub;
+  if(!sub.classeId) sub.classeId = S.classes[0].id;
+  if(!sub.date) sub.date = todayStr();
+
+  const selectors = el(`<div class="card"><div class="card-body">
+    <div class="field-row">
+      <div class="field"><label>Classe</label><select id="s-classe">${S.classes.map(c=>`<option value="${c.id}" ${c.id===sub.classeId?'selected':''}>${esc(c.nom)}</option>`).join("")}</select></div>
+      <div class="field"><label>Date</label><input type="date" id="s-date" value="${sub.date}"></div>
+    </div>
+  </div></div>`);
+  selectors.querySelector("#s-classe").addEventListener("change",e=>{ sub.classeId=e.target.value; render(); });
+  selectors.querySelector("#s-date").addEventListener("change",e=>{ sub.date=e.target.value; render(); });
+  wrap.appendChild(selectors);
+
+  const eleves = elevesOfClasse(sub.classeId);
+  const card = el(`<div class="card"><div class="card-head"><h3>Appel — ${fmtDateHuman(sub.date)}</h3><span class="meta">Cocher = absent</span></div><div class="card-body pad-0"><div class="tbl-wrap" id="grid"></div></div></div>`);
+  const grid = card.querySelector("#grid");
+  if(eleves.length===0){ grid.appendChild(el(`<div class="empty"><h4>Aucun élève</h4></div>`)); }
+  else {
+    const tbl = el(`<table><thead><tr><th>Élève</th><th>Absent</th><th>Motif</th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    eleves.forEach(e=>{
+      const pres = S.presences.find(p=>p.eleveId===e.id && p.date===sub.date);
+      const isAbs = pres && pres.statut==="absent";
+      tb.appendChild(el(`<tr>
+        <td>${esc(e.prenom)} ${esc(e.nom)}</td>
+        <td><input type="checkbox" data-el="${e.id}" class="chk-abs" ${isAbs?'checked':''}></td>
+        <td><input type="text" data-el="${e.id}" class="motif-inp" placeholder="Motif (optionnel)" value="${pres?esc(pres.motif||""):""}" style="width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:2px;" ${isAbs?'':'disabled'}></td>
+      </tr>`));
+    });
+    grid.appendChild(tbl);
+    grid.querySelectorAll(".chk-abs").forEach(chk=>{
+      chk.addEventListener("change",()=>{
+        const motifInp = chk.closest("tr").querySelector(".motif-inp");
+        motifInp.disabled = !chk.checked;
+      });
+    });
+  }
+  wrap.appendChild(card);
+  const saveBar = el(`<div style="text-align:right;"><button class="btn btn-primary" id="save-presences">Enregistrer l'appel</button></div>`);
+  saveBar.querySelector("#save-presences").addEventListener("click", async ()=>{
+    let nouvellesAbsences = 0;
+    grid.querySelectorAll(".chk-abs").forEach(chk=>{
+      const eid = chk.dataset.el;
+      const motif = grid.querySelector(`.motif-inp[data-el="${eid}"]`).value.trim();
+      let pres = S.presences.find(p=>p.eleveId===eid && p.date===sub.date);
+      const wasAbsent = pres && pres.statut==="absent";
+      const nowAbsent = chk.checked;
+      if(!pres){ pres = {id:uid("pr"),eleveId:eid,date:sub.date,statut:"present",motif:"",signalePar:S.ecole.adminUser}; S.presences.push(pres); }
+      pres.statut = nowAbsent ? "absent" : "present";
+      pres.motif = nowAbsent ? motif : "";
+      pres.signalePar = S.ecole.adminUser;
+      if(nowAbsent && !wasAbsent){
+        const e = eleveById(eid);
+        addNotification("absence", eid, `${e.prenom} ${e.nom} a été signalé(e) absent(e) le ${fmtDateHuman(sub.date)}${motif?(" — motif : "+motif):""}.`);
+        nouvellesAbsences++;
+      }
+    });
+    await saveState();
+    toast(nouvellesAbsences>0 ? `Appel enregistré — ${nouvellesAbsences} notification(s) envoyée(s)` : "Appel enregistré ✓");
+    render();
+  });
+  wrap.appendChild(saveBar);
+  return wrap;
+}
+
+/* ---- paiements ---- */
+function adminPaiements(){
+  const wrap = document.createElement("div");
+  const sub = VIEW.sub;
+  if(!sub.mois) sub.mois = monthKey();
+  const [y,m] = sub.mois.split("-");
+  const label = `${MOIS_LABELS[parseInt(m)-1]} ${y}`;
+  wrap.innerHTML = pageHead("Paiements","Finances",`<button class="btn btn-board" id="send-rappels">📣 Envoyer les rappels — ${esc(label)}</button>`);
+
+  const monthPicker = el(`<div class="card"><div class="card-body">
+    <div class="field" style="max-width:220px;"><label>Mois</label><input type="month" id="s-mois" value="${sub.mois}"></div>
+    <p class="hint">Mensualité standard : <b>${S.ecole.tarifMensuel.toLocaleString("fr-FR")} FCFA</b></p>
+  </div></div>`);
+  monthPicker.querySelector("#s-mois").addEventListener("change",e=>{ sub.mois=e.target.value; render(); });
+  wrap.appendChild(monthPicker);
+
+  const eleves = S.eleves.filter(e=>e.actif!==false);
+  const card = el(`<div class="card"><div class="card-body pad-0"><div class="tbl-wrap" id="grid"></div></div></div>`);
+  const grid = card.querySelector("#grid");
+  if(eleves.length===0){ grid.appendChild(el(`<div class="empty"><h4>Aucun élève</h4></div>`)); }
+  else {
+    const tbl = el(`<table><thead><tr><th>Élève</th><th>Classe</th><th>Statut</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    eleves.forEach(e=>{
+      const cl = classeById(e.classeId);
+      const st = paiementStatut(e.id,sub.mois);
+      tb.appendChild(el(`<tr>
+        <td>${esc(e.prenom)} ${esc(e.nom)}</td>
+        <td>${cl?esc(cl.nom):"—"}</td>
+        <td>${st==="paye"?'<span class="badge badge-ok">Payé</span>':'<span class="badge badge-danger">Impayé</span>'}</td>
+        <td><button class="btn btn-outline btn-sm" data-toggle="${e.id}">${st==="paye"?"Marquer impayé":"Marquer payé"}</button></td>
+      </tr>`));
+    });
+    grid.appendChild(tbl);
+    grid.querySelectorAll("[data-toggle]").forEach(b=>b.addEventListener("click", async ()=>{
+      const eid=b.dataset.toggle;
+      const cur = paiementStatut(eid,sub.mois);
+      setPaiement(eid,sub.mois, cur==="paye"?"impaye":"paye");
+      await saveState(); render();
+    }));
+  }
+  wrap.appendChild(card);
+  wrap.querySelector("#send-rappels").addEventListener("click", async ()=>{
+    let count=0;
+    eleves.forEach(e=>{
+      if(paiementStatut(e.id,sub.mois)!=="paye"){
+        addNotification("rappel_paiement", e.id, `Rappel : la mensualité de ${label} (${S.ecole.tarifMensuel.toLocaleString("fr-FR")} FCFA) reste à régler pour ${e.prenom} ${e.nom}.`);
+        count++;
+      }
+    });
+    S.meta.dernierRappelPaiement = sub.mois;
+    await saveState();
+    toast(count>0 ? `${count} rappel(s) envoyé(s)` : "Tous les élèves sont à jour ✓");
+    render();
+  });
+  return wrap;
+}
+
+/* ---- convocations (avec doc imprimable) ---- */
+function adminConvocations(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Convocations parents","Vie scolaire",`<button class="btn btn-primary" id="add-conv">+ Convoquer un parent</button>`);
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  if(S.convocations.length===0){
+    body.appendChild(el(`<div class="empty"><div class="ic">📨</div><h4>Aucune convocation</h4></div>`));
+  } else {
+    const tbl = el(`<table><thead><tr><th>Élève</th><th>Motif</th><th>Date & heure</th><th></th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    S.convocations.slice().reverse().forEach(c=>{
+      const e = eleveById(c.eleveId);
+      tb.appendChild(el(`<tr><td>${e?esc(e.prenom+" "+e.nom):"—"}</td><td>${esc(c.motif)}</td><td>${fmtDateHuman(c.date)} ${esc(c.heure||"")}</td>
+        <td><button class="btn btn-outline btn-sm" data-print="${c.id}">🖨 Voir / imprimer</button></td></tr>`));
+    });
+    body.appendChild(tbl);
+    body.querySelectorAll("[data-print]").forEach(b=>b.addEventListener("click",()=>{
+      const c = S.convocations.find(x=>x.id===b.dataset.print);
+      const e = eleveById(c.eleveId);
+      printConvocation(c,e);
+    }));
+  }
+  wrap.appendChild(card);
+  wrap.querySelector("#add-conv").addEventListener("click", ()=>{
+    if(S.eleves.filter(e=>e.actif!==false).length===0){ toast("Inscrivez d'abord des élèves."); return; }
+    const bg = el(`<div class="modal-bg"><div class="modal">
+      <div class="modal-head"><h3>Convoquer un parent</h3><button class="btn-ghost" id="m-close">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Élève</label><select id="f-eleve">${S.eleves.filter(e=>e.actif!==false).map(e=>`<option value="${e.id}">${esc(e.prenom)} ${esc(e.nom)}</option>`).join("")}</select></div>
+        <div class="field"><label>Motif</label><textarea id="f-motif" rows="3" placeholder="Ex : retards répétés, comportement en classe..."></textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Date</label><input type="date" id="f-date" value="${todayStr()}"></div>
+          <div class="field"><label>Heure</label><input type="time" id="f-heure" value="09:00"></div>
+        </div>
+        <div class="err" id="f-err"></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-outline" id="m-cancel">Annuler</button><button class="btn btn-primary" id="m-save">Envoyer la convocation</button></div>
+    </div></div>`);
+    bg.querySelector("#m-close").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-cancel").addEventListener("click",()=>bg.remove());
+    bg.querySelector("#m-save").addEventListener("click", async ()=>{
+      const eleveId=bg.querySelector("#f-eleve").value, motif=bg.querySelector("#f-motif").value.trim();
+      const date=bg.querySelector("#f-date").value, heure=bg.querySelector("#f-heure").value;
+      if(!motif){ bg.querySelector("#f-err").textContent="Le motif est requis."; return; }
+      S.convocations.push({id:uid("cv"),eleveId,motif,date,heure,signalePar:S.ecole.adminUser,statut:"envoyee"});
+      const e = eleveById(eleveId);
+      addNotification("convocation", eleveId, `Le parent de ${e.prenom} ${e.nom} est convoqué le ${fmtDateHuman(date)} à ${heure} — motif : ${motif}`);
+      await saveState(); bg.remove(); toast("Convocation envoyée au parent"); render();
+    });
+    document.getElementById("app").appendChild(bg);
+  });
+  return wrap;
+}
+function renderConvocationDoc(c,e){
+  const ecole = S.ecole;
+  const cl = classeById(e.classeId);
+  const logoHtml = ecole.logo ? `<div class="b-logo"><img src="${ecole.logo}" alt="Logo"></div>` : `<div class="b-logo"></div>`;
+  const watermarkStyle = ecole.logo ? `style="background-image:url('${ecole.logo}');"` : `style="display:none;"`;
+  return el(`<div class="bulletin-doc" id="conv-doc">
+    <div class="watermark" ${watermarkStyle}></div>
+    <div class="b-content">
+      <div class="b-head">
+        <div class="b-left">
+          <div class="sname">${esc(ecole.nom||"Établissement scolaire")}</div>
+          ${ecole.adresse?`<div class="sline">${esc(ecole.adresse)}</div>`:""}
+          ${ecole.ville?`<div class="sline">${esc(ecole.ville)}</div>`:""}
+          ${ecole.telephone?`<div class="sline">Tél : ${esc(ecole.telephone)}</div>`:""}
+          ${ecole.email?`<div class="sline">Email : ${esc(ecole.email)}</div>`:""}
+        </div>
+        ${logoHtml}
+      </div>
+      <div class="b-title">
+        <h2>Convocation</h2>
+        <div class="an">Année scolaire ${anneeScolaire()}</div>
+      </div>
+      <div style="padding:22px 4px 8px;font-size:14px;line-height:1.8;">
+        <p>À l'attention de : <b>${esc(e.parentNom||"Parent")}</b></p>
+        <p>Parent / tuteur de l'élève : <b>${esc(e.prenom)} ${esc(e.nom)}</b> (matricule <b>${esc(e.matricule)}</b>)</p>
+        <p>Classe : <b>${esc(cl?cl.nom:"—")}</b></p>
+        <div class="divider"></div>
+        <p>Madame, Monsieur,</p>
+        <p>Vous êtes prié(e) de bien vouloir vous présenter au bureau de la direction le <b>${fmtDateHuman(c.date)}</b> à <b>${esc(c.heure||"")}</b>.</p>
+        <p><b>Motif :</b> ${esc(c.motif)}</p>
+        <div class="divider"></div>
+        <p>Nous vous remercions de votre présence et vous prions d'agréer nos salutations distinguées.</p>
+        ${ecole.telephone?`<p class="hint" style="margin-top:14px;">Pour tout renseignement, contactez-nous au ${esc(ecole.telephone)}${ecole.email?` ou par email à ${esc(ecole.email)}`:""}.</p>`:""}
+      </div>
+      <div class="b-foot">
+        <div>Fait à ${esc(ecole.ville||"")}, le ${fmtDateHuman(todayStr())}</div>
+        <div class="sig">
+          <div class="line"></div>
+          <div>Le chef d'établissement</div>
+        </div>
+      </div>
+    </div>
+  </div>`);
+}
+function printConvocation(c,e){
+  let host = document.getElementById("print-area");
+  if(host) host.remove();
+  host = document.createElement("div");
+  host.id = "print-area";
+  host.style.display="none";
+  document.body.appendChild(host);
+  host.appendChild(renderConvocationDoc(c,e));
+  const style = document.createElement("style");
+  style.id = "print-style-tmp";
+  style.textContent = "@media print{ #print-area{display:block !important;} }";
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(()=>{ host.remove(); style.remove(); },700);
+}
+
+/* ---- notifications log ---- */
+function adminNotifications(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Journal des notifications","Communication");
+  const card = el(`<div class="card"><div class="card-body pad-0" id="list"></div></div>`);
+  const list = card.querySelector("#list");
+  if(S.notifications.length===0){ list.appendChild(el(`<div class="empty"><div class="ic">🔔</div><h4>Aucune notification pour le moment</h4></div>`)); }
+  S.notifications.forEach(n=> list.appendChild(notifRow(n)));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ---- établissement (modifier infos + logo) ---- */
+function adminEtablissement(){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Établissement","Administration");
+  let logoData = S.ecole.logo || null;
+  const card = el(`<div class="card"><div class="card-body">
+    <div class="field-row">
+      <div class="field"><label>Nom</label><input id="e-nom" value="${esc(S.ecole.nom)}"></div>
+      <div class="field"><label>Ville</label><input id="e-ville" value="${esc(S.ecole.ville||"")}"></div>
+    </div>
+    <div class="field"><label>Adresse</label><input id="e-adresse" value="${esc(S.ecole.adresse||"")}"></div>
+    <div class="field-row">
+      <div class="field"><label>Téléphone</label><input id="e-tel" value="${esc(S.ecole.telephone||"")}"></div>
+      <div class="field"><label>Email</label><input id="e-email" value="${esc(S.ecole.email||"")}"></div>
+    </div>
+    <div class="field" style="max-width:220px;"><label>Mensualité (FCFA)</label><input id="e-tarif" type="number" value="${S.ecole.tarifMensuel}"></div>
+    <div class="field">
+      <label>Logo</label>
+      <div class="logo-drop" id="e-logo-drop" style="max-width:260px;">
+        ${S.ecole.logo?`<img id="e-logo-img" src="${S.ecole.logo}">`:`<img id="e-logo-img" style="display:none;"><div class="ph" id="e-logo-ph">📷 Changer le logo</div>`}
+      </div>
+      <input type="file" id="e-logo-file" accept="image/*" style="display:none;">
+    </div>
+    <button class="btn btn-primary" id="e-save">Enregistrer</button>
+  </div></div>`);
+  const drop = card.querySelector("#e-logo-drop");
+  const fileInput = card.querySelector("#e-logo-file");
+  drop.addEventListener("click",()=>fileInput.click());
+  fileInput.addEventListener("change",ev=>{
+    const f = ev.target.files[0]; if(!f) return;
+    lireLogo(f, data=>{
+      logoData = data;
+      const img = card.querySelector("#e-logo-img");
+      img.src = data; img.style.display="block";
+      const ph = card.querySelector("#e-logo-ph"); if(ph) ph.style.display="none";
+    });
+  });
+  card.querySelector("#e-save").addEventListener("click", async ()=>{
+    S.ecole.nom = card.querySelector("#e-nom").value.trim();
+    S.ecole.ville = card.querySelector("#e-ville").value.trim();
+    S.ecole.adresse = card.querySelector("#e-adresse").value.trim();
+    S.ecole.telephone = card.querySelector("#e-tel").value.trim();
+    S.ecole.email = card.querySelector("#e-email").value.trim();
+    S.ecole.tarifMensuel = parseInt(card.querySelector("#e-tarif").value)||S.ecole.tarifMensuel;
+    S.ecole.logo = logoData;
+    await saveState();
+    toast("Établissement mis à jour ✓");
+    render();
+  });
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ================= ÉLÈVE ================= */
+function renderEleveShell(){
+  const eleve = eleveById(SESSION.id);
+  if(!eleve){ SESSION=null; go("gate"); return document.createElement("div"); }
+  const items = [{key:"accueil",label:"Mes notes"},{key:"bulletin",label:"Mon bulletin"},{key:"presences",label:"Mes absences"},{key:"notifications",label:"Notifications"}];
+  let content;
+  if(VIEW.tab==="bulletin") content = eleveBulletinTab(eleve);
+  else if(VIEW.tab==="presences") content = eleveAbsencesTab(eleve);
+  else if(VIEW.tab==="notifications") content = eleveNotifTab(eleve);
+  else content = eleveNotesTab(eleve);
+  return shellFrame({ userName:`${eleve.prenom} ${eleve.nom}`, userRole:`Élève — ${classeById(eleve.classeId)?.nom||""}`, navItems:items, content, onNav:(k)=>setTab(k) });
+}
+function eleveNotesTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Mes notes", `Matricule ${eleve.matricule}`);
+  const sub = VIEW.sub; if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+  const tabs = el(`<div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>`);
+  tabs.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(tabs);
+  const b = bulletinFor(eleve.id, sub.trimestre);
+  const card = el(`<div class="card"><div class="card-body pad-0"><div class="tbl-wrap"></div></div></div>`);
+  const tbl = el(`<table><thead><tr><th>Matière</th><th>Devoir 1</th><th>Devoir 2</th><th>Comp</th><th>Moyenne</th><th>Appréciation</th></tr></thead><tbody></tbody></table>`);
+  const tb = tbl.querySelector("tbody");
+  b.lignes.forEach(l=>{
+    const ap = appreciationMatiere(l.moyenne);
+    tb.appendChild(el(`<tr><td>${esc(l.matiere.nom)}</td>
+      <td>${l.note&&l.note.devoir1!=null?l.note.devoir1:"—"}</td>
+      <td>${l.note&&l.note.devoir2!=null?l.note.devoir2:"—"}</td>
+      <td>${l.note&&l.note.composition!=null?l.note.composition:"—"}</td>
+      <td><b>${l.moyenne!=null?l.moyenne.toFixed(2):"—"}</b></td>
+      <td><span class="badge ${ap.cls}">${ap.label}</span></td></tr>`));
+  });
+  card.querySelector(".tbl-wrap").appendChild(tbl);
+  wrap.appendChild(card);
+  const {rangs,total} = rangClasse(eleve.classeId, sub.trimestre);
+  const app = appreciation(b.moyenneGenerale);
+  wrap.appendChild(el(`<div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="stat"><div class="n">${b.moyenneGenerale!=null?b.moyenneGenerale.toFixed(2):"—"}</div><div class="l">Moyenne générale /20</div></div>
+    <div class="stat"><div class="n">${rangs[eleve.id]?`${rangs[eleve.id]}/${total}`:"—"}</div><div class="l">Rang de classe</div></div>
+    <div class="stat"><div class="n" style="font-size:16px;padding-top:6px;"><span class="badge ${app.cls}">${app.label}</span></div><div class="l">Appréciation</div></div>
+  </div>`));
+  return wrap;
+}
+function eleveBulletinTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Mon bulletin", eleve.matricule);
+  const sub = VIEW.sub; if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+  const tabs = el(`<div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>`);
+  tabs.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(tabs);
+  const {rangs,total} = rangClasse(eleve.classeId, sub.trimestre);
+  wrap.appendChild(renderBulletinDoc(eleve, sub.trimestre, rangs[eleve.id], total));
+  const printBtn = el(`<div style="margin-top:14px;text-align:right;"><button class="btn btn-board" id="pb">🖨 Imprimer</button></div>`);
+  printBtn.querySelector("#pb").addEventListener("click",()=>printBulletin(eleve,sub.trimestre,rangs[eleve.id],total));
+  wrap.appendChild(printBtn);
+  return wrap;
+}
+function eleveAbsencesTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Mes absences", eleve.matricule);
+  const abs = S.presences.filter(p=>p.eleveId===eleve.id && p.statut==="absent").sort((a,b)=>b.date.localeCompare(a.date));
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  if(abs.length===0){ body.appendChild(el(`<div class="empty"><div class="ic">✅</div><h4>Aucune absence enregistrée</h4></div>`)); }
+  else {
+    const tbl = el(`<table><thead><tr><th>Date</th><th>Motif</th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    abs.forEach(a=> tb.appendChild(el(`<tr><td>${fmtDateHuman(a.date)}</td><td>${esc(a.motif||"Non précisé")}</td></tr>`)));
+    body.appendChild(tbl);
+  }
+  wrap.appendChild(card);
+  return wrap;
+}
+function eleveNotifTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Notifications", eleve.matricule);
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  const ns = notifsFor(eleve.id);
+  if(ns.length===0){ body.appendChild(el(`<div class="empty"><div class="ic">🔔</div><h4>Aucune notification</h4></div>`)); }
+  ns.forEach(n=> body.appendChild(notifRow(n)));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ================= PARENT ================= */
+function renderParentShell(){
+  const kids = childrenOfParent(SESSION.phone);
+  if(kids.length===0){ SESSION=null; go("gate"); return document.createElement("div"); }
+  const sub = VIEW.sub; if(!sub.eleveId) sub.eleveId = kids[0].id;
+  const items = [{key:"accueil",label:"Notes"},{key:"bulletin",label:"Bulletin"},{key:"presences",label:"Absences"},{key:"paiements",label:"Paiement"},{key:"notifications",label:"Notifications"}];
+  let content;
+  const eleve = eleveById(sub.eleveId);
+  if(VIEW.tab==="presences") content = parentAbsencesTab(eleve);
+  else if(VIEW.tab==="paiements") content = parentPaiementTab(eleve);
+  else if(VIEW.tab==="notifications") content = parentNotifTab(eleve);
+  else if(VIEW.tab==="bulletin") content = parentBulletinTab(eleve);
+  else content = parentNotesTab(eleve);
+
+  const frame = shellFrame({ userName: kids[0].parentNom || "Parent", userRole:"Espace parent", navItems:items, content, onNav:(k)=>setTab(k) });
+  if(kids.length>1){
+    const switcher = el(`<div class="pill-tabs" style="margin-bottom:16px;">${kids.map(k=>`<button class="pill ${sub.eleveId===k.id?'active':''}" data-k="${k.id}">${esc(k.prenom)} ${esc(k.nom)}</button>`).join("")}</div>`);
+    switcher.querySelectorAll("[data-k]").forEach(b=>b.addEventListener("click",()=>{ sub.eleveId=b.dataset.k; render(); }));
+    const main = frame.querySelector("#main-host");
+    main.insertBefore(switcher, main.children[1]);
+  }
+  return frame;
+}
+function parentNotesTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead(`Notes de ${eleve.prenom}`, classeById(eleve.classeId)?.nom||"");
+  const sub = VIEW.sub; if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+  const tabs = el(`<div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>`);
+  tabs.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(tabs);
+  const b = bulletinFor(eleve.id, sub.trimestre);
+  const {rangs,total} = rangClasse(eleve.classeId, sub.trimestre);
+  const app = appreciation(b.moyenneGenerale);
+  wrap.appendChild(el(`<div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="stat"><div class="n">${b.moyenneGenerale!=null?b.moyenneGenerale.toFixed(2):"—"}</div><div class="l">Moyenne générale /20</div></div>
+    <div class="stat"><div class="n">${rangs[eleve.id]?`${rangs[eleve.id]}/${total}`:"—"}</div><div class="l">Rang de classe</div></div>
+    <div class="stat"><div class="n" style="font-size:16px;padding-top:6px;"><span class="badge ${app.cls}">${app.label}</span></div><div class="l">Appréciation</div></div>
+  </div>`));
+  const card = el(`<div class="card"><div class="card-body pad-0"><div class="tbl-wrap"></div></div></div>`);
+  const tbl = el(`<table><thead><tr><th>Matière</th><th>Devoir 1</th><th>Devoir 2</th><th>Comp</th><th>Moyenne</th><th>Appréciation</th></tr></thead><tbody></tbody></table>`);
+  const tb = tbl.querySelector("tbody");
+  b.lignes.forEach(l=>{
+    const ap = appreciationMatiere(l.moyenne);
+    tb.appendChild(el(`<tr><td>${esc(l.matiere.nom)}</td>
+      <td>${l.note&&l.note.devoir1!=null?l.note.devoir1:"—"}</td>
+      <td>${l.note&&l.note.devoir2!=null?l.note.devoir2:"—"}</td>
+      <td>${l.note&&l.note.composition!=null?l.note.composition:"—"}</td>
+      <td><b>${l.moyenne!=null?l.moyenne.toFixed(2):"—"}</b></td>
+      <td><span class="badge ${ap.cls}">${ap.label}</span></td></tr>`));
+  });
+  card.querySelector(".tbl-wrap").appendChild(tbl);
+  wrap.appendChild(card);
+  return wrap;
+}
+function parentBulletinTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead(`Bulletin de ${eleve.prenom}`, classeById(eleve.classeId)?.nom||"");
+  const sub = VIEW.sub; if(!sub.trimestre) sub.trimestre = TRIMESTRES[0];
+  const tabs = el(`<div class="pill-tabs">${TRIMESTRES.map(t=>`<button class="pill ${sub.trimestre===t?'active':''}" data-t="${t}">${t}</button>`).join("")}</div>`);
+  tabs.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ sub.trimestre=b.dataset.t; render(); }));
+  wrap.appendChild(tabs);
+  const {rangs,total} = rangClasse(eleve.classeId, sub.trimestre);
+  wrap.appendChild(renderBulletinDoc(eleve, sub.trimestre, rangs[eleve.id], total));
+  const printBtn = el(`<div style="margin-top:14px;text-align:right;"><button class="btn btn-board" id="pb">🖨 Imprimer</button></div>`);
+  printBtn.querySelector("#pb").addEventListener("click",()=>printBulletin(eleve,sub.trimestre,rangs[eleve.id],total));
+  wrap.appendChild(printBtn);
+  return wrap;
+}
+function parentAbsencesTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead(`Absences de ${eleve.prenom}`,"");
+  const abs = S.presences.filter(p=>p.eleveId===eleve.id && p.statut==="absent").sort((a,b)=>b.date.localeCompare(a.date));
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  if(abs.length===0){ body.appendChild(el(`<div class="empty"><div class="ic">✅</div><h4>Aucune absence</h4></div>`)); }
+  else { const tbl = el(`<table><thead><tr><th>Date</th><th>Motif</th></tr></thead><tbody></tbody></table>`);
+    const tb = tbl.querySelector("tbody");
+    abs.forEach(a=> tb.appendChild(el(`<tr><td>${fmtDateHuman(a.date)}</td><td>${esc(a.motif||"Non précisé")}</td></tr>`)));
+    body.appendChild(tbl);
+  }
+  wrap.appendChild(card);
+  return wrap;
+}
+function parentPaiementTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead(`Paiement — ${eleve.prenom}`,"Scolarité");
+  const now = new Date(); const rows = [];
+  for(let i=0;i<6;i++){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    rows.push({mk:monthKey(d), label:`${MOIS_LABELS[d.getMonth()]} ${d.getFullYear()}`});
+  }
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const tbl = el(`<table><thead><tr><th>Mois</th><th>Montant</th><th>Statut</th></tr></thead><tbody></tbody></table>`);
+  const tb = tbl.querySelector("tbody");
+  rows.forEach(r=>{
+    const st = paiementStatut(eleve.id, r.mk);
+    tb.appendChild(el(`<tr><td>${r.label}</td><td>${S.ecole.tarifMensuel.toLocaleString("fr-FR")} FCFA</td><td>${st==="paye"?'<span class="badge badge-ok">Payé</span>':'<span class="badge badge-danger">Impayé</span>'}</td></tr>`));
+  });
+  card.querySelector(".card-body").appendChild(tbl);
+  wrap.appendChild(card);
+  return wrap;
+}
+function parentNotifTab(eleve){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = pageHead("Notifications", eleve.prenom+" "+eleve.nom);
+  const card = el(`<div class="card"><div class="card-body pad-0"></div></div>`);
+  const body = card.querySelector(".card-body");
+  const ns = notifsFor(eleve.id);
+  if(ns.length===0){ body.appendChild(el(`<div class="empty"><div class="ic">🔔</div><h4>Aucune notification</h4></div>`)); }
+  ns.forEach(n=> body.appendChild(notifRow(n)));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+boot();
+</script>
+</body>
+</html>
