@@ -21,7 +21,8 @@ Les effets roses (bulles, anneaux, particules, étincelles, halos, balayages) so
 
 - `render_bureau_rose.py` : script de rendu (Pillow et NumPy pour l'image, HarfBuzz pour le kerning, ffmpeg pour l'encodage).
 - `fonts/` : police Montserrat, sous licence SIL Open Font License (voir `fonts/OFL-Montserrat.txt`).
-- `out/` : vidéos et images générées. Ce dossier est ignoré par Git.
+- `Bureau-Rose-generique.mp4` : la vidéo finale, versionnée pour pouvoir la consulter sur GitHub.
+- `out/` : vidéos et images générées par le script. Ce dossier est ignoré par Git.
 
 ## Utilisation
 
