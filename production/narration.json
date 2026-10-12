@@ -1,0 +1,62 @@
+[
+  {
+    "id": "01",
+    "title": "Accroche",
+    "duration": 25,
+    "text": "Tu entends parler de ChatGPT, d’images créées par l’intelligence artificielle et d’outils qui peuvent aider à faire certaines tâches. Mais l’intelligence artificielle, c’est quoi au juste ? Est-ce qu’une machine pense comme un être humain ? Dans cette leçon, on va expliquer les bases simplement, voir un exemple concret et apprendre pourquoi il faut vérifier les réponses d’une IA."
+  },
+  {
+    "id": "02",
+    "title": "Présentation",
+    "duration": 25,
+    "text": "Bienvenue sur ATHENA, une chaîne réalisée en collaboration avec LAMEX INSTITUT, centre de formation situé aux Parcelles Assainies, à Dakar. Ici, on apprend l’intelligence artificielle sans jargon, avec des exemples pratiques pour les études, la formation et les activités professionnelles. Commençons par une définition simple."
+  },
+  {
+    "id": "03",
+    "title": "Définition de l’IA",
+    "duration": 65,
+    "text": "L’intelligence artificielle, ou IA, désigne un ensemble de méthodes et de programmes informatiques qui permettent à une machine d’effectuer certaines tâches que l’on associe souvent à l’intelligence humaine. Par exemple : reconnaître des formes, comprendre une question, classer des informations, proposer une recommandation ou produire un texte. L’IA n’est pas forcément un robot. Elle peut être intégrée dans un site, une application ou un outil que l’on utilise sur un téléphone ou un ordinateur. Et attention : dire qu’un outil utilise l’intelligence artificielle ne signifie pas qu’il pense, qu’il ressent des émotions ou qu’il comprend le monde comme une personne. Il traite des informations selon son fonctionnement et les consignes qu’on lui donne."
+  },
+  {
+    "id": "04",
+    "title": "Quelques exemples d’IA",
+    "duration": 50,
+    "text": "On rencontre déjà des systèmes d’IA dans plusieurs types d’outils. Certains aident à reconnaître une commande vocale, à filtrer des messages indésirables ou à recommander une vidéo. D’autres peuvent analyser une image ou classer des informations. Ces exemples ne fonctionnent pas tous de la même manière. Pour cette première leçon, retenons une distinction utile : certaines IA servent surtout à analyser, classer ou recommander ; les IA génératives, elles, peuvent produire un nouveau contenu à partir d’une consigne."
+  },
+  {
+    "id": "05",
+    "title": "L’IA générative",
+    "duration": 60,
+    "text": "L’IA générative peut créer, par exemple, un brouillon de texte, une image, une voix ou du code. ChatGPT est un exemple de chatbot qui peut générer des réponses écrites à partir de tes consignes. Il existe aussi d’autres outils, et leurs fonctions peuvent changer avec le temps. Pour répondre, beaucoup de modèles de langage apprennent des régularités dans de très grandes quantités de textes. Quand on leur écrit une demande, ils construisent une réponse morceau par morceau en s’appuyant sur la consigne et le contexte. Cela peut produire un texte très convaincant, mais convaincant ne veut pas toujours dire vrai."
+  },
+  {
+    "id": "06",
+    "title": "Exemple : une boutique à Dakar",
+    "duration": 70,
+    "text": "Prenons un exemple fictif. Imaginons une petite boutique de vêtements à Dakar qui veut annoncer une nouvelle collection. On peut demander à un outil d’IA de préparer un premier brouillon de message WhatsApp. Par exemple : Tu aides une petite boutique de vêtements à Dakar. Rédige un message WhatsApp de 50 mots maximum pour annoncer une nouvelle collection. Utilise un ton chaleureux et un français simple. N’invente ni prix, ni adresse, ni numéro de téléphone ; laisse des espaces à compléter. L’outil peut proposer une base de message. La personne qui gère la boutique doit ensuite relire, ajouter les informations exactes et vérifier que le ton lui convient. L’IA aide à préparer un brouillon ; elle ne connaît pas automatiquement les prix, le stock ou les horaires de cette boutique."
+  },
+  {
+    "id": "07",
+    "title": "Écrire une meilleure consigne",
+    "duration": 75,
+    "text": "Pour obtenir une réponse plus utile, donne à l’outil un contexte, une tâche précise, le format souhaité et les limites à respecter. Tu peux retenir quatre questions : Premièrement, quel est le contexte ? Deuxièmement, quelle tâche veux-tu réaliser ? Troisièmement, à qui s’adresse le résultat et sous quelle forme le veux-tu ? Enfin, que doit éviter l’outil ou que dois-tu vérifier ? Par exemple : Je prépare un atelier d’initiation à l’IA pour des adultes débutants à Dakar. Propose un plan de cours de 45 minutes, en français, avec trois parties et un exercice pratique. N’invente pas de prix ni d’informations sur un établissement ; indique clairement les éléments à vérifier. Plus ta demande est claire, plus tu facilites la réponse. Mais une consigne détaillée ne garantit pas que tout sera exact."
+  },
+  {
+    "id": "08",
+    "title": "Limites et bons réflexes",
+    "duration": 70,
+    "text": "Première limite : une IA peut produire une information fausse, incomplète ou dépassée. Parfois, elle la présente avec beaucoup d’assurance. Vérifie donc les dates, les prix, les chiffres, les noms et les faits importants à partir de sources fiables. Deuxième limite : l’outil ne connaît pas forcément tout le contexte local ou personnel de ta demande. Ajoute uniquement les informations nécessaires, sans transmettre de données confidentielles. Évite par exemple de copier dans un chatbot un mot de passe, une pièce d’identité, un numéro personnel, un dossier scolaire nominatif ou des informations privées sur un client. Si tu utilises l’IA dans un cours ou au travail, respecte aussi les consignes de ton établissement ou de ton organisation. Enfin, garde ton jugement. L’IA peut t’aider à expliquer une notion, proposer des idées ou préparer un brouillon ; c’est à toi de vérifier et de décider quoi utiliser."
+  },
+  {
+    "id": "09",
+    "title": "Petit exercice",
+    "duration": 40,
+    "text": "À ton tour : choisis une tâche simple, comme demander une explication d’un sujet que tu apprends ou préparer un message fictif pour une petite activité. Écris le contexte, la tâche, le format que tu souhaites et une limite à respecter. Lis ensuite la réponse : qu’est-ce qui doit être vérifié ? Et quelles informations personnelles as-tu évité de partager ? Tu peux refaire l’exercice avec un autre exemple, puis comparer les résultats."
+  },
+  {
+    "id": "10",
+    "title": "Résumé et conclusion",
+    "duration": 50,
+    "text": "Résumons. L’intelligence artificielle regroupe différentes technologies qui peuvent analyser des informations ou aider à réaliser certaines tâches. L’IA générative peut produire du contenu à partir d’une consigne. Elle peut être utile pour préparer un brouillon ou comprendre un sujet, mais elle peut aussi se tromper : vérifie ses réponses et protège tes données. Si tu veux la prochaine leçon, on va apprendre à utiliser ChatGPT pas à pas et à formuler de bonnes demandes. Dis-moi en commentaire quelle tâche tu aimerais apprendre à réaliser avec l’IA, à Dakar ou ailleurs au Sénégal. Abonne-toi à ATHENA pour suivre les prochains cours. ATHENA est réalisée en collaboration avec LAMEX INSTITUT, aux Parcelles Assainies, à Dakar. À très bientôt !"
+  }
+]

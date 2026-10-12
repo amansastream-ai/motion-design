@@ -1,0 +1,584 @@
+1
+00:00:00,000 --> 00:00:05,187
+Tu entends parler de ChatGPT, d’images créées
+par l’intelligence artificielle et
+
+2
+00:00:05,187 --> 00:00:08,516
+d’outils qui peuvent aider à faire certaines
+tâches.
+
+3
+00:00:08,516 --> 00:00:11,922
+Mais l’intelligence artificielle, c’est quoi
+au juste ?
+
+4
+00:00:11,922 --> 00:00:14,941
+Est-ce qu’une machine pense comme un être
+humain ?
+
+5
+00:00:14,941 --> 00:00:18,889
+Dans cette leçon, on va expliquer les bases
+simplement, voir un
+
+6
+00:00:18,889 --> 00:00:22,528
+exemple concret et apprendre pourquoi il faut
+vérifier
+
+7
+00:00:22,528 --> 00:00:23,844
+les réponses d’une IA.
+
+8
+00:00:25,000 --> 00:00:30,491
+Bienvenue sur ATHENA, une chaîne réalisée en
+collaboration avec LAMEX INSTITUT,
+
+9
+00:00:30,491 --> 00:00:34,507
+centre de formation situé aux Parcelles
+Assainies, à Dakar.
+
+10
+00:00:34,507 --> 00:00:40,325
+Ici, on apprend l’intelligence artificielle
+sans jargon, avec des exemples pratiques
+
+11
+00:00:40,325 --> 00:00:44,751
+pour les études, la formation et les activités
+professionnelles.
+
+12
+00:00:44,751 --> 00:00:47,374
+Commençons par une définition simple.
+
+13
+00:00:50,000 --> 00:00:55,154
+L’intelligence artificielle, ou IA, désigne un
+ensemble de méthodes et de
+
+14
+00:00:55,154 --> 00:01:01,339
+programmes informatiques qui permettent à une
+machine d’effectuer certaines tâches
+
+15
+00:01:01,339 --> 00:01:04,861
+que l’on associe souvent à l’intelligence
+humaine.
+
+16
+00:01:04,861 --> 00:01:05,720
+Par exemple :
+
+17
+00:01:05,720 --> 00:01:11,819
+reconnaître des formes, comprendre une
+question, classer des informations, proposer
+
+18
+00:01:11,819 --> 00:01:14,739
+une recommandation ou produire un texte.
+
+19
+00:01:14,739 --> 00:01:16,973
+L’IA n’est pas forcément un robot.
+
+20
+00:01:16,973 --> 00:01:21,096
+Elle peut être intégrée dans un site, une
+application ou un
+
+21
+00:01:21,096 --> 00:01:25,047
+outil que l’on utilise sur un téléphone ou un
+ordinateur.
+
+22
+00:01:25,047 --> 00:01:25,992
+Et attention :
+
+23
+00:01:25,992 --> 00:01:31,748
+dire qu’un outil utilise l’intelligence
+artificielle ne signifie pas qu’il pense,
+
+24
+00:01:31,748 --> 00:01:35,012
+qu’il ressent des émotions ou qu’il comprend
+le
+
+25
+00:01:35,012 --> 00:01:36,816
+monde comme une personne.
+
+26
+00:01:36,816 --> 00:01:41,111
+Il traite des informations selon son
+fonctionnement et les
+
+27
+00:01:41,111 --> 00:01:42,915
+consignes qu’on lui donne.
+
+28
+00:01:55,000 --> 00:01:59,451
+On rencontre déjà des systèmes d’IA dans
+plusieurs types d’outils.
+
+29
+00:01:59,451 --> 00:02:04,562
+Certains aident à reconnaître une commande
+vocale, à filtrer des messages
+
+30
+00:02:04,562 --> 00:02:07,364
+indésirables ou à recommander une vidéo.
+
+31
+00:02:07,364 --> 00:02:11,816
+D’autres peuvent analyser une image ou classer
+des informations.
+
+32
+00:02:11,816 --> 00:02:15,690
+Ces exemples ne fonctionnent pas tous de la
+même manière.
+
+33
+00:02:15,690 --> 00:02:19,729
+Pour cette première leçon, retenons une
+distinction utile :
+
+34
+00:02:19,729 --> 00:02:24,180
+certaines IA servent surtout à analyser,
+classer ou recommander ;
+
+35
+00:02:24,180 --> 00:02:28,466
+les IA génératives, elles, peuvent produire un
+nouveau contenu
+
+36
+00:02:28,466 --> 00:02:30,032
+à partir d’une consigne.
+
+37
+00:02:45,000 --> 00:02:49,063
+L’IA générative peut créer, par exemple, un
+brouillon de texte, une
+
+38
+00:02:49,063 --> 00:02:50,597
+image, une voix ou du code.
+
+39
+00:02:50,597 --> 00:02:54,660
+ChatGPT est un exemple de chatbot qui peut
+générer des réponses
+
+40
+00:02:54,660 --> 00:02:56,806
+écrites à partir de tes consignes.
+
+41
+00:02:56,806 --> 00:03:00,563
+Il existe aussi d’autres outils, et leurs
+fonctions peuvent
+
+42
+00:03:00,563 --> 00:03:01,943
+changer avec le temps.
+
+43
+00:03:01,943 --> 00:03:07,003
+Pour répondre, beaucoup de modèles de langage
+apprennent des régularités dans
+
+44
+00:03:07,003 --> 00:03:09,303
+de très grandes quantités de textes.
+
+45
+00:03:09,303 --> 00:03:13,749
+Quand on leur écrit une demande, ils
+construisent une réponse morceau
+
+46
+00:03:13,749 --> 00:03:17,276
+par morceau en s’appuyant sur la consigne et
+le contexte.
+
+47
+00:03:17,276 --> 00:03:21,799
+Cela peut produire un texte très convaincant,
+mais convaincant ne veut
+
+48
+00:03:21,799 --> 00:03:23,256
+pas toujours dire vrai.
+
+49
+00:03:45,000 --> 00:03:46,862
+Prenons un exemple fictif.
+
+50
+00:03:46,862 --> 00:03:51,095
+Imaginons une petite boutique de vêtements à
+Dakar qui veut
+
+51
+00:03:51,095 --> 00:03:53,550
+annoncer une nouvelle collection.
+
+52
+00:03:53,550 --> 00:03:57,275
+On peut demander à un outil d’IA de préparer
+un premier
+
+53
+00:03:57,275 --> 00:03:59,476
+brouillon de message WhatsApp.
+
+54
+00:03:59,476 --> 00:04:00,323
+Par exemple :
+
+55
+00:04:00,323 --> 00:04:03,794
+Tu aides une petite boutique de vêtements à
+Dakar.
+
+56
+00:04:03,794 --> 00:04:07,349
+Rédige un message WhatsApp de 50 mots maximum
+pour
+
+57
+00:04:07,349 --> 00:04:09,804
+annoncer une nouvelle collection.
+
+58
+00:04:09,804 --> 00:04:13,191
+Utilise un ton chaleureux et un français
+simple.
+
+59
+00:04:13,191 --> 00:04:16,746
+N’invente ni prix, ni adresse, ni numéro de
+téléphone ;
+
+60
+00:04:16,746 --> 00:04:18,947
+laisse des espaces à compléter.
+
+61
+00:04:18,947 --> 00:04:21,826
+L’outil peut proposer une base de message.
+
+62
+00:04:21,826 --> 00:04:26,397
+La personne qui gère la boutique doit ensuite
+relire, ajouter les
+
+63
+00:04:26,397 --> 00:04:30,461
+informations exactes et vérifier que le ton
+lui convient.
+
+64
+00:04:30,461 --> 00:04:32,747
+L’IA aide à préparer un brouillon ;
+
+65
+00:04:32,747 --> 00:04:36,979
+elle ne connaît pas automatiquement les prix,
+le stock ou les
+
+66
+00:04:36,979 --> 00:04:38,926
+horaires de cette boutique.
+
+67
+00:04:55,000 --> 00:04:59,570
+Pour obtenir une réponse plus utile, donne à
+l’outil un contexte,
+
+68
+00:04:59,570 --> 00:05:04,228
+une tâche précise, le format souhaité et les
+limites à respecter.
+
+69
+00:05:04,228 --> 00:05:06,689
+Tu peux retenir quatre questions :
+
+70
+00:05:06,689 --> 00:05:09,238
+Premièrement, quel est le contexte ?
+
+71
+00:05:09,238 --> 00:05:12,490
+Deuxièmement, quelle tâche veux-tu réaliser ?
+
+72
+00:05:12,490 --> 00:05:16,621
+Troisièmement, à qui s’adresse le résultat et
+sous quelle
+
+73
+00:05:16,621 --> 00:05:17,763
+forme le veux-tu ?
+
+74
+00:05:17,763 --> 00:05:21,542
+Enfin, que doit éviter l’outil ou que dois-tu
+vérifier ?
+
+75
+00:05:21,542 --> 00:05:22,421
+Par exemple :
+
+76
+00:05:22,421 --> 00:05:25,937
+Je prépare un atelier d’initiation à l’IA pour
+des
+
+77
+00:05:25,937 --> 00:05:27,870
+adultes débutants à Dakar.
+
+78
+00:05:27,870 --> 00:05:31,825
+Propose un plan de cours de 45 minutes, en
+français, avec
+
+79
+00:05:31,825 --> 00:05:34,638
+trois parties et un exercice pratique.
+
+80
+00:05:34,638 --> 00:05:39,032
+N’invente pas de prix ni d’informations sur un
+établissement ;
+
+81
+00:05:39,032 --> 00:05:42,284
+indique clairement les éléments à vérifier.
+
+82
+00:05:42,284 --> 00:05:46,327
+Plus ta demande est claire, plus tu facilites
+la réponse.
+
+83
+00:05:46,327 --> 00:05:50,985
+Mais une consigne détaillée ne garantit pas
+que tout sera exact.
+
+84
+00:06:10,000 --> 00:06:11,199
+Première limite :
+
+85
+00:06:11,199 --> 00:06:16,080
+une IA peut produire une information fausse,
+incomplète ou dépassée.
+
+86
+00:06:16,080 --> 00:06:19,763
+Parfois, elle la présente avec beaucoup
+d’assurance.
+
+87
+00:06:19,763 --> 00:06:23,702
+Vérifie donc les dates, les prix, les
+chiffres, les noms et
+
+88
+00:06:23,702 --> 00:06:27,213
+les faits importants à partir de sources
+fiables.
+
+89
+00:06:27,213 --> 00:06:28,412
+Deuxième limite :
+
+90
+00:06:28,412 --> 00:06:32,523
+l’outil ne connaît pas forcément tout le
+contexte local ou
+
+91
+00:06:32,523 --> 00:06:34,235
+personnel de ta demande.
+
+92
+00:06:34,235 --> 00:06:38,175
+Ajoute uniquement les informations
+nécessaires, sans
+
+93
+00:06:38,175 --> 00:06:41,172
+transmettre de données confidentielles.
+
+94
+00:06:41,172 --> 00:06:44,854
+Évite par exemple de copier dans un chatbot un
+mot de
+
+95
+00:06:44,854 --> 00:06:50,421
+passe, une pièce d’identité, un numéro
+personnel, un dossier scolaire nominatif
+
+96
+00:06:50,421 --> 00:06:53,418
+ou des informations privées sur un client.
+
+97
+00:06:53,418 --> 00:06:57,272
+Si tu utilises l’IA dans un cours ou au
+travail, respecte
+
+98
+00:06:57,272 --> 00:07:01,896
+aussi les consignes de ton établissement ou de
+ton organisation.
+
+99
+00:07:01,896 --> 00:07:03,695
+Enfin, garde ton jugement.
+
+100
+00:07:03,695 --> 00:07:07,976
+L’IA peut t’aider à expliquer une notion,
+proposer des idées ou
+
+101
+00:07:07,976 --> 00:07:09,604
+préparer un brouillon ;
+
+102
+00:07:09,604 --> 00:07:13,115
+c’est à toi de vérifier et de décider quoi
+utiliser.
+
+103
+00:07:20,000 --> 00:07:20,693
+À ton tour :
+
+104
+00:07:20,693 --> 00:07:25,805
+choisis une tâche simple, comme demander une
+explication d’un sujet que
+
+105
+00:07:25,805 --> 00:07:30,656
+tu apprends ou préparer un message fictif pour
+une petite activité.
+
+106
+00:07:30,656 --> 00:07:34,642
+Écris le contexte, la tâche, le format que tu
+souhaites et
+
+107
+00:07:34,642 --> 00:07:36,288
+une limite à respecter.
+
+108
+00:07:36,288 --> 00:07:37,934
+Lis ensuite la réponse :
+
+109
+00:07:37,934 --> 00:07:40,100
+qu’est-ce qui doit être vérifié ?
+
+110
+00:07:40,100 --> 00:07:44,605
+Et quelles informations personnelles as-tu
+évité de partager ?
+
+111
+00:07:44,605 --> 00:07:48,071
+Tu peux refaire l’exercice avec un autre
+exemple,
+
+112
+00:07:48,071 --> 00:07:50,150
+puis comparer les résultats.
+
+113
+00:08:00,000 --> 00:08:00,649
+Résumons.
+
+114
+00:08:00,649 --> 00:08:06,651
+L’intelligence artificielle regroupe
+différentes technologies qui peuvent analyser
+
+115
+00:08:06,651 --> 00:08:10,383
+des informations ou aider à réaliser certaines
+tâches.
+
+116
+00:08:10,383 --> 00:08:14,682
+L’IA générative peut produire du contenu à
+partir d’une consigne.
+
+117
+00:08:14,682 --> 00:08:19,062
+Elle peut être utile pour préparer un
+brouillon ou comprendre un
+
+118
+00:08:19,062 --> 00:08:21,577
+sujet, mais elle peut aussi se tromper :
+
+119
+00:08:21,577 --> 00:08:24,578
+vérifie ses réponses et protège tes données.
+
+120
+00:08:24,578 --> 00:08:28,309
+Si tu veux la prochaine leçon, on va apprendre
+à utiliser
+
+121
+00:08:28,309 --> 00:08:31,635
+ChatGPT pas à pas et à formuler de bonnes
+demandes.
+
+122
+00:08:31,635 --> 00:08:36,664
+Dis-moi en commentaire quelle tâche tu
+aimerais apprendre à réaliser avec
+
+123
+00:08:36,664 --> 00:08:38,936
+l’IA, à Dakar ou ailleurs au Sénégal.
+
+124
+00:08:38,936 --> 00:08:42,424
+Abonne-toi à ATHENA pour suivre les prochains
+cours.
+
+125
+00:08:42,424 --> 00:08:46,642
+ATHENA est réalisée en collaboration avec
+LAMEX INSTITUT, aux
+
+126
+00:08:46,642 --> 00:08:48,588
+Parcelles Assainies, à Dakar.
+
+127
+00:08:48,588 --> 00:08:49,562
+À très bientôt !
