@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunu École — Motion Design 60s | Présentation Directeurs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="./gsap.min.js"></script>
+<style>
+:root{
+  --paper:#FBF8F0; --paper-dim:#F3EEDF; --paper-2:#EDE7D3;
+  --board:#1F3A2E; --board-dark:#14251D; --board-light:#2C4E3C;
+  --chalk:#F4F1E4; --ink:#1A1A18; --ink-soft:#57534A; --muted:#8A8270; --line:#D8D0B8;
+  --ochre:#B5541F; --ochre-dark:#8E3F14; --ochre-dim:#F3E3D3;
+  --stamp:#A8322D; --stamp-dim:#FBE9E7;
+  --good:#1B6B4A; --good-dim:#DCF0E4;
+  --blue:#1E3A5F; --gold:#C5A254;
+  --ease-standard:cubic-bezier(0.2,0,0,1);
+  --ease-emphasized:cubic-bezier(0.05,0.7,0.1,1);
+  --ease-decelerate:cubic-bezier(0,0,0,1);
+  --ease-premium:cubic-bezier(0.4,0,0.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  background:#0F1A15; color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  display:flex; flex-direction:column;
+}
+/* top bar */
+.topbar{
+  height:52px; background:rgba(15,26,21,0.9); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(244,241,228,0.08);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; flex-shrink:0; z-index:20;
+}
+.brand{
+  display:flex; align-items:center; gap:10px; color:var(--chalk);
+}
+.brand-mark{
+  width:34px; height:34px; background:var(--ochre); border-radius:3px;
+  display:grid; place-items:center; font-family:'Fraunces',serif; font-weight:700; font-size:17px; color:#fff;
+}
+.brand-txt{font-family:'Fraunces',serif; font-weight:700; font-size:18px; letter-spacing:-0.02em}
+.brand-txt small{font-family:'IBM Plex Sans',sans-serif; font-weight:500; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.6; margin-left:8px}
+.top-actions{display:flex; gap:8px; align-items:center}
+.btn{
+  display:inline-flex; align-items:center; gap:7px;
+  border:1px solid transparent; border-radius:100px;
+  padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer;
+  transition:all 140ms var(--ease-standard);
+}
+.btn-primary{background:var(--ochre); color:#fff}
+.btn-primary:hover{background:var(--ochre-dark); transform:translateY(-1px)}
+.btn-ghost{background:rgba(255,255,255,0.06); color:var(--chalk); border-color:rgba(255,255,255,0.12)}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.btn-outline{background:#fff; color:var(--ink); border-color:var(--line)}
+.btn:disabled{opacity:0.5; cursor:not-allowed}
+.time{font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(244,241,228,0.6); letter-spacing:0.04em}
+
+/* stage wrapper */
+.stage-wrap{
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:18px; background:
+    radial-gradient(1200px 600px at 70% -10%, rgba(181,84,31,0.08), transparent 60%),
+    radial-gradient(900px 500px at 0% 100%, rgba(31,58,46,0.5), transparent 60%),
+    linear-gradient(180deg, #0F1A15 0%, #162921 100%);
+  position:relative; overflow:hidden;
+}
+.stage{
+  width:min(1280px, 100%); aspect-ratio:16/9; max-height:calc(100vh - 140px);
+  background:var(--paper); border-radius:6px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.08) inset;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+@media (max-width:900px){
+  .stage{aspect-ratio:auto; height:100%; max-height:none; border-radius:0}
+  .stage-wrap{padding:0}
+}
+
+/* progress */
+.progress-track{
+  position:absolute; top:0; left:0; right:0; height:3px; background:rgba(0,0,0,0.06); z-index:10;
+}
+.progress-fill{
+  height:100%; width:0%; background:var(--ochre); transform-origin:left;
+  transition:width 0.1s linear;
+}
+.progress-knob{
+  position:absolute; top:-3px; width:10px; height:10px; background:var(--ochre); border:2px solid #fff; border-radius:50%;
+  box-shadow:0 1px 6px rgba(0,0,0,0.2); transform:translateX(-50%); pointer-events:none;
+}
+
+/* scenes container */
+.scenes{flex:1; position:relative; overflow:hidden}
+.scene{
+  position:absolute; inset:0; padding:44px 48px 36px;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; pointer-events:none;
+  will-change:transform, opacity;
+}
+.scene.active{visibility:visible; pointer-events:auto}
+
+/* ambient */
+.ambient{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:0.6;
+}
+.ambient-blob{
+  position:absolute; border-radius:50%; filter:blur(40px); opacity:0.35;
+  will-change:transform;
+}
+.ambient-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask:radial-gradient(800px 400px at 50% 0%, black, transparent 70%);
+}
+
+/* typography */
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:600;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--ochre);
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+}
+.eyebrow::before{content:''; width:22px; height:1.5px; background:var(--ochre); opacity:0.7}
+.h1{
+  font-family:'Fraunces',serif; font-weight:700; line-height:0.95; letter-spacing:-0.03em;
+  font-size:clamp(32px, 4.2vw, 54px); color:var(--ink); margin-bottom:10px;
+}
+.h1 em{font-family:'Instrument Serif',serif; font-weight:400; font-style:italic; color:var(--ochre)}
+.h2{
+  font-family:'Fraunces',serif; font-weight:600; font-size:26px; line-height:1.1; letter-spacing:-0.02em; margin-bottom:10px
+}
+.lead{font-size:15.5px; line-height:1.5; color:var(--ink-soft); max-width:560px}
+.muted{color:var(--muted)}
+.kicker{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--board); color:var(--chalk); padding:6px 12px; border-radius:100px;
+  font-size:11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+}
+
+/* scene specifics */
+.scene-inner{flex:1; display:flex; gap:32px; align-items:center; min-height:0}
+.scene-text{flex:1; min-width:0}
+.scene-visual{flex:1.05; min-width:0; position:relative; display:flex; align-items:center; justify-content:center}
+.stack{display:flex; flex-direction:column; gap:10px}
+.bullet{
+  display:flex; gap:12px; align-items:flex-start; font-size:13.5px; line-height:1.45; color:var(--ink-soft)
+}
+.bullet i{
+  flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--paper-dim);
+  border:1px solid var(--line); display:grid; place-items:center; font-size:13px; margin-top:1px;
+}
+.bullet b{color:var(--ink)}
+
+/* mock UI */
+.mock{
+  width:100%; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;
+  box-shadow:0 12px 40px rgba(31,58,46,0.12), 0 1px 3px rgba(0,0,0,0.06);
+}
+.mock-head{
+  height:38px; background:var(--board); display:flex; align-items:center; gap:8px; padding:0 14px; color:var(--chalk);
+  font-size:12px; font-weight:600; letter-spacing:0.02em;
+}
+.mock-dots{display:flex; gap:6px}
+.mock-dots span{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25)}
+.mock-body{padding:14px; background:#fff}
+.mini-stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px}
+.mini-stat{background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--ochre); border-radius:6px; padding:10px 12px}
+.mini-stat .v{font-family:'Fraunces',serif; font-weight:700; font-size:20px; line-height:1}
+.mini-stat .l{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-top:4px; font-weight:600}
+.mini-table{width:100%; border-collapse:collapse; font-size:11px}
+.mini-table th{font-size:9px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); text-align:left; padding:6px 8px; background:var(--paper-dim); border-bottom:1px solid var(--line)}
+.mini-table td{padding:7px 8px; border-bottom:1px solid var(--line); font-size:12px}
+.badge{display:inline-flex; align-items:center; padding:2px 8px; border-radius:100px; font-size:10px; font-weight:700}
+.badge-ok{background:var(--good-dim); color:var(--good)}
+.badge-warn{background:var(--ochre-dim); color:var(--ochre)}
+.badge-danger{background:var(--stamp-dim); color:var(--stamp)}
+
+/* chaos cards */
+.chaos-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:100%}
+.chaos-card{
+  background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px 14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06); text-align:center;
+}
+.chaos-card .ic{font-size:22px; margin-bottom:8px}
+.chaos-card h4{font-family:'Fraunces',serif; font-size:14px; margin-bottom:4px}
+.chaos-card p{font-size:12px; color:var(--muted); line-height:1.4}
+
+/* module grid */
+.module-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:100%}
+.module-card{
+  background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px;
+  display:flex; gap:12px; align-items:flex-start;
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
+}
+.module-card .ico{
+  width:36px; height:36px; border-radius:8px; display:grid; place-items:center; font-size:16px; flex-shrink:0;
+}
+.module-card h4{font-size:13px; font-weight:700; margin-bottom:2px}
+.module-card p{font-size:11.5px; color:var(--muted); line-height:1.4}
+
+/* phones */
+.phones{display:flex; gap:16px; align-items:flex-end; justify-content:center; width:100%}
+.phone{
+  width:148px; background:#0F1A15; border-radius:18px; padding:6px; border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+.phone-screen{
+  background:#fff; border-radius:14px; overflow:hidden; min-height:220px;
+}
+.phone-head{height:28px; background:var(--board); display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700}
+.phone-body{padding:10px}
+.phone-body .row{height:8px; background:var(--paper-dim); border-radius:4px; margin-bottom:6px}
+.phone-body .row.w60{width:60%} .row.w80{width:80%} .row.w40{width:40%}
+
+/* price stamp */
+.price-wrap{
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+}
+.price{
+  font-family:'Fraunces',serif; font-weight:700; font-size:56px; letter-spacing:-0.04em; line-height:1;
+  color:var(--board); position:relative;
+}
+.price small{font-size:16px; font-weight:600; color:var(--muted); letter-spacing:-0.01em; margin-left:6px}
+.stamp{
+  background:var(--stamp); color:#fff; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700;
+  letter-spacing:0.08em; text-transform:uppercase; padding:6px 10px; border-radius:4px;
+  transform:rotate(-3deg); box-shadow:0 4px 12px rgba(168,50,45,0.3);
+}
+.check-list{list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:10px}
+.check-list li{display:flex; gap:10px; align-items:center; font-size:13px; font-weight:500}
+.check-list li span{width:20px; height:20px; border-radius:50%; background:var(--good-dim); color:var(--good); display:grid; place-items:center; font-size:11px; font-weight:700}
+
+/* subtitle bar */
+.subtitle-bar{
+  height:44px; background:var(--board); color:var(--chalk);
+  display:flex; align-items:center; gap:14px; padding:0 18px;
+  font-size:13px; line-height:1.4; border-top:1px solid rgba(255,255,255,0.06);
+}
+.subtitle-bar .dot{width:8px; height:8px; border-radius:50%; background:var(--ochre); box-shadow:0 0 0 4px rgba(181,84,31,0.2); flex-shrink:0; animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{transform:scale(1); opacity:1} 50%{transform:scale(1.1); opacity:0.9}}
+.subtitle-text{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.subtitle-hint{margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.5}
+
+/* controls bottom */
+.controls{
+  height:54px; background:#0F1A15; border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; gap:12px; padding:0 16px; flex-shrink:0;
+}
+.ctrl-btn{
+  width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06); color:#fff; display:grid; place-items:center; cursor:pointer;
+  transition:all 140ms var(--ease-standard); flex-shrink:0;
+}
+.ctrl-btn:hover{background:rgba(255,255,255,0.1); transform:translateY(-1px)}
+.ctrl-btn.primary{background:var(--ochre); border-color:var(--ochre); color:#fff}
+.scrub{flex:1; height:36px; display:flex; align-items:center; gap:10px; min-width:0}
+.scrub-track{flex:1; height:4px; background:rgba(255,255,255,0.12); border-radius:100px; position:relative; cursor:pointer; overflow:visible}
+.scrub-fill{position:absolute; left:0; top:0; bottom:0; background:var(--ochre); border-radius:100px; width:0%}
+.scrub-thumb{position:absolute; top:50%; width:12px; height:12px; background:#fff; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 1px 6px rgba(0,0,0,0.3); pointer-events:none}
+.chapters{display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; flex-shrink:0; max-width:40%}
+.chapters::-webkit-scrollbar{display:none}
+.chip{
+  white-space:nowrap; padding:6px 10px; border-radius:100px; font-size:11px; font-weight:600;
+  background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.08); cursor:pointer;
+  transition:all 140ms var(--ease-standard);
+}
+.chip.active{background:var(--ochre); color:#fff; border-color:var(--ochre)}
+
+/* timeline markers */
+.marker{position:absolute; top:-2px; bottom:-2px; width:2px; background:rgba(255,255,255,0.3); transform:translateX(-50%); border-radius:2px}
+
+/* reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .ambient-blob{display:none}
+  .scene{transition:none !important}
+}
+
+/* micro animations helpers */
+.reveal{opacity:0; transform:translateY(14px)}
+.float{animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)}}
+.shimmer{
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  background-size:200% 100%; animation:shimmer 2s infinite linear; -webkit-background-clip:text; background-clip:text;
+}
+@keyframes shimmer{0%{background-position:-200% 0} 100%{background-position:200% 0}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark" style="overflow:hidden; background:#fff; border:1px solid rgba(255,255,255,0.15)"><img src="./bon.png" alt="Logo" style="width:100%; height:100%; object-fit:contain; padding:2px;" onerror="this.style.display='none'; this.parentElement.textContent='S'; this.parentElement.style.background='var(--ochre)'; this.parentElement.style.color='#fff'; this.parentElement.style.display='grid'; this.parentElement.style.placeItems='center';"></div>
+    <div class="brand-txt">Sunu École <small>présentation directeurs — 60s</small></div>
+  </div>
+  <div class="top-actions">
+    <span class="time" id="timeDisplay">00:00 / 01:00</span>
+    <button class="btn btn-ghost" id="btnShare" title="Copier le lien">⧉ Partager</button>
+    <button class="btn btn-primary" id="btnCTA">Demander une démo →</button>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div><div class="progress-knob" id="progressKnob" style="left:0%"></div></div>
+
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-blob" style="width:420px;height:420px; background:radial-gradient(circle, rgba(181,84,31,0.16), transparent 70%); left:-60px; top:-80px;"></div>
+      <div class="ambient-blob" style="width:520px;height:520px; background:radial-gradient(circle, rgba(31,58,46,0.12), transparent 70%); right:-80px; bottom:-100px;"></div>
+      <div class="ambient-blob" id="blob3" style="width:300px;height:300px; background:radial-gradient(circle, rgba(197,162,84,0.10), transparent 70%); left:45%; top:30%;"></div>
+    </div>
+
+    <div class="scenes" id="scenes">
+
+      <!-- SCENE 0 : INTRO 0-6s -->
+      <section class="scene active" data-scene="0" data-start="0" data-end="6">
+        <div class="eyebrow">Plateforme scolaire • Made in Sénégal</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <div class="kicker" style="margin-bottom:14px;">✦ Nouveau • Sunu École par Ardoise</div>
+            <h1 class="h1">Pilotez votre<br><em>école entière</em><br>dans une seule<br>plateforme.</h1>
+            <p class="lead" style="margin-top:12px;">Finis les cahiers, les fichiers Excel et les groupes WhatsApp. <b style="color:var(--ink)">Tout est centralisé, clair, et sous contrôle.</b></p>
+            <div style="display:flex; gap:10px; margin-top:18px;">
+              <span class="badge badge-ok">✓ Sans abonnement mensuel</span>
+              <span class="badge" style="background:var(--board); color:var(--chalk)">60 secondes pour comprendre</span>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div class="mock float" style="max-width:460px; transform:rotate(-1deg);">
+              <div class="mock-head">
+                <div class="mock-dots"><span></span><span></span><span></span></div>
+                <span style="margin-left:8px;">Sunu École — Tableau de bord Direction</span>
+                <span style="margin-left:auto; opacity:0.7; font-size:10px;">● En ligne</span>
+              </div>
+              <div class="mock-body">
+                <div class="mini-stat-row">
+                  <div class="mini-stat"><div class="v" data-count="248">248</div><div class="l">Élèves</div></div>
+                  <div class="mini-stat" style="border-left-color:var(--good)"><div class="v">12</div><div class="l">Classes</div></div>
+                  <div class="mini-stat" style="border-left-color:var(--stamp)"><div class="v">96%</div><div class="l">Taux paiement</div></div>
+                </div>
+                <table class="mini-table">
+                  <thead><tr><th>Classe</th><th>Présents</th><th>Moyenne</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>CM2 A</b></td><td><span class="badge badge-ok">28/30</span></td><td>13.4</td></tr>
+                    <tr><td><b>6e B</b></td><td><span class="badge badge-warn">22/26</span></td><td>11.9</td></tr>
+                    <tr><td><b>Tle S</b></td><td><span class="badge badge-ok">31/32</span></td><td>12.8</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:10px; display:flex; gap:6px;">
+                  <span class="badge badge-ok">● Paiements Mobile Money</span>
+                  <span class="badge badge-warn">3 relances automatiques</span>
+                </div>
+              </div>
+            </div>
+            <!-- floating badge -->
+            <div style="position:absolute; right:8px; bottom:18px; background:var(--ochre); color:#fff; padding:10px 12px; border-radius:10px; font-size:11px; font-weight:700; box-shadow:0 8px 20px rgba(181,84,31,0.3); transform:rotate(2deg);" class="reveal" data-reveal>
+              ⚡ Installation en 24h
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:auto; padding-top:12px; border-top:1px dashed var(--line);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted)">Conçu pour les directeurs, surveillants & comptables</span>
+          <span style="margin-left:auto; font-size:11px; color:var(--muted)">01 — Introduction</span>
+        </div>
+      </section>
+
+      <!-- SCENE 1 : LE CHAOS 6-10.5s -->
+      <section class="scene" data-scene="1" data-start="6" data-end="10.5">
+        <div class="eyebrow">Le quotidien sans Sunu École</div>
+        <h2 class="h2">Vous connaissez <em style="color:var(--stamp); font-family:'Instrument Serif',serif; font-weight:400;">ce chaos ?</em></h2>
+        <p class="lead">Cahiers qui s'empilent, paiements en retard, bulletins faits à la main jusqu'à 2h du matin…</p>
+        <div class="scene-inner" style="margin-top:18px;">
+          <div class="chaos-grid" id="chaosGrid">
+            <div class="chaos-card" data-chaos>
+              <div class="ic">📒</div>
+              <h4>Cahiers & Excel</h4>
+              <p>Notes dispersées, erreurs de calcul, doubles saisies</p>
+            </div>
+            <div class="chaos-card" data-chaos>
+              <div class="ic">💸</div>
+              <h4>Paiements en retard</h4>
+              <p>Relances téléphoniques, reçus perdus, trésorerie floue</p>
+            </div>
+            <div class="chaos-card" data-chaos>
+              <div class="ic">💬</div>
+              <h4>WhatsApp partout</h4>
+              <p>Parents mal informés, absences non justifiées</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:18px; text-align:center;">
+          <div style="display:inline-flex; align-items:center; gap:10px; background:var(--board); color:var(--chalk); padding:10px 18px; border-radius:100px; font-size:13px; font-weight:600;" id="chaosResolve">
+            <span>→</span> Sunu École réunit tout, <span style="color:var(--ochre-dim)">en un seul endroit sécurisé</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 2 : PILOTAGE & SCOLARITÉ 10.5-18s -->
+      <section class="scene" data-scene="2" data-start="10.5" data-end="18">
+        <div class="eyebrow">Pilotage • Scolarité</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <h2 class="h2">Un <em style="color:var(--ochre); font-family:'Instrument Serif',serif; font-weight:400;">pilotage</em> à 360° de votre école</h2>
+            <div class="stack" style="margin-top:14px;">
+              <div class="bullet"><i>◉</i><span><b>Tableaux de bord par profil</b> — Direction, enseignant, comptable, parent, élève. KPI, tendances, alertes, tâches.</span></div>
+              <div class="bullet"><i>⧉</i><span><b>Scolarité centralisée</b> — Dossiers élèves, inscriptions, fratrie, tuteurs, documents, recherche globale, export CSV.</span></div>
+              <div class="bullet"><i>◎</i><span><b>Gagnez des heures</b> — Recherche instantanée, fratrie liée, documents administratifs en 1 clic.</span></div>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div class="mock" style="max-width:420px;">
+              <div class="mock-head">◉ Pilotage — Vue Direction <span style="margin-left:auto; background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:100px; font-size:10px;">Temps réel</span></div>
+              <div class="mock-body">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+                  <div class="mini-stat" style="padding:8px 10px"><div class="v" style="font-size:16px;">18 absences</div><div class="l">Aujourd'hui • 3 à justifier</div></div>
+                  <div class="mini-stat" style="border-left-color:var(--good); padding:8px 10px"><div class="v" style="font-size:16px;">+12% encaissé</div><div class="l">vs. mois dernier</div></div>
+                </div>
+                <div style="background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:8px;">
+                  <div style="font-size:11px; font-weight:700; margin-bottom:6px;">Alertes</div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <span class="badge badge-danger">● 3 impayés critiques</span>
+                    <span class="badge badge-warn">● Conseil de classe demain</span>
+                    <span class="badge badge-ok">● Bulletin Tle prêt</span>
+                  </div>
+                </div>
+                <div style="height:6px; background:var(--paper-dim); border-radius:100px; overflow:hidden;">
+                  <div style="width:72%; height:100%; background:var(--ochre); border-radius:100px;"></div>
+                </div>
+                <div style="font-size:10px; color:var(--muted); margin-top:4px; display:flex; justify-content:space-between;"><span>Progression annuelle</span><span>72%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 3 : PÉDAGOGIE 18-25.5s -->
+      <section class="scene" data-scene="3" data-start="18" data-end="25.5">
+        <div class="eyebrow">Pédagogie — Le cœur du métier</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <h2 class="h2">La <em style="color:var(--ochre); font-family:'Instrument Serif',serif; font-weight:400;">pédagogie</em> sans friction</h2>
+            <div class="stack" style="margin-top:14px;">
+              <div class="bullet"><i>✓</i><span><b>Appel ultra-rapide</b> — Saisie clavier, mode hors-ligne. Même sans connexion.</span></div>
+              <div class="bullet"><i>✎</i><span><b>Notes & moyennes pondérées</b> — Devoirs, compos, coefficients, bulletins A4 imprimables.</span></div>
+              <div class="bullet"><i>◐</i><span><b>Emploi du temps intelligent</b> — Détection automatique des conflits, cahier de textes, devoirs.</span></div>
+            </div>
+            <div style="margin-top:14px; display:inline-flex; gap:6px; flex-wrap:wrap;">
+              <span class="badge badge-ok">Conseil de classe inclus</span>
+              <span class="badge" style="background:var(--paper-dim); color:var(--ink-soft)">Bulletin prêt en 1 clic</span>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div class="mock" style="max-width:460px;">
+              <div class="mock-head">✎ Saisie des notes — CM2 A • Trimestre 1</div>
+              <div class="mock-body" style="padding:10px;">
+                <table class="mini-table">
+                  <thead><tr><th>Élève</th><th>Devoir 1</th><th>Comp</th><th>Moy</th><th>App</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>A. Diop</b></td><td>14</td><td>15</td><td><b>14.5</b></td><td><span class="badge badge-ok">Bien</span></td></tr>
+                    <tr><td><b>M. Fall</b></td><td>09</td><td>11</td><td><b>10.0</b></td><td><span class="badge badge-warn">Passable</span></td></tr>
+                    <tr><td><b>F. Sow</b></td><td>16.5</td><td>17</td><td><b>16.7</b></td><td><span class="badge badge-ok">Très Bien</span></td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:10px; background:var(--paper); border:1px dashed var(--line); border-radius:6px; padding:8px 10px; display:flex; align-items:center; gap:8px; font-size:11px;">
+                  <span style="width:22px; height:22px; background:var(--good); color:#fff; border-radius:50%; display:grid; place-items:center; font-weight:700;">↗</span>
+                  <span><b>Emploi du temps :</b> aucun conflit détecté • 32 cours planifiés</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 4 : FINANCES 25.5-33.5s -->
+      <section class="scene" data-scene="4" data-start="25.5" data-end="33.5">
+        <div class="eyebrow">Finances • Le nerf de la guerre • Trésorerie</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <h2 class="h2">Enfin une <em style="color:var(--good); font-family:'Instrument Serif',serif; font-weight:400;">trésorerie</em> claire</h2>
+            <div class="stack" style="margin-top:14px;">
+              <div class="bullet"><i style="background:var(--good-dim); color:var(--good); border-color:transparent">₣</i><span><b>Facturation en masse & échéancier</b> — Types de frais, génération automatique, journal de caisse.</span></div>
+              <div class="bullet"><i style="background:var(--ochre-dim); color:var(--ochre); border-color:transparent">◈</i><span><b>Mobile Money intégré</b> — Initier → Confirmer, reçu imprimable instantané.</span></div>
+              <div class="bullet"><i style="background:var(--stamp-dim); color:var(--stamp); border-color:transparent">✉</i><span><b>Relances SMS chiffrées en FCFA</b> — Avec estimation du coût, suivi trésorerie & dépenses.</span></div>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div style="width:100%; max-width:420px;">
+              <!-- payment flow -->
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                <div style="flex:1; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Facture</div>
+                  <div style="font-family:'Fraunces',serif; font-weight:700; font-size:16px; margin-top:4px;">15 000 F</div>
+                  <div style="font-size:10px; color:var(--muted)">Novembre 2025</div>
+                </div>
+                <div style="color:var(--ochre); font-weight:700;">→</div>
+                <div style="flex:1; background:var(--board); color:var(--chalk); border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:10px; opacity:0.7; text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Mobile Money</div>
+                  <div style="font-weight:700; font-size:13px; margin-top:4px;">●●●  Wave • OM</div>
+                  <div style="font-size:10px; opacity:0.7">Confirmation auto</div>
+                </div>
+                <div style="color:var(--ochre); font-weight:700;">→</div>
+                <div style="flex:1; background:var(--good-dim); border:1px solid #B9D9C6; border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:10px; color:var(--good); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Reçu</div>
+                  <div style="font-weight:700; font-size:13px; margin-top:4px; color:var(--good)">✓ Imprimé</div>
+                  <div style="font-size:10px; color:var(--good)">Journal mis à jour</div>
+                </div>
+              </div>
+              <div class="mock">
+                <div class="mock-body" style="padding:10px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11px; font-weight:700;">Relances SMS — Novembre</span>
+                    <span class="badge badge-warn">Coût estimé : 2 450 F</span>
+                  </div>
+                  <div style="height:6px; background:var(--paper-dim); border-radius:100px; overflow:hidden; margin-bottom:6px;">
+                    <div style="width:84%; height:100%; background:var(--good); border-radius:100px;"></div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted)"><span>32/38 familles relancées</span><span>84% délivrés</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 5 : VIE SCOLAIRE & RH & SERVICES 33.5-39.5s -->
+      <section class="scene" data-scene="5" data-start="33.5" data-end="39.5">
+        <div class="eyebrow">Vie scolaire • RH • Services</div>
+        <h2 class="h2">Tout ce qui fait <em style="color:var(--ochre); font-family:'Instrument Serif',serif; font-weight:400;">vivre</em> l'école</h2>
+        <div class="module-grid" style="margin-top:16px;">
+          <div class="module-card">
+            <div class="ico" style="background:var(--stamp-dim); color:var(--stamp)">⚑</div>
+            <div><h4>Vie scolaire</h4><p>Absences/retards + justification parentale, incidents & sanctions, activités.</p></div>
+          </div>
+          <div class="module-card">
+            <div class="ico" style="background:var(--paper-dim); color:var(--board)">☷</div>
+            <div><h4>RH & Paie conforme</h4><p>Contrats, congés, paie <b>IPRES 5,6% • Impôt 12%</b> au-delà de 300 000 F, bulletins de salaire.</p></div>
+          </div>
+          <div class="module-card">
+            <div class="ico" style="background:var(--good-dim); color:var(--good)">❖</div>
+            <div><h4>Services</h4><p>Bibliothèque (prêts/retours), cantine, transport, infirmerie — suivi quotidien.</p></div>
+          </div>
+          <div class="module-card">
+            <div class="ico" style="background:var(--ochre-dim); color:var(--ochre)">◐</div>
+            <div><h4>Et plus encore</h4><p>Emploi du temps sans conflit, cahier de textes, devoirs, conseils de classe.</p></div>
+          </div>
+        </div>
+        <div style="margin-top:14px; background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:10px 14px; display:flex; gap:12px; align-items:center; font-size:12px;">
+          <span style="background:var(--board); color:var(--chalk); padding:4px 8px; border-radius:100px; font-size:10px; font-weight:700; letter-spacing:0.06em;">RH — Exemple paie</span>
+          <span><b>300 000 F</b> brut → IPRES 16 800 F • Net <b>283 200 F</b> • <span class="badge badge-ok">Conforme Sénégal</span></span>
+        </div>
+      </section>
+
+      <!-- SCENE 6 : PORTAILS & COMMUNICATION 39.5-47s -->
+      <section class="scene" data-scene="6" data-start="39.5" data-end="47">
+        <div class="eyebrow">Portails • Communication</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <h2 class="h2"><em style="color:var(--board); font-family:'Instrument Serif',serif; font-weight:400;">Parents & élèves</em> enfin connectés</h2>
+            <div class="stack" style="margin-top:14px;">
+              <div class="bullet"><i>◑</i><span><b>Espace parent multi-enfants</b> — Paiement en ligne, justification d'absence en 1 tap, bulletins.</span></div>
+              <div class="bullet"><i>◎</i><span><b>Espace élève dédié</b> — Notes, bulletins, emploi du temps, devoirs à faire.</span></div>
+              <div class="bullet"><i>✉</i><span><b>Communication pro</b> — Annonces, notifications, campagnes SMS avec estimation du coût.</span></div>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:6px;">
+              <span class="badge" style="background:var(--board); color:var(--chalk)">Calendrier mois / liste / année scolaire</span>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div class="phones">
+              <div class="phone" style="transform:rotate(-2deg);">
+                <div class="phone-screen">
+                  <div class="phone-head">👨‍👩‍👧 Espace Parent</div>
+                  <div class="phone-body">
+                    <div style="font-size:10px; font-weight:700; margin-bottom:8px;">Mes enfants (2)</div>
+                    <div style="background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:6px;">
+                      <div style="font-size:11px; font-weight:700;">Aminata Diop • CM2 A</div>
+                      <div style="font-size:10px; color:var(--muted)">Moy: 14.2 • Rang 3/28</div>
+                      <div style="margin-top:6px; display:flex; gap:4px;"><span class="badge badge-ok" style="font-size:9px;">Payé Nov</span><span class="badge badge-warn" style="font-size:9px;">Justifier absence</span></div>
+                    </div>
+                    <div style="background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px;">
+                      <div style="font-size:11px; font-weight:700;">Moussa Diop • 6e B</div>
+                      <div style="font-size:10px; color:var(--muted)">Moy: 12.8 • Rang 5/26</div>
+                    </div>
+                    <div style="margin-top:8px; background:var(--ochre); color:#fff; text-align:center; padding:6px; border-radius:6px; font-size:11px; font-weight:700;">Payer 15 000 F →</div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone" style="transform:rotate(1.5deg);">
+                <div class="phone-screen">
+                  <div class="phone-head">🎓 Espace Élève</div>
+                  <div class="phone-body">
+                    <div style="font-size:10px; font-weight:700; margin-bottom:8px;">Aminata • CM2 A</div>
+                    <div style="height:6px; background:var(--paper-dim); border-radius:100px; overflow:hidden; margin-bottom:4px;"><div style="width:78%; height:100%; background:var(--good)"></div></div>
+                    <div style="font-size:9px; color:var(--muted); margin-bottom:8px;">Trimestre 1 • 14.2/20</div>
+                    <div class="row w80"></div><div class="row w60"></div><div class="row w40"></div>
+                    <div style="margin-top:8px; font-size:10px; background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:6px;">📅 Demain : Maths 8h • Français 10h</div>
+                    <div style="margin-top:6px; font-size:10px; background:var(--good-dim); color:var(--good); padding:6px; border-radius:6px; text-align:center; font-weight:700;">✓ Devoirs à jour</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 7 : PARAMÈTRES & CONFIANCE 47-52s -->
+      <section class="scene" data-scene="7" data-start="47" data-end="52">
+        <div class="eyebrow">Paramètres • Sécurité • Sérénité</div>
+        <div class="scene-inner">
+          <div class="scene-text">
+            <h2 class="h2">Une plateforme <em style="color:var(--ochre); font-family:'Instrument Serif',serif; font-weight:400;">qui s'adapte</em> à vous</h2>
+            <div class="stack" style="margin-top:14px;">
+              <div class="bullet"><i>⚙</i><span><b>Paramétrage complet</b> — Établissement, barème de mentions, horaires, modules activés, niveaux/classes/matières.</span></div>
+              <div class="bullet"><i>◈</i><span><b>Droits & abonnements</b> — Comptes & permissions fines, gestion abonnement, journal d'audit.</span></div>
+              <div class="bullet"><i>⬢</i><span><b>Sauvegardes & export</b> — Sauvegardes automatiques, <b>export JSON complet</b> — vos données vous appartiennent.</span></div>
+            </div>
+          </div>
+          <div class="scene-visual">
+            <div style="width:100%; max-width:380px;">
+              <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:10px;">
+                <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:18px;">🛡️</div><div style="font-size:11px; font-weight:700; margin-top:4px;">Journal d'audit</div><div style="font-size:10px; color:var(--muted)">Traçabilité totale</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:18px;">💾</div><div style="font-size:11px; font-weight:700; margin-top:4px;">Sauvegarde auto</div><div style="font-size:10px; color:var(--muted)">Quotidienne</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:18px;">🔑</div><div style="font-size:11px; font-weight:700; margin-top:4px;">Rôles & droits</div><div style="font-size:10px; color:var(--muted)">5 profils</div>
+                </div>
+                <div style="background:var(--board); color:var(--chalk); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:18px;">⤓</div><div style="font-size:11px; font-weight:700; margin-top:4px;">Export JSON</div><div style="font-size:10px; opacity:0.7">Complet</div>
+                </div>
+              </div>
+              <div style="background:var(--paper); border:1px dashed var(--line); border-radius:8px; padding:10px; font-size:11px; color:var(--ink-soft); text-align:center;">
+                Hébergement sécurisé • Données chiffrées • Support WhatsApp réactif
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 8 : CTA 52-60s -->
+      <section class="scene" data-scene="8" data-start="52" data-end="60">
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px; padding:10px 0;">
+          <div class="eyebrow" style="justify-content:center;">Offre de lancement • Écoles du Sénégal</div>
+          <div class="price-wrap" style="justify-content:center;">
+            <div class="price">150 000<small>FCFA</small></div>
+            <div class="stamp">Achat unique</div>
+          </div>
+          <p style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; color:var(--ink);">Pas d'abonnement caché. <span style="color:var(--ochre)">Accès à vie.</span></p>
+          <p class="lead" style="max-width:520px; text-align:center; font-size:13.5px;">Tous les modules inclus. Installation, formation et support compris.<br>Vous payez une fois, vous gérez votre école pour de bon.</p>
+          <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; justify-content:center;">
+            <button class="btn btn-primary" style="padding:12px 22px; font-size:14px;" onclick="window.open('https://github.com','_blank')">Réserver ma démo gratuite →</button>
+            <button class="btn btn-outline" style="padding:12px 22px; font-size:14px;" id="btnReplay2">↺ Revoir la présentation</button>
+          </div>
+          <ul class="check-list" style="flex-direction:row; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:6px;">
+            <li><span>✓</span> Déploiement en 24h</li>
+            <li><span>✓</span> Formation directeurs & secrétaires</li>
+            <li><span>✓</span> Support WhatsApp 7j/7</li>
+          </ul>
+          <div style="margin-top:10px; display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted)">Ils nous font confiance</span>
+            <span style="font-size:12px; color:var(--muted)">•</span>
+            <span style="font-size:12px; font-weight:600;">GS PIA • Les Lauriers • École Sunu</span>
+            <span style="font-size:12px; color:var(--muted)">•</span>
+            <span style="font-size:11px; color:var(--muted)">et 30+ établissements</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--line); font-size:11px; color:var(--muted)">
+          <span><b style="color:var(--ink)">Sunu École</b> — par Ardoise • contact@sunu-ecole.sn • Dakar, Sénégal</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:10px;">© 2026 • Tous droits réservés</span>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="subtitle-bar" id="subtitleBar">
+      <div class="dot"></div>
+      <div class="subtitle-text" id="subtitleText">Bienvenue. En 60 secondes, découvrez comment Sunu École transforme votre quotidien.</div>
+      <div class="subtitle-hint" id="subtitleHint">00:00</div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="ctrl-btn primary" id="btnPlay" title="Lecture / Pause">▶</button>
+  <button class="ctrl-btn" id="btnRestart" title="Recommencer">↺</button>
+  <div class="scrub">
+    <div class="scrub-track" id="scrubTrack">
+      <div class="scrub-fill" id="scrubFill"></div>
+      <div class="scrub-thumb" id="scrubThumb" style="left:0%"></div>
+      <!-- markers -->
+      <div class="marker" style="left:10%"></div>
+      <div class="marker" style="left:17.5%"></div>
+      <div class="marker" style="left:30%"></div>
+      <div class="marker" style="left:42.5%"></div>
+      <div class="marker" style="left:55.8%"></div>
+      <div class="marker" style="left:65.8%"></div>
+      <div class="marker" style="left:78.3%"></div>
+      <div class="marker" style="left:86.6%"></div>
+    </div>
+  </div>
+  <div class="chapters" id="chapters">
+    <button class="chip active" data-time="0">Intro</button>
+    <button class="chip" data-time="6">Chaos</button>
+    <button class="chip" data-time="10.5">Pilotage</button>
+    <button class="chip" data-time="18">Pédagogie</button>
+    <button class="chip" data-time="25.5">Finances</button>
+    <button class="chip" data-time="33.5">Vie scolaire</button>
+    <button class="chip" data-time="39.5">Portails</button>
+    <button class="chip" data-time="47">Sécurité</button>
+    <button class="chip" data-time="52">Offre</button>
+  </div>
+  <button class="ctrl-btn" id="btnSound" title="Son">♪</button>
+  <button class="ctrl-btn" id="btnFS" title="Plein écran">⛶</button>
+</div>
+
+<script>
+const DURATION = 60;
+let current = 0;
+let playing = true;
+let raf = null;
+let lastTs = null;
+
+// subtitles per time
+const subs = [
+  {t:0, text:"Bienvenue. En 60 secondes, découvrez comment Sunu École transforme votre quotidien de directeur."},
+  {t:3, text:"Une seule plateforme pour piloter toute votre école — de l'inscription au bulletin."},
+  {t:6, text:"Sans Sunu École : cahiers, Excel, WhatsApp… tout se disperse, tout se perd."},
+  {t:8.5, text:"Avec Sunu École : tout est centralisé, sécurisé, et accessible en un clic."},
+  {t:10.5, text:"Pilotage à 360° : tableaux de bord pour chaque profil — direction, comptable, parent."},
+  {t:14, text:"Scolarité simplifiée : dossiers, fratrie, documents, recherche globale instantanée."},
+  {t:18, text:"Pédagogie sans friction : appel hors-ligne, notes pondérées, bulletins A4 prêts à imprimer."},
+  {t:22, text:"Emploi du temps intelligent : il détecte les conflits avant même qu'ils n'arrivent."},
+  {t:25.5, text:"Finance enfin claire : facturation en masse, échéanciers, journal de caisse."},
+  {t:28, text:"Paiement Mobile Money intégré — Wave, Orange Money — reçu imprimable automatique."},
+  {t:31, text:"Relances SMS chiffrées en FCFA, avec estimation du coût. Trésorerie sous contrôle."},
+  {t:33.5, text:"Vie scolaire, RH, services : absences, discipline, bibliothèque, cantine, transport, infirmerie."},
+  {t:36, text:"Même la paie est conforme : IPRES 5,6% et impôt 12% au-delà de 300 000 F — calculé automatiquement."},
+  {t:39.5, text:"Parents connectés : espace multi-enfants, paiement en ligne, justification d'absence en un tap."},
+  {t:43, text:"Élèves autonomes : notes, bulletins, emploi du temps, devoirs — tout sur leur téléphone."},
+  {t:45, text:"Et la communication devient pro : annonces, notifications, campagnes SMS avec coût estimé."},
+  {t:47, text:"Paramétrage total : barèmes, horaires, modules, droits. Vous gardez la main."},
+  {t:49, text:"Sécurité maximale : journal d'audit, sauvegardes quotidiennes, export JSON complet."},
+  {t:52, text:"Et tout ça pour 150 000 FCFA seulement. Un seul achat. Accès à vie."},
+  {t:55, text:"Installation en 24 heures, formation incluse, support WhatsApp 7 jours sur 7."},
+  {t:58, text:"Sunu École — l'école qui respire. Réservez votre démo gratuite aujourd'hui."},
+];
+
+const scenes = [...document.querySelectorAll('.scene')];
+const progressFill = document.getElementById('progressFill');
+const progressKnob = document.getElementById('progressKnob');
+const scrubFill = document.getElementById('scrubFill');
+const scrubThumb = document.getElementById('scrubThumb');
+const scrubTrack = document.getElementById('scrubTrack');
+const subtitleText = document.getElementById('subtitleText');
+const subtitleHint = document.getElementById('subtitleHint');
+const timeDisplay = document.getElementById('timeDisplay');
+const btnPlay = document.getElementById('btnPlay');
+const chapters = [...document.querySelectorAll('.chip')];
+
+function fmt(s){
+  const m = Math.floor(s/60); const sec = Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function activeSceneFor(t){
+  // find scene where t in [start,end)
+  for(let i=scenes.length-1;i>=0;i--){
+    const s = scenes[i];
+    const st = parseFloat(s.dataset.start), en = parseFloat(s.dataset.end);
+    if(t >= st) return s;
+  }
+  return scenes[0];
+}
+
+let activeSceneEl = scenes[0];
+
+function updateUI(t){
+  current = Math.max(0, Math.min(DURATION, t));
+  const pct = (current/DURATION)*100;
+  progressFill.style.width = pct+'%';
+  progressKnob.style.left = pct+'%';
+  scrubFill.style.width = pct+'%';
+  scrubThumb.style.left = pct+'%';
+  subtitleHint.textContent = fmt(current);
+  timeDisplay.textContent = fmt(current)+' / '+fmt(DURATION);
+
+  // chapters
+  let activeChip = chapters[0];
+  for(const c of chapters){
+    const ct = parseFloat(c.dataset.time);
+    if(current >= ct) activeChip = c;
+  }
+  chapters.forEach(c=>c.classList.toggle('active', c===activeChip));
+
+  // subtitle
+  let sub = subs[0];
+  for(const s of subs){ if(current >= s.t) sub = s; }
+  if(subtitleText.textContent !== sub.text){
+    gsap.to(subtitleText, {opacity:0, y:-4, duration:0.18, ease:'power2.in', onComplete:()=>{
+      subtitleText.textContent = sub.text;
+      gsap.fromTo(subtitleText, {opacity:0, y:4}, {opacity:1, y:0, duration:0.22, ease:'power2.out'});
+    }});
+  }
+
+  // scene switching with motion
+  const target = activeSceneFor(current);
+  if(target !== activeSceneEl){
+    const outgoing = activeSceneEl;
+    const incoming = target;
+    activeSceneEl = incoming;
+    // outgoing exit: 260ms
+    gsap.to(outgoing, {opacity:0, y:-14, scale:0.985, duration:0.26, ease:'power2.in', onComplete:()=>{
+      outgoing.classList.remove('active');
+      outgoing.style.visibility='hidden';
+    }});
+    // incoming entrance
+    incoming.classList.add('active');
+    incoming.style.visibility='visible';
+    gsap.fromTo(incoming, {opacity:0, y:18, scale:0.985}, {opacity:1, y:0, scale:1, duration:0.42, ease:'power3.out', delay:0.06});
+    // stagger inner reveals
+    const reveals = incoming.querySelectorAll('.reveal, .bullet, .module-card, .chaos-card, .mini-stat');
+    if(reveals.length){
+      gsap.fromTo(reveals, {opacity:0, y:12}, {opacity:1, y:0, duration:0.34, stagger:0.06, ease:'power2.out', delay:0.18, overwrite:true});
+    }
+  }
+}
+
+// animation loop
+function tick(ts){
+  if(!playing){ lastTs = ts; raf = requestAnimationFrame(tick); return; }
+  if(lastTs==null) lastTs = ts;
+  const dt = (ts - lastTs)/1000;
+  lastTs = ts;
+  let next = current + dt;
+  if(next >= DURATION){
+    next = DURATION;
+    playing = false;
+    btnPlay.textContent = '↺';
+    btnPlay.classList.add('primary');
+  }
+  updateUI(next);
+  raf = requestAnimationFrame(tick);
+}
+
+// initial reveals for first scene
+gsap.fromTo(scenes[0].querySelectorAll('.reveal, .bullet, .mini-stat'), {opacity:0, y:12}, {opacity:1, y:0, duration:0.4, stagger:0.07, ease:'power2.out', delay:0.5});
+
+// ambient blobs drift
+gsap.to('#blob3', {x:30, y:-20, duration:6, repeat:-1, yoyo:true, ease:'sine.inOut'});
+gsap.to('.ambient-blob', {scale:1.05, duration:5, repeat:-1, yoyo:true, ease:'sine.inOut', stagger:0.6});
+
+function play(){ if(current>=DURATION) { seek(0); } playing=true; btnPlay.textContent='❚❚'; lastTs=null; if(!raf) raf=requestAnimationFrame(tick); }
+function pause(){ playing=false; btnPlay.textContent='▶'; }
+function seek(t){ updateUI(t); }
+
+btnPlay.addEventListener('click', ()=>{
+  if(playing){ pause(); } else { play(); }
+});
+document.getElementById('btnRestart').addEventListener('click', ()=>{ seek(0); play(); });
+document.getElementById('btnReplay2')?.addEventListener('click', ()=>{ seek(0); play(); });
+
+chapters.forEach(ch=> ch.addEventListener('click', ()=>{
+  seek(parseFloat(ch.dataset.time));
+  play();
+}));
+
+let dragging=false;
+scrubTrack.addEventListener('pointerdown', (e)=>{
+  dragging=true; scrubTrack.setPointerCapture(e.pointerId);
+  const rect=scrubTrack.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX-rect.left)/rect.width));
+  seek(pct*DURATION);
+  pause();
+});
+scrubTrack.addEventListener('pointermove', (e)=>{
+  if(!dragging) return;
+  const rect=scrubTrack.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX-rect.left)/rect.width));
+  seek(pct*DURATION);
+});
+scrubTrack.addEventListener('pointerup', (e)=>{
+  dragging=false;
+  play();
+});
+
+// keyboard
+document.addEventListener('keydown', (e)=>{
+  if(e.code==='Space'){ e.preventDefault(); playing?pause():play(); }
+  if(e.code==='ArrowRight'){ seek(Math.min(DURATION, current+5)); }
+  if(e.code==='ArrowLeft'){ seek(Math.max(0, current-5)); }
+});
+
+// topbar share
+document.getElementById('btnShare').addEventListener('click', async ()=>{
+  const url = location.href;
+  try{ await navigator.clipboard.writeText(url); btnShare.textContent='✓ Copié !'; setTimeout(()=>btnShare.textContent='⧉ Partager',1500);}catch{ prompt('Copiez ce lien :', url); }
+});
+document.getElementById('btnCTA').addEventListener('click', ()=>{
+  seek(52); play();
+  // after a moment scroll to CTA or alert
+  setTimeout(()=>{ if(confirm('Voulez-vous être recontacté pour une démo gratuite ?\n\nLaissez-nous votre numéro et on vous rappelle sous 2h.')) {
+    window.open('https://wa.me/221000000000?text=Bonjour%20Sunu%20%C3%89cole%20%2C%20je%20souhaite%20une%20d%C3%A9mo%20pour%20mon%20%C3%A9cole','_blank');
+  }}, 400);
+});
+document.getElementById('btnSound').addEventListener('click', (e)=>{
+  const b=e.currentTarget;
+  b.textContent = b.textContent==='♪' ? '♪ off' : '♪';
+  // toggle speech if supported
+  if('speechSynthesis' in window){
+    if(speechSynthesis.speaking){ speechSynthesis.cancel(); }
+    else {
+      const u = new SpeechSynthesisUtterance(subtitleText.textContent);
+      u.lang='fr-FR'; u.rate=1.05; speechSynthesis.speak(u);
+    }
+  }
+});
+document.getElementById('btnFS').addEventListener('click', ()=>{
+  const stage = document.getElementById('stage');
+  if(document.fullscreenElement) document.exitFullscreen();
+  else stage.requestFullscreen?.();
+});
+
+// progress click anywhere on top progress
+document.querySelector('.progress-track').addEventListener('click', (e)=>{
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  seek(pct*DURATION); play();
+});
+
+// start
+updateUI(0);
+raf = requestAnimationFrame(tick);
+// autoplay after slight delay feels premium
+setTimeout(()=>{ play(); }, 800);
+
+// hide controls for clean recording — press H
+let controlsHidden=false;
+function toggleControls(){
+  controlsHidden=!controlsHidden;
+  document.querySelector('.topbar').style.display = controlsHidden?'none':'flex';
+  document.querySelector('.controls').style.display = controlsHidden?'none':'flex';
+  document.querySelector('.stage-wrap').style.padding = controlsHidden?'0':'18px';
+  if(controlsHidden) document.querySelector('.stage').style.borderRadius='0';
+  else document.querySelector('.stage').style.borderRadius='';
+}
+document.addEventListener('keydown', (e)=>{
+  if(e.key.toLowerCase()==='h'){ toggleControls(); }
+  if(e.key.toLowerCase()==='f'){ document.getElementById('btnFS').click(); }
+});
+
+// respect reduced motion
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  gsap.globalTimeline.timeScale(1.6);
+}
+</script>
+</body>
+</html>

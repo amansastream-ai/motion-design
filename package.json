@@ -1,0 +1,23 @@
+{
+  "name": "motion-design",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amansastream-ai/motion-design.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amansastream-ai/motion-design/issues"
+  },
+  "homepage": "https://github.com/amansastream-ai/motion-design#readme",
+  "dependencies": {
+    "gsap": "^3.12.5"
+  }
+}
