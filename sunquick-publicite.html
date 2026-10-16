@@ -524,6 +524,57 @@
     footer strong { color: var(--navy); }
     .footer-line { display: flex; justify-content: space-between; gap: 15px; padding-top: 20px; border-top: 1px solid var(--line); }
 
+    /* ---------- REAL PHOTO CUT / V02 ---------- */
+    .real-scene .real-photo { position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #e9e3d5; }
+    .real-scene .real-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.035); filter: saturate(1.08) contrast(1.03); }
+    .real-scene .real-photo-pour img { object-position: center 48%; }
+    .real-scene .real-photo-share img { object-position: center 52%; }
+    .real-scene .real-photo-final img { object-position: center 55%; }
+    .real-overlay { position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, rgba(255,211,91,.98) 0%, rgba(255,177,64,.76) 35%, rgba(255,139,54,.12) 75%, rgba(13,27,53,.06) 100%); mix-blend-mode: multiply; }
+    .real-overlay::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,239,185,.35), transparent 58%); mix-blend-mode: screen; }
+    .real-overlay-pour { background: linear-gradient(90deg, rgba(13,27,53,.94) 0%, rgba(13,27,53,.66) 36%, rgba(13,27,53,.05) 79%), linear-gradient(0deg, rgba(13,27,53,.3), transparent 45%); mix-blend-mode: normal; }
+    .real-overlay-share { background: linear-gradient(90deg, rgba(13,27,53,.93) 0%, rgba(13,27,53,.68) 38%, rgba(13,27,53,.07) 84%), linear-gradient(0deg, rgba(13,27,53,.5), transparent 55%); mix-blend-mode: normal; }
+    .real-overlay-final { background: linear-gradient(90deg, rgba(255,218,113,.84) 0%, rgba(245,108,42,.38) 44%, rgba(13,27,53,.48) 100%), linear-gradient(0deg, rgba(13,27,53,.34), transparent 55%); mix-blend-mode: normal; }
+    .real-grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .15; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rg)' opacity='.35'/%3E%3C/svg%3E"); mix-blend-mode: overlay; }
+    .real-scene .real-copy { z-index: 10; left: 7.5%; top: 23%; max-width: 49%; color: var(--navy); animation: copy-up .9s .15s var(--ease-out) both; }
+    .real-scene .real-copy h2 { color: inherit; text-shadow: 0 2px 10px rgba(255,225,133,.2); }
+    .real-scene .real-copy h2 em { color: var(--white); }
+    .scene-1.real-scene .real-copy, .scene-2.real-scene .real-copy { color: var(--white); }
+    .scene-1.real-scene .real-copy h2 em, .scene-2.real-scene .real-copy h2 em { color: var(--yellow); }
+    .scene-3.real-scene .real-copy { color: var(--white); }
+    .scene-3.real-scene .real-copy h2 em { color: var(--yellow); }
+    .real-packshot { position: absolute; z-index: 11; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,.48); border-radius: 18px; background: rgba(255,250,235,.58); box-shadow: 16px 24px 35px rgba(72, 29, 12, .23); backdrop-filter: blur(2px); }
+    .real-packshot img { width: 100%; height: 100%; display: block; object-fit: contain; mix-blend-mode: multiply; filter: saturate(1.12) contrast(1.05) drop-shadow(7px 13px 8px rgba(76,27,9,.16)); }
+    .real-packshot-hero { right: 5.5%; bottom: 5.5%; width: 30%; height: 83%; transform: rotate(2deg); animation: real-product-in 1.1s .28s var(--ease-spring) both, real-product-float 4.8s 1.4s ease-in-out infinite alternate; }
+    .real-packshot-pour { right: 7%; bottom: 5%; width: 25%; height: 75%; transform: rotate(2deg); animation: real-product-in 1s .72s var(--ease-spring) both, real-product-float 4.3s 1.5s ease-in-out infinite alternate-reverse; }
+    .real-packshot-share { right: 7%; bottom: 7%; width: 25%; height: 73%; transform: rotate(-3deg); animation: real-product-in 1s .6s var(--ease-spring) both, real-product-float 4.3s 1.4s ease-in-out infinite alternate; }
+    .real-packshot-final { left: 50%; bottom: 6%; width: 28%; height: 76%; transform: translateX(-50%) rotate(-2deg); animation: real-final-product-in 1.1s .3s var(--ease-spring) both, real-product-float 4.6s 1.6s ease-in-out infinite alternate; }
+    .real-caption { z-index: 12; right: 7%; top: 10%; display: flex; flex-direction: column; align-items: flex-end; color: var(--navy); font-size: 10px; font-weight: 950; letter-spacing: .18em; text-transform: uppercase; animation: fade-in .5s .85s both; }
+    .real-caption span { margin-top: 5px; padding: 6px 8px; color: var(--white); border-radius: 999px; background: var(--orange-dark); font-size: 8px; letter-spacing: .11em; }
+    .real-pour-badge { z-index: 12; right: 34%; top: 11%; display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 8px; font-weight: 900; line-height: 1.15; letter-spacing: .12em; text-transform: uppercase; animation: copy-up .7s .55s var(--ease-out) both; }
+    .real-pour-badge b { color: var(--yellow); font-size: 10px; }
+    .badge-ring { display: grid; place-items: center; width: 31px; height: 31px; border: 1px solid rgba(255,211,91,.78); border-radius: 50%; color: var(--yellow); font-size: 13px; }
+    .real-share-line { z-index: 12; left: 7.5%; bottom: 14%; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.72); font-size: 9px; font-weight: 900; letter-spacing: .18em; animation: copy-up .65s .78s var(--ease-out) both; }
+    .real-share-line span { display: block; width: 36px; height: 1px; background: var(--yellow); }
+    .real-scene .final-logo { z-index: 12; left: 7.5%; top: 11%; transform: none; color: var(--white); animation: logo-in .85s .15s var(--ease-spring) both; }
+    .real-scene .final-logo .word { text-shadow: 0 2px 15px rgba(13,27,53,.24); }
+    .real-scene .final-copy { z-index: 12; left: 7.5%; bottom: 10%; width: 41%; transform: none; text-align: left; animation: copy-up .8s .7s var(--ease-out) both; }
+    .real-scene .final-copy .line { color: rgba(255,255,255,.82); }
+    .real-scene .final-copy strong { color: var(--white); text-shadow: 0 3px 15px rgba(13,27,53,.3); }
+    .real-scene .final-pill { color: var(--white); border-color: rgba(255,255,255,.68); background: rgba(13,27,53,.16); }
+    @keyframes real-product-in { from { opacity: 0; translate: 30px 45px; scale: .76; } to { opacity: 1; translate: 0 0; scale: 1; } }
+    @keyframes real-final-product-in { from { opacity: 0; translate: -50% 55px; scale: .72; } to { opacity: 1; translate: -50% 0; scale: 1; } }
+    @keyframes real-product-float { from { rotate: -1deg; } to { rotate: 1.5deg; } }
+
+    /* Use real photographic references in the presentation storyboard too. */
+    .story-visual.sv-0 { background-image: linear-gradient(90deg, rgba(13,27,53,.15), rgba(243,107,43,.16)), url("assets/sunquick-orange-glass-real.jpg"); background-position: center; background-size: cover; }
+    .story-visual.sv-1 { background-image: linear-gradient(90deg, rgba(13,27,53,.28), rgba(243,107,43,.08)), url("assets/sunquick-pour-real.jpg"); background-position: center 42%; background-size: cover; }
+    .story-visual.sv-2 { background-image: linear-gradient(90deg, rgba(13,27,53,.38), rgba(13,27,53,.06)), url("assets/sunquick-share-real.jpg"); background-position: center; background-size: cover; }
+    .story-visual.sv-3 { background-image: linear-gradient(90deg, rgba(243,107,43,.12), rgba(13,27,53,.2)), url("assets/sunquick-orange-bottle-real.jpg"); background-position: center; background-size: cover; }
+    .story-visual .sv-sun, .story-visual .sv-bottle, .story-visual .sv-glass, .story-visual .sv-drop, .story-visual .sv-heads, .story-visual .sv-pack { display: none; }
+    .story-visual .sv-word, .story-visual .sv-title { z-index: 2; color: var(--white); text-shadow: 0 2px 8px rgba(13,27,53,.45); }
+    .sv-1 .sv-word, .sv-1 .sv-title, .sv-3 .sv-word, .sv-3 .sv-title { color: var(--white); }
+
     @media (max-width: 1080px) {
       .film-grid { grid-template-columns: 1fr; }
       .film-side { display: grid; grid-template-columns: 1fr 1fr; }
@@ -578,7 +629,7 @@
       <a class="mini-brand" href="#film" aria-label="Sunquick — retour au film">
         <span class="mark" aria-hidden="true"></span>
         <strong>sunquick</strong>
-        <small>concept film</small>
+        <small>concept film · photo réelle</small>
       </a>
       <nav class="nav" aria-label="Sections de la présentation">
         <button class="active" data-nav="film">Film</button>
@@ -592,7 +643,7 @@
       <section class="view active" id="filmView" data-view="film">
         <div class="film-intro">
           <div>
-            <span class="eyebrow">Proposition de film publicitaire · Sénégal</span>
+            <span class="eyebrow">Proposition de film publicitaire · Sénégal · version photo réelle</span>
             <h1>Le soleil <em>se partage.</em></h1>
           </div>
           <p class="intro-copy">Une mini-histoire en quatre temps : un rayon de soleil, un geste simple, une table qui se remplit, puis le goût Sunquick comme signature du moment.</p>
@@ -603,41 +654,38 @@
             <div class="film-stage" id="filmStage" data-scene="0" aria-label="Film publicitaire Sunquick interactif">
               <div class="stage-ui"><span class="live">Concept en lecture</span><span class="frame-count" id="frameCount">01 / 04</span></div>
 
-              <article class="scene scene-0 active" data-scene-index="0" aria-label="Ouverture : un moment commence">
-                <div class="sun-disc"></div><div class="sun-rays"></div><div class="curve curve-a"></div><div class="curve curve-b"></div>
-                <div class="copy"><span class="mini">Un rayon. Une envie.</span><h2>Tout commence<br><em>par un moment.</em></h2><p>Le soleil descend, la table s'ouvre. Il suffit d'un geste pour donner le ton.</p></div>
-                <div class="orange-fruit fruit-a" aria-hidden="true"></div><div class="orange-fruit fruit-b" aria-hidden="true"></div>
-                <div class="bottle bottle-hero" aria-label="Bouteille Sunquick Orange">
-                  <span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span>
-                  <span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span>
-                </div>
-                <span class="scene-tag">orange · concentré fruité</span><span class="scene-number">01 / 04</span>
+              <article class="scene scene-0 active real-scene" data-scene-index="0" aria-label="Ouverture : le produit et l'orange">
+                <div class="real-photo"><img src="assets/sunquick-orange-glass-real.jpg" alt="Verre de boisson à l'orange posé au soleil"></div>
+                <div class="real-overlay"></div><div class="real-grain"></div>
+                <div class="copy real-copy"><span class="mini">Un rayon. Une envie.</span><h2>Tout commence<br><em>par un moment.</em></h2><p>Une lumière chaude, une vraie couleur fruitée : le plaisir commence avant même la première gorgée.</p></div>
+                <div class="real-packshot real-packshot-hero"><img src="assets/sunquick-orange-bottle-real.jpg" alt="Bouteille réelle Sunquick Orange"></div>
+                <div class="real-caption">SUNQUICK <span>ORANGE · CONCENTRÉ</span></div>
+                <span class="scene-tag">packshot réel · orange</span><span class="scene-number">01 / 04</span>
               </article>
 
-              <article class="scene scene-1" data-scene-index="1" aria-label="Le geste : on verse">
-                <div class="sun-disc" style="right:-22%;top:-39%;opacity:.72"></div><div class="pour-table"></div>
-                <div class="copy"><span class="mini">Le geste qui rassemble</span><h2>On verse.<br><em>On se retrouve.</em></h2><p>Une couleur vive, un parfum d'orange, et le moment prend une nouvelle dimension.</p></div>
-                <div class="bottle bottle-pour" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
-                <div class="pour-arc"></div><div class="pour-drop"></div>
-                <div class="glass glass-a"><span class="drink"></span><span class="slice"></span></div><div class="glass glass-b"><span class="drink"></span></div><div class="glass glass-c"><span class="drink"></span></div>
-                <span class="scene-tag">simple à préparer · facile à partager</span><span class="scene-number">02 / 04</span>
+              <article class="scene scene-1 real-scene" data-scene-index="1" aria-label="Le geste : on verse la boisson">
+                <div class="real-photo real-photo-pour"><img src="assets/sunquick-pour-real.jpg" alt="Personne versant une boisson orange dans un verre"></div>
+                <div class="real-overlay real-overlay-pour"></div><div class="real-grain"></div>
+                <div class="copy real-copy"><span class="mini">Le geste qui rassemble</span><h2>On verse.<br><em>On se retrouve.</em></h2><p>La boisson prend vie dans le verre. Le mouvement est réel, le geste est immédiat.</p></div>
+                <div class="real-pour-badge"><span class="badge-ring">✦</span><span>À DILUER<br><b>À PARTAGER</b></span></div>
+                <div class="real-packshot real-packshot-pour"><img src="assets/sunquick-orange-bottle-real.jpg" alt="Bouteille réelle Sunquick Orange en référence"></div>
+                <span class="scene-tag">geste réel · couleur réelle</span><span class="scene-number">02 / 04</span>
               </article>
 
-              <article class="scene scene-2" data-scene-index="2" aria-label="Le partage : une table se remplit">
-                <div class="sharing-sun"></div><div class="table-leg leg-a"></div><div class="table-leg leg-b"></div><div class="table-oval"></div>
-                <div class="copy"><span class="mini">Le goût du partage</span><h2>Un même goût.<br><em>Des sourires.</em></h2><p>À la maison, entre amis, au détour d'un après-midi : le plaisir grandit quand il circule.</p></div>
-                <div class="person p-a"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
-                <div class="person p-b"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
-                <div class="person p-c"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
-                <div class="bottle bottle-final" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
-                <div class="glass glass-a"><span class="drink"></span></div><div class="glass glass-b"><span class="drink"></span></div><div class="glass glass-c"><span class="drink"></span></div>
-                <span class="scene-tag">une bouteille · plusieurs moments</span><span class="scene-number">03 / 04</span>
+              <article class="scene scene-2 real-scene" data-scene-index="2" aria-label="Le partage autour de la table">
+                <div class="real-photo real-photo-share"><img src="assets/sunquick-share-real.jpg" alt="Amis réunis autour d'une table"></div>
+                <div class="real-overlay real-overlay-share"></div><div class="real-grain"></div>
+                <div class="copy real-copy"><span class="mini">Le goût du partage</span><h2>Un même goût.<br><em>Des sourires.</em></h2><p>Quand les verres se lèvent, le moment devient collectif. Sunquick se partage naturellement.</p></div>
+                <div class="real-share-line"><span></span><b>À TABLE</b><span></span></div>
+                <div class="real-packshot real-packshot-share"><img src="assets/sunquick-orange-bottle-real.jpg" alt="Bouteille réelle Sunquick Orange"></div>
+                <span class="scene-tag">photo réelle · moment partagé</span><span class="scene-number">03 / 04</span>
               </article>
 
-              <article class="scene scene-3" data-scene-index="3" aria-label="Signature : Sunquick">
-                <div class="final-rays"></div><div class="final-halo"></div>
+              <article class="scene scene-3 real-scene" data-scene-index="3" aria-label="Signature finale Sunquick">
+                <div class="real-photo real-photo-final"><img src="assets/sunquick-orange-glass-real.jpg" alt="Verre de boisson orange et tranche d'orange"></div>
+                <div class="real-overlay real-overlay-final"></div><div class="real-grain"></div>
                 <div class="final-logo"><span class="round"></span><span class="word">sunquick</span></div>
-                <div class="bottle bottle-final" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
+                <div class="real-packshot real-packshot-final"><img src="assets/sunquick-orange-bottle-real.jpg" alt="Packshot réel Sunquick Orange"></div>
                 <div class="final-copy"><span class="line">Le goût fruité qui rapproche</span><strong>Le soleil se partage.</strong><span class="final-pill">Sunquick · orange · à diluer</span></div>
                 <span class="scene-number">04 / 04</span>
               </article>
@@ -698,22 +746,22 @@
       <section class="view" id="researchView" data-view="research">
         <div class="section-heading">
           <div><span class="eyebrow">Recherche rapide · sources ouvertes</span><h1>Faire rêver,<br><em>sans inventer.</em></h1></div>
-          <p>La direction du film s'appuie sur le territoire de marque officiel et sur la réalité de la distribution au Sénégal.</p>
+          <p>La direction du film s'appuie sur le territoire de marque officiel, le packshot réel et des photos lifestyle réalistes. Les visuels devront être licenciés ou tournés pour la version finale.</p>
         </div>
         <div class="research-grid">
           <article class="research-main"><span class="card-kicker" style="color:var(--yellow)">Ce que la marque raconte</span><h1>Une boisson fruitée<br>faite pour <em>partager.</em></h1><p>Sunquick présente son histoire autour du plaisir, de la nature, de la convivialité et des moments partagés. Le concentré orange a été lancé en 1966 et la marque indique être présente dans plus de 70 pays.</p><ul class="fact-list"><li><span class="fact-no">1966</span><strong>Lancement du concentré orange</strong><span>Histoire officielle Sunquick</span></li><li><span class="fact-no">70+</span><strong>Pays couverts par la marque</strong><span>Information de marque, à date de la recherche</span></li><li><span class="fact-no">FRUIT</span><strong>Un goût inspiré par la nature</strong><span>Territoire créatif retenu</span></li><li><span class="fact-no">JOY</span><strong>Le plaisir est meilleur quand il est partagé</strong><span>Territoire de communication officiel</span></li></ul></article>
-          <article class="packshot-card"><div class="packshot-visual"><img src="assets/sunquick-packshot-reference.jpg" alt="Packshot de référence d'une bouteille Sunquick Orange"></div><div class="packshot-caption"><h3>Packshot de référence</h3><p>Image de recherche utilisée pour cadrer la silhouette et les codes de l'étiquette. À remplacer par le master produit validé par Finamark / CO-RO avant production finale.</p></div></article>
+          <article class="packshot-card"><div class="packshot-visual"><img src="assets/sunquick-orange-bottle-real.jpg" alt="Packshot de référence d'une bouteille Sunquick Orange"></div><div class="packshot-caption"><h3>Packshot de référence</h3><p>Packshot réel utilisé comme référence dans cette maquette. À remplacer par le master produit fourni et validé par Finamark / CO-RO avant production finale.</p></div></article>
         </div>
         <div class="source-grid">
           <article class="source-card"><span class="card-kicker">Source 01 · officiel</span><h3>Sunquick · Our story</h3><p>Histoire, territoire « share the joy », lancement du concentré en 1966 et présence internationale.</p><a href="https://www.sunquick.com/about/" target="_blank" rel="noreferrer">Ouvrir la source ↗</a></article>
           <article class="source-card"><span class="card-kicker">Source 02 · officiel</span><h3>Sunquick · Orange</h3><p>Fiche produit consultée : concentré d'orange, jus de fruit, vitamine C et mentions liées aux arômes/couleurs selon le marché.</p><a href="https://www.sunquick.com/products/sunquick-orange/" target="_blank" rel="noreferrer">Ouvrir la fiche ↗</a></article>
           <article class="source-card"><span class="card-kicker">Source 03 · local</span><h3>Finamark · Sénégal</h3><p>Finamark présente Sunquick et Suntop comme des marques importées et distribuées au Sénégal, aux côtés de sa production locale SIM.</p><a href="https://finamark.sn/" target="_blank" rel="noreferrer">Ouvrir Finamark ↗</a></article>
         </div>
-        <div class="validation"><span class="v-icon">!</span><div><h3>Point de validation avant tournage</h3><p>Confirmer le packshot exact du format commercialisé au Sénégal, les mentions autorisées sur l'étiquette, le volume rendu après dilution et la présence de la signature « Le soleil se partage » dans les territoires de marque.</p></div></div>
+        <div class="validation"><span class="v-icon">!</span><div><h3>Point de validation avant tournage</h3><p>Confirmer le packshot exact du format commercialisé au Sénégal, les mentions autorisées sur l'étiquette, le volume rendu après dilution, les droits des photos lifestyle et la présence de la signature « Le soleil se partage » dans les territoires de marque.</p></div></div>
       </section>
     </main>
 
-    <footer><div class="footer-line"><span><strong>Sunquick · Le soleil se partage.</strong> Proposition créative non officielle — V01.</span><span>Concept motion design · 16:9 · 30 s</span></div></footer>
+    <footer><div class="footer-line"><span><strong>Sunquick · Le soleil se partage.</strong> Proposition créative non officielle — V01.</span><span>Concept motion design · photo réelle · 16:9 · 30 s</span></div></footer>
   </div>
 
   <script>
