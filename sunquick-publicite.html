@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1b35">
+  <title>Sunquick — Le soleil se partage | Concept de film</title>
+  <style>
+    :root {
+      --navy: #0d1b35;
+      --navy-2: #132c53;
+      --navy-3: #1f4670;
+      --ink: #152b50;
+      --orange: #f36b2b;
+      --orange-dark: #d94a18;
+      --tangerine: #ff9438;
+      --yellow: #ffd35b;
+      --cream: #fff5e8;
+      --paper: #fffaf3;
+      --coral: #ff7552;
+      --blue-soft: #dbeaff;
+      --muted: #758095;
+      --line: rgba(13, 27, 53, .12);
+      --white: #fff;
+      --shadow: 0 24px 70px rgba(12, 25, 49, .22);
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+      --ease-soft: cubic-bezier(.22, .8, .2, 1);
+      --ease-spring: cubic-bezier(.18, .92, .32, 1.18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: #f7f4ed;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--yellow); color: var(--navy); }
+
+    .app-shell { min-height: 100vh; overflow: hidden; }
+    .topbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 clamp(18px, 4vw, 64px);
+      background: rgba(255, 250, 243, .9);
+      border-bottom: 1px solid rgba(13, 27, 53, .08);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+    }
+    .mini-brand { display: flex; align-items: center; gap: 10px; min-width: max-content; }
+    .mini-brand .mark {
+      position: relative;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      background: var(--yellow);
+      box-shadow: inset 0 -3px 0 rgba(243, 107, 43, .18);
+    }
+    .mini-brand .mark::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 10px;
+      left: 8px;
+      top: 9px;
+      border-radius: 50% 50% 56% 56%;
+      background: var(--orange);
+      transform: rotate(-5deg);
+    }
+    .mini-brand strong {
+      color: var(--navy);
+      font-size: 18px;
+      letter-spacing: -.06em;
+      font-weight: 900;
+    }
+    .mini-brand small {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border-left: 1px solid var(--line);
+      padding-left: 10px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .65);
+    }
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: background .25s var(--ease-soft), color .25s var(--ease-soft), transform .25s var(--ease-soft);
+    }
+    .nav button:hover { color: var(--navy); transform: translateY(-1px); }
+    .nav button.active { color: var(--white); background: var(--navy); }
+    .top-meta {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .top-meta b { color: var(--orange); }
+    .top-meta .dot { width: 4px; height: 4px; background: var(--yellow); border-radius: 50%; }
+
+    main { padding: 42px clamp(18px, 4vw, 64px) 72px; }
+    .view { display: none; max-width: 1500px; margin: 0 auto; }
+    .view.active { display: block; animation: view-in .6s var(--ease-out) both; }
+    @keyframes view-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Film page */
+    .film-intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 26px;
+      margin-bottom: 24px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--orange-dark);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 18px; height: 2px; border-radius: 5px; background: var(--orange); }
+    .film-intro h1 {
+      max-width: 730px;
+      margin: 10px 0 0;
+      color: var(--navy);
+      font-size: clamp(32px, 4vw, 57px);
+      line-height: .98;
+      letter-spacing: -.065em;
+      font-weight: 900;
+    }
+    .film-intro h1 em { color: var(--orange); font-style: normal; }
+    .film-intro .intro-copy { max-width: 330px; color: var(--muted); font-size: 13px; margin: 0 0 3px; }
+
+    .film-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(310px, .45fr); gap: 22px; align-items: start; }
+    .film-card { min-width: 0; }
+    .film-stage {
+      --stage-accent: var(--orange);
+      position: relative;
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 26px;
+      background: var(--navy);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+    .film-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      opacity: .13;
+      mix-blend-mode: screen;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.36'/%3E%3C/svg%3E");
+    }
+    .film-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 29;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: inherit;
+      box-shadow: inset 0 0 80px rgba(5, 15, 35, .24);
+    }
+    .stage-ui {
+      position: absolute;
+      z-index: 35;
+      top: 17px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgba(255,255,255,.74);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .stage-ui .live { display: inline-flex; align-items: center; gap: 7px; }
+    .stage-ui .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 4px rgba(255, 211, 91, .16); }
+    .stage-ui .frame-count { color: rgba(255,255,255,.5); }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .65s var(--ease-soft);
+    }
+    .scene.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    .scene > * { position: absolute; }
+    .scene-0 { color: var(--navy); background: linear-gradient(135deg, #ffba49 0%, #ff8741 53%, #f56839 100%); }
+    .scene-1 { color: var(--navy); background: linear-gradient(135deg, #fff4d6 0%, #ffd770 49%, #ff9b37 100%); }
+    .scene-2 { color: var(--white); background: linear-gradient(135deg, #10284c 0%, #193e69 62%, #244e79 100%); }
+    .scene-3 { color: var(--navy); background: linear-gradient(135deg, #ffce65 0%, #ff8c35 53%, #f2632e 100%); }
+    .scene .copy { z-index: 9; left: 7.5%; top: 23%; max-width: 54%; }
+    .scene .copy .mini { display: block; font-size: clamp(8px, .85vw, 12px); font-weight: 900; letter-spacing: .19em; text-transform: uppercase; opacity: .66; margin-bottom: 15px; }
+    .scene .copy h2 { margin: 0; font-size: clamp(31px, 5.2vw, 78px); font-weight: 900; line-height: .92; letter-spacing: -.08em; }
+    .scene .copy h2 em { color: var(--white); font-style: normal; }
+    .scene-1 .copy h2 em, .scene-3 .copy h2 em { color: var(--orange-dark); }
+    .scene-2 .copy h2 em { color: var(--yellow); }
+    .scene .copy p { max-width: 310px; margin: 20px 0 0; font-size: clamp(11px, 1.2vw, 16px); line-height: 1.35; opacity: .72; }
+    .scene-tag {
+      z-index: 10;
+      left: 7.5%;
+      bottom: 7.5%;
+      padding: 8px 12px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      opacity: .75;
+    }
+    .scene-number { z-index: 10; right: 7.5%; bottom: 7.5%; font-size: 10px; font-weight: 900; letter-spacing: .16em; opacity: .52; }
+
+    /* Sun and fruit language */
+    .sun-disc { z-index: 1; width: min(44vw, 580px); height: min(44vw, 580px); right: -9%; top: -25%; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffeaa4 0 14%, #ffd05f 15% 47%, rgba(255, 170, 49, .72) 48% 68%, rgba(255, 170, 49, 0) 69%); filter: blur(.2px); }
+    .sun-disc::before, .sun-disc::after { content: ""; position: absolute; inset: -14%; border-radius: 50%; border: 1px solid rgba(255,244,189,.55); transform: rotate(35deg); }
+    .sun-disc::after { inset: -25%; border-color: rgba(255,244,189,.26); transform: rotate(-28deg); }
+    .sun-rays { z-index: 0; width: 80%; height: 80%; right: -18%; top: -12%; opacity: .3; background: repeating-conic-gradient(from 15deg, rgba(255,244,189,.8) 0 1deg, transparent 1deg 10deg); border-radius: 50%; mask-image: radial-gradient(circle, transparent 0 46%, #000 47% 54%, transparent 55%); }
+    .orange-fruit { z-index: 6; width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 36% 28%, #ffd268 0 12%, #ffad38 13% 46%, #e95a21 70% 100%); box-shadow: inset -8px -10px 16px rgba(153, 42, 12, .22), 0 18px 28px rgba(133, 47, 11, .19); }
+    .orange-fruit::after { content: ""; position: absolute; width: 27px; height: 11px; right: -10px; top: 0; border-radius: 100% 0 100% 0; background: #3e874e; transform: rotate(24deg); box-shadow: inset 2px 2px 0 rgba(255,255,255,.18); }
+    .orange-fruit::before { content: ""; position: absolute; inset: 11px; border: 1px dashed rgba(255,225,139,.55); border-radius: 50%; }
+    .fruit-a { right: 31%; bottom: 12%; transform: scale(.82); }
+    .fruit-b { right: 15%; top: 30%; transform: scale(.56) rotate(28deg); }
+    .fruit-c { left: 62%; bottom: -9%; transform: scale(1.35) rotate(-20deg); opacity: .94; }
+    .curve { z-index: 2; border: 1px solid rgba(255,245,211,.65); border-left-color: transparent; border-bottom-color: transparent; border-radius: 50%; transform: rotate(-31deg); }
+    .curve-a { width: 55%; height: 125%; left: 28%; top: -31%; }
+    .curve-b { width: 42%; height: 92%; left: 48%; top: 14%; transform: rotate(34deg); border-color: rgba(255,239,196,.37); border-left-color: transparent; }
+
+    /* Bottle */
+    .bottle {
+      --bottle-scale: 1;
+      z-index: 15;
+      width: 136px;
+      height: 306px;
+      transform: scale(var(--bottle-scale));
+      transform-origin: 50% 100%;
+      filter: drop-shadow(17px 24px 14px rgba(90, 29, 9, .25));
+    }
+    .bottle .cap { position: absolute; z-index: 4; left: 42px; top: 0; width: 52px; height: 39px; border-radius: 10px 10px 5px 5px; background: linear-gradient(90deg, #1b6a45, #3b9862 36%, #0d513b 100%); box-shadow: inset 0 3px 0 rgba(255,255,255,.22), inset 0 -5px 0 rgba(0,0,0,.16); }
+    .bottle .cap::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 5px; height: 2px; background: rgba(5, 47, 34, .4); box-shadow: 0 -5px 0 rgba(255,255,255,.1), 0 -10px 0 rgba(255,255,255,.1); }
+    .bottle .neck { position: absolute; z-index: 2; left: 48px; top: 29px; width: 40px; height: 58px; border-radius: 9px 9px 3px 3px; background: linear-gradient(90deg, #ba3b14, #ff8e2d 43%, #b93a14 100%); box-shadow: inset 10px 0 9px rgba(255,221,112,.16), inset -6px 0 8px rgba(116,23,7,.23); }
+    .bottle .body { position: absolute; z-index: 1; left: 4px; top: 62px; width: 128px; height: 244px; border-radius: 32px 32px 36px 36px / 44px 44px 31px 31px; overflow: hidden; background: linear-gradient(90deg, #a93314 0%, #ec5a1e 15%, #ff8c28 36%, #ec5b1e 69%, #a52d12 100%); box-shadow: inset 12px 0 13px rgba(255,211,103,.15), inset -13px 0 12px rgba(86,20,8,.28), inset 0 -10px 10px rgba(89, 24, 8, .25); }
+    .bottle .body::before { content: ""; position: absolute; inset: 0; opacity: .3; background: repeating-linear-gradient(90deg, transparent 0 13px, rgba(255, 223, 134, .13) 14px 15px, transparent 16px 25px); }
+    .bottle .shine { position: absolute; z-index: 3; left: 25px; top: 79px; width: 9px; height: 166px; border-radius: 50%; background: linear-gradient(180deg, rgba(255,255,255,.44), rgba(255,255,255,0)); filter: blur(1px); opacity: .55; }
+    .bottle .label { position: absolute; z-index: 6; left: 9px; right: 9px; top: 112px; height: 104px; overflow: hidden; color: var(--ink); text-align: center; background: linear-gradient(180deg, #fffdf0, #fff7db); border-radius: 3px; box-shadow: 0 2px 4px rgba(93, 30, 10, .24); }
+    .bottle .label::before { content: ""; position: absolute; width: 74px; height: 56px; left: 17px; top: -22px; border-radius: 50%; background: #ffd054; opacity: .95; }
+    .bottle .label .heart { position: relative; z-index: 2; display: block; width: 33px; height: 25px; margin: 7px auto -2px; border-radius: 50% 50% 55% 55%; background: var(--orange); color: #fff1ac; font-size: 17px; line-height: 25px; transform: rotate(-4deg); }
+    .bottle .label .word { position: relative; z-index: 3; display: block; color: var(--ink); font-size: 19px; font-weight: 950; line-height: .92; letter-spacing: -.09em; }
+    .bottle .label .line { display: block; margin: 6px auto 4px; width: 56px; height: 1px; background: rgba(21,43,80,.32); }
+    .bottle .label .flavor { display: block; color: var(--orange-dark); font-size: 10px; font-weight: 950; line-height: 1; letter-spacing: .12em; text-transform: uppercase; }
+    .bottle .label .subline { display: block; margin-top: 4px; color: #55715d; font-size: 7px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    .bottle-sm { --bottle-scale: .65; }
+    .bottle-hero { right: 14%; bottom: 10%; }
+    .bottle-pour { right: 16%; bottom: 9%; --bottle-scale: .73; transform: scale(var(--bottle-scale)) rotate(11deg); transform-origin: 50% 100%; }
+    .bottle-final { left: 50%; bottom: 10%; --bottle-scale: 1.05; transform: translateX(-50%) scale(var(--bottle-scale)); transform-origin: 50% 100%; }
+
+    /* Scene 0 */
+    .scene-0 .copy { animation: copy-up .9s .15s var(--ease-out) both; }
+    .scene-0 .sun-disc { animation: sun-breathe 6.8s ease-in-out infinite alternate; }
+    .scene-0 .fruit-a { animation: fruit-float 3.6s .1s ease-in-out infinite alternate; }
+    .scene-0 .fruit-b { animation: fruit-float 3.1s .4s ease-in-out infinite alternate-reverse; }
+    .scene-0 .bottle-hero { animation: bottle-in 1.25s .25s var(--ease-spring) both, bottle-sway 4.5s 1.5s ease-in-out infinite alternate; }
+    .scene-0.active .scene-tag { animation: fade-in .5s .8s both; }
+
+    /* Scene 1 */
+    .pour-table { z-index: 1; left: 0; right: 0; bottom: -2%; height: 30%; background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(163,71,14,.16)), repeating-linear-gradient(90deg, rgba(108,51,13,.12) 0 2px, transparent 2px 68px); transform: skewY(-2deg); }
+    .pour-arc { z-index: 5; right: 24%; bottom: 29%; width: 78px; height: 143px; border-right: 5px solid rgba(244, 104, 27, .85); border-bottom: 5px solid rgba(244,104,27,.85); border-radius: 0 0 76px 0; transform: rotate(12deg); filter: drop-shadow(0 0 3px rgba(255,233,125,.45)); opacity: 0; }
+    .pour-drop { z-index: 8; right: 18.8%; bottom: 28%; width: 17px; height: 24px; border-radius: 60% 60% 60% 0; background: var(--orange); transform: rotate(-45deg); opacity: 0; }
+    .glass { z-index: 8; width: 84px; height: 98px; border: 2px solid rgba(255,255,255,.8); border-top: 3px solid rgba(255,255,255,.95); border-radius: 5px 5px 14px 14px; overflow: hidden; background: rgba(255,255,255,.12); box-shadow: inset 0 14px 18px rgba(255,255,255,.14), 0 12px 18px rgba(137,63,16,.12); }
+    .glass::before { content: ""; position: absolute; left: 11px; top: 9px; width: 8px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.45); transform: rotate(4deg); filter: blur(1px); }
+    .glass .drink { position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: linear-gradient(180deg, #ffae3c, #ec5b20); box-shadow: inset 0 8px 8px rgba(255,227,119,.2); }
+    .glass .slice { position: absolute; z-index: 2; right: -12px; top: -14px; width: 38px; height: 38px; border-radius: 50%; border: 6px solid #ffb13b; background: repeating-conic-gradient(#ffe48b 0 16deg, #f38127 16deg 21deg); box-shadow: inset 0 0 0 2px #f26c22; }
+    .glass-a { right: 37%; bottom: 16%; transform: rotate(-4deg); }
+    .glass-b { right: 26%; bottom: 13%; transform: rotate(4deg) scale(.82); }
+    .glass-c { right: 14%; bottom: 16%; transform: rotate(8deg) scale(.7); }
+    .scene-1 .copy { animation: copy-up .9s .12s var(--ease-out) both; }
+    .scene-1 .bottle-pour { animation: bottle-pour-in 1s .16s var(--ease-spring) both; }
+    .scene-1 .pour-arc { animation: pour-draw .7s .83s var(--ease-out) both; }
+    .scene-1 .pour-drop { animation: drop-pop .5s 1.35s var(--ease-spring) both; }
+    .scene-1 .glass-a { animation: glass-in .65s .98s var(--ease-spring) both; }
+    .scene-1 .glass-b { animation: glass-in .65s 1.1s var(--ease-spring) both; }
+    .scene-1 .glass-c { animation: glass-in .65s 1.22s var(--ease-spring) both; }
+
+    /* Scene 2 */
+    .scene-2 .copy { left: 7.5%; top: 17%; animation: copy-up .9s .1s var(--ease-out) both; }
+    .sharing-sun { z-index: 1; right: -10%; top: -30%; width: 75%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255,211,91,.9) 0 16%, rgba(255,211,91,.16) 17% 47%, rgba(255,211,91,0) 70%); opacity: .68; }
+    .sharing-sun::after { content: ""; position: absolute; inset: 17%; border-radius: 50%; border: 1px solid rgba(255,211,91,.5); box-shadow: 0 0 0 26px rgba(255,211,91,.07), 0 0 0 52px rgba(255,211,91,.05); }
+    .table-oval { z-index: 4; left: 13%; right: 10%; bottom: 17%; height: 15%; border-radius: 50%; background: #bf5a29; box-shadow: inset 0 10px 0 rgba(255,194,97,.14), 0 28px 34px rgba(0,0,0,.18); }
+    .table-leg { z-index: 3; bottom: -7%; width: 9%; height: 28%; background: #773c2c; border-radius: 4px; transform: skewX(9deg); }
+    .leg-a { left: 25%; } .leg-b { right: 20%; transform: skewX(-9deg); }
+    .person { z-index: 3; bottom: 29%; width: 116px; height: 172px; transform-origin: 50% 100%; }
+    .person .head { position: absolute; width: 43px; height: 43px; left: 36px; top: 4px; border-radius: 50%; background: var(--skin, #b96d4b); box-shadow: inset -8px -3px 0 rgba(67,34,31,.16); }
+    .person .head::after { content: ""; position: absolute; left: -1px; top: -2px; width: 45px; height: 21px; border-radius: 52% 52% 30% 30%; background: var(--hair, #14263c); }
+    .person .body { position: absolute; left: 20px; top: 42px; width: 77px; height: 111px; border-radius: 39px 39px 16px 16px; background: var(--shirt, #ec6c33); box-shadow: inset 12px 0 15px rgba(255,255,255,.13), inset -11px 0 16px rgba(41,25,40,.15); }
+    .person .arm { position: absolute; z-index: 3; width: 20px; height: 82px; top: 56px; border-radius: 20px; background: var(--skin, #b96d4b); transform-origin: 50% 10px; }
+    .person .arm.a { left: 9px; transform: rotate(23deg); } .person .arm.b { right: 7px; transform: rotate(-35deg); }
+    .person.p-a { left: 19%; --skin: #b96742; --hair: #101e39; --shirt: #e95c2d; transform: scale(.84); }
+    .person.p-b { left: 42%; --skin: #8e4a40; --hair: #202133; --shirt: #f0a330; transform: scale(1.02); }
+    .person.p-c { right: 15%; --skin: #a75c43; --hair: #442625; --shirt: #f2774e; transform: scale(.9); }
+    .scene-2 .bottle-final { left: 53%; bottom: 28%; --bottle-scale: .43; z-index: 7; }
+    .scene-2 .glass-a { right: 42%; bottom: 23%; transform: rotate(-4deg) scale(.43); z-index: 8; }
+    .scene-2 .glass-b { right: 31%; bottom: 23%; transform: rotate(4deg) scale(.37); z-index: 8; }
+    .scene-2 .glass-c { right: 21%; bottom: 23%; transform: rotate(8deg) scale(.34); z-index: 8; }
+    .scene-2 .person { animation: person-in .75s var(--ease-spring) both; }
+    .scene-2 .p-a { animation-delay: .25s; } .scene-2 .p-b { animation-delay: .39s; } .scene-2 .p-c { animation-delay: .53s; }
+    .scene-2 .bottle-final { animation: bottle-small-pop .7s .84s var(--ease-spring) both; }
+    .scene-2 .glass { animation: glass-small-in .6s 1.04s var(--ease-spring) both; }
+
+    /* Scene 3 */
+    .final-halo { z-index: 1; left: 50%; top: 47%; width: min(42vw, 530px); aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(255,246,199,.98) 0 20%, rgba(255,224,112,.72) 21% 43%, rgba(255,166,49,.18) 44% 67%, transparent 68%); }
+    .final-rays { z-index: 0; left: 50%; top: 47%; width: 90%; height: 90%; transform: translate(-50%, -50%); border-radius: 50%; opacity: .3; background: repeating-conic-gradient(from 0deg, rgba(255,244,189,.9) 0 1.5deg, transparent 1.5deg 12deg); mask-image: radial-gradient(circle, transparent 0 45%, #000 46% 53%, transparent 54%); }
+    .final-logo { z-index: 12; left: 50%; top: 12%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; color: var(--ink); }
+    .final-logo .round { position: relative; width: 38px; height: 38px; border-radius: 50%; background: var(--yellow); box-shadow: inset 0 -3px 0 rgba(243,107,43,.2); }
+    .final-logo .round::after { content: ""; position: absolute; width: 19px; height: 14px; left: 9px; top: 11px; border-radius: 52% 52% 56% 56%; background: var(--orange); transform: rotate(-5deg); }
+    .final-logo .word { font-size: clamp(31px, 5vw, 70px); font-weight: 950; line-height: .8; letter-spacing: -.1em; }
+    .final-copy { z-index: 12; left: 50%; bottom: 8%; transform: translateX(-50%); text-align: center; width: 86%; }
+    .final-copy .line { display: block; font-size: clamp(10px, 1.1vw, 15px); font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
+    .final-copy strong { display: block; margin-top: 6px; font-size: clamp(22px, 3vw, 45px); line-height: .9; letter-spacing: -.07em; }
+    .final-pill { display: inline-flex; margin-top: 16px; padding: 7px 11px; border: 1px solid rgba(21,43,80,.46); border-radius: 999px; font-size: 8px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+    .scene-3 .final-logo { animation: logo-in .85s .12s var(--ease-spring) both; }
+    .scene-3 .final-halo { animation: halo-in 1.1s .08s var(--ease-out) both, halo-pulse 4s 1.5s ease-in-out infinite alternate; }
+    .scene-3 .bottle-final { animation: final-bottle-in 1.1s .34s var(--ease-spring) both, final-bottle-breathe 4.5s 1.55s ease-in-out infinite alternate; }
+    .scene-3 .final-copy { animation: copy-up .8s .7s var(--ease-out) both; }
+
+    /* Keyframes */
+    @keyframes fade-in { from { opacity: 0; } to { opacity: .75; } }
+    @keyframes copy-up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes sun-breathe { from { transform: scale(.98) rotate(-2deg); } to { transform: scale(1.05) rotate(4deg); } }
+    @keyframes fruit-float { from { translate: 0 0; rotate: -2deg; } to { translate: 0 -15px; rotate: 5deg; } }
+    @keyframes bottle-in { from { opacity: 0; transform: translateY(45px) rotate(9deg) scale(.88); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
+    @keyframes bottle-sway { from { rotate: -1.5deg; } to { rotate: 1.5deg; } }
+    @keyframes bottle-pour-in { from { opacity: 0; transform: translate(32px, 35px) rotate(25deg) scale(.5); } to { opacity: 1; transform: translate(0,0) rotate(11deg) scale(.73); } }
+    @keyframes pour-draw { from { opacity: 0; clip-path: inset(0 100% 100% 0); } to { opacity: 1; clip-path: inset(0); } }
+    @keyframes drop-pop { 0% { opacity: 0; translate: 0 -16px; scale: .4; } 70% { opacity: 1; scale: 1.2; } 100% { opacity: 1; translate: 0 0; scale: 1; } }
+    @keyframes glass-in { from { opacity: 0; translate: 0 34px; scale: .72; } to { opacity: 1; translate: 0 0; scale: 1; } }
+    @keyframes person-in { from { opacity: 0; translate: 0 45px; scale: .86; } to { opacity: 1; translate: 0 0; scale: 1; } }
+    @keyframes bottle-small-pop { from { opacity: 0; translate: 0 20px; scale: .2; } to { opacity: 1; translate: 0 0; scale: .43; } }
+    @keyframes glass-small-in { from { opacity: 0; translate: 0 15px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes logo-in { from { opacity: 0; translate: 0 -12px; scale: .9; } to { opacity: 1; translate: 0 0; scale: 1; } }
+    @keyframes halo-in { from { opacity: 0; scale: .72; } to { opacity: 1; scale: 1; } }
+    @keyframes halo-pulse { from { scale: .98; } to { scale: 1.04; } }
+    @keyframes final-bottle-in { from { opacity: 0; translate: -50% 60px; scale: .76; } to { opacity: 1; translate: -50% 0; scale: 1.05; } }
+    @keyframes final-bottle-breathe { from { rotate: -1deg; } to { rotate: 1deg; } }
+
+    /* Controls and side direction */
+    .film-controls { display: flex; align-items: center; gap: 12px; padding: 14px 2px 0; }
+    .play-btn, .outline-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 10px 17px;
+      color: var(--white);
+      background: var(--navy);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: transform .25s var(--ease-spring), box-shadow .25s var(--ease-soft), background .25s;
+    }
+    .play-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13,27,53,.17); }
+    .play-btn .play-icon { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid currentColor; }
+    .play-btn.is-playing .play-icon { width: 8px; height: 10px; border: 0; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
+    .outline-btn { color: var(--navy); background: transparent; border-color: var(--line); }
+    .outline-btn:hover { background: rgba(255,255,255,.7); transform: translateY(-2px); }
+    .time-readout { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; font-weight: 800; letter-spacing: .06em; }
+    .film-side { display: flex; flex-direction: column; gap: 14px; }
+    .side-card { padding: 22px; border-radius: 20px; border: 1px solid var(--line); background: rgba(255,255,255,.63); }
+    .side-card.dark { color: var(--white); background: var(--navy); border-color: var(--navy); }
+    .side-card h2 { margin: 8px 0 10px; color: inherit; font-size: 26px; line-height: .98; letter-spacing: -.06em; }
+    .side-card p { color: var(--muted); font-size: 13px; margin: 0; }
+    .side-card.dark p { color: rgba(255,255,255,.68); }
+    .side-label { color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .dark .side-label { color: var(--yellow); }
+    .scene-readout { margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.13); }
+    .scene-readout .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: rgba(255,255,255,.56); font-size: 10px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+    .scene-readout strong { color: var(--white); font-size: 12px; font-weight: 800; letter-spacing: .02em; text-transform: none; }
+    .scene-readout .bar { height: 4px; margin-top: 13px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.13); }
+    .scene-readout .bar i { display: block; width: 25%; height: 100%; border-radius: inherit; background: var(--yellow); transform-origin: left; transition: width .35s linear; }
+    .beat-list { display: grid; gap: 9px; margin-top: 17px; }
+    .beat { display: flex; align-items: center; gap: 10px; border: 0; padding: 0; color: var(--muted); background: transparent; text-align: left; transition: color .2s, transform .2s; }
+    .beat:hover { color: var(--navy); transform: translateX(3px); }
+    .beat.active { color: var(--navy); }
+    .beat .bullet { width: 8px; height: 8px; border-radius: 50%; background: #d2d7df; transition: background .2s, transform .2s; }
+    .beat.active .bullet { background: var(--orange); transform: scale(1.25); }
+    .beat time { width: 37px; color: inherit; font-size: 10px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .beat span:last-child { font-size: 12px; font-weight: 800; }
+    .claim-note { display: flex; align-items: start; gap: 10px; padding-top: 15px; margin-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .claim-note b { color: var(--orange-dark); font-size: 14px; line-height: 1; }
+
+    /* Direction / deck */
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 22px; margin-bottom: 26px; }
+    .section-heading h1 { margin: 10px 0 0; color: var(--navy); font-size: clamp(33px, 4.2vw, 64px); line-height: .91; letter-spacing: -.075em; }
+    .section-heading h1 em { color: var(--orange); font-style: normal; }
+    .section-heading p { max-width: 360px; color: var(--muted); font-size: 13px; margin: 0; }
+    .concept-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 16px; margin-bottom: 16px; }
+    .concept-hero, .metric-card, .story-card, .production-card, .source-card { border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.66); }
+    .concept-hero { position: relative; min-height: 310px; overflow: hidden; padding: 32px; color: var(--white); background: var(--navy); }
+    .concept-hero::before { content: ""; position: absolute; width: 420px; aspect-ratio: 1; right: -90px; top: -160px; border-radius: 50%; background: radial-gradient(circle, var(--yellow), var(--orange) 45%, transparent 70%); opacity: .86; }
+    .concept-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.07) 20.5% 20.8%, transparent 21% 34%, rgba(255,255,255,.05) 34.5% 34.8%, transparent 35%); pointer-events: none; }
+    .concept-hero > * { position: relative; z-index: 1; }
+    .concept-hero h2 { max-width: 640px; margin: 45px 0 14px; color: var(--white); font-size: clamp(44px, 6vw, 84px); line-height: .86; letter-spacing: -.09em; }
+    .concept-hero h2 em { color: var(--yellow); font-style: normal; }
+    .concept-hero p { max-width: 460px; color: rgba(255,255,255,.66); font-size: 13px; margin: 0; }
+    .card-kicker { color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: .17em; text-transform: uppercase; }
+    .concept-hero .card-kicker { color: var(--yellow); }
+    .metric-stack { display: grid; gap: 16px; }
+    .metric-card { min-height: 147px; padding: 24px; }
+    .metric-card .metric { display: block; margin: 15px 0 4px; color: var(--navy); font-size: 43px; font-weight: 950; line-height: .9; letter-spacing: -.08em; }
+    .metric-card p { margin: 0; color: var(--muted); font-size: 12px; }
+    .storyboard-title { display: flex; align-items: center; justify-content: space-between; margin: 33px 0 13px; }
+    .storyboard-title h2 { margin: 0; color: var(--navy); font-size: 21px; letter-spacing: -.04em; }
+    .storyboard-title span { color: var(--muted); font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .storyboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .story-card { overflow: hidden; }
+    .story-visual { position: relative; height: 164px; overflow: hidden; }
+    .story-visual.sv-0 { background: linear-gradient(135deg, #ffbd4b, #f46e2f); }
+    .story-visual.sv-1 { background: linear-gradient(135deg, #fff0c5, #ff9c37); }
+    .story-visual.sv-2 { background: linear-gradient(135deg, #12294b, #245073); }
+    .story-visual.sv-3 { background: linear-gradient(135deg, #ffcf63, #f16a2d); }
+    .story-visual .sv-sun { position: absolute; width: 145px; height: 145px; right: -30px; top: -48px; border-radius: 50%; background: radial-gradient(circle, #ffeaa6, #ffbf4e 48%, transparent 70%); }
+    .story-visual .sv-word { position: absolute; left: 18px; top: 20px; color: rgba(13,27,53,.74); font-size: 9px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .story-visual .sv-title { position: absolute; left: 17px; bottom: 18px; color: var(--navy); font-size: 25px; font-weight: 950; line-height: .87; letter-spacing: -.08em; }
+    .sv-2 .sv-word, .sv-2 .sv-title { color: var(--white); }
+    .story-visual .sv-bottle { position: absolute; right: 23px; bottom: 13px; width: 46px; height: 113px; border-radius: 12px 12px 15px 15px; background: linear-gradient(90deg, #b43a18, #ff8525 43%, #b83c15); box-shadow: 8px 12px 12px rgba(71,21,8,.25); }
+    .story-visual .sv-bottle::before { content: ""; position: absolute; top: -12px; left: 13px; width: 20px; height: 18px; border-radius: 5px 5px 2px 2px; background: #27724d; }
+    .story-visual .sv-bottle::after { content: "sunquick"; position: absolute; left: 4px; right: 4px; top: 42px; padding: 8px 2px; color: var(--navy); background: #fff5dc; font-size: 6px; font-weight: 950; letter-spacing: -.1em; text-align: center; }
+    .sv-1 .sv-glass { position: absolute; width: 34px; height: 44px; right: 30px; bottom: 18px; border: 2px solid rgba(255,255,255,.8); border-radius: 3px 3px 7px 7px; background: linear-gradient(transparent 44%, #ef691f 45%); transform: rotate(7deg); }
+    .sv-1 .sv-drop { position: absolute; right: 43px; bottom: 55px; width: 4px; height: 38px; border-radius: 5px; background: #ec641e; transform: rotate(-17deg); }
+    .sv-2 .sv-heads { position: absolute; right: 23px; bottom: 18px; width: 83px; height: 64px; border-radius: 50% 50% 12px 12px; background: rgba(241,113,67,.9); box-shadow: -30px 0 0 rgba(235,155,50,.9), -55px 6px 0 rgba(215,83,57,.9); }
+    .sv-2 .sv-heads::before { content: ""; position: absolute; left: 12px; top: -21px; width: 26px; height: 26px; border-radius: 50%; background: #a65744; box-shadow: -30px 7px 0 #b8694b, 39px 0 0 #9a5347; }
+    .sv-3 .sv-pack { position: absolute; left: 50%; bottom: 11px; width: 63px; height: 119px; border-radius: 17px 17px 21px 21px; background: linear-gradient(90deg, #b73b15, #ff8425 45%, #bd3d14); transform: translateX(-50%); box-shadow: 10px 14px 18px rgba(114,38,10,.22); }
+    .sv-3 .sv-pack::before { content: ""; position: absolute; left: 18px; top: -13px; width: 27px; height: 18px; border-radius: 5px; background: #2c8257; }
+    .sv-3 .sv-pack::after { content: "sunquick"; position: absolute; left: 5px; right: 5px; top: 42px; padding: 10px 2px; color: var(--navy); background: #fff7df; text-align: center; font-size: 7px; font-weight: 950; letter-spacing: -.1em; }
+    .story-copy { padding: 15px 17px 17px; }
+    .story-copy .time { color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: .15em; }
+    .story-copy h3 { margin: 8px 0 4px; color: var(--navy); font-size: 17px; line-height: .96; letter-spacing: -.05em; }
+    .story-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .production-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .production-card { padding: 20px; }
+    .production-card h3 { margin: 12px 0 7px; color: var(--navy); font-size: 18px; letter-spacing: -.04em; }
+    .production-card p { margin: 0; color: var(--muted); font-size: 12px; }
+    .icon-line { display: flex; align-items: center; gap: 7px; color: var(--orange); font-size: 18px; }
+    .icon-line i { display: block; width: 23px; height: 23px; border: 2px solid currentColor; border-radius: 50%; }
+    .icon-line i::after { content: ""; display: block; width: 7px; height: 7px; margin: 6px; border-radius: 50%; background: currentColor; }
+
+    /* Research */
+    .research-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; align-items: stretch; }
+    .research-main { padding: 32px; border-radius: 22px; background: var(--navy); color: var(--white); }
+    .research-main h1 { max-width: 670px; margin: 12px 0 13px; color: var(--white); font-size: clamp(35px, 4.4vw, 67px); line-height: .9; letter-spacing: -.08em; }
+    .research-main h1 em { color: var(--yellow); font-style: normal; }
+    .research-main > p { max-width: 620px; margin: 0; color: rgba(255,255,255,.63); font-size: 13px; }
+    .fact-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 31px 0 0; padding: 0; list-style: none; }
+    .fact-list li { min-height: 94px; padding: 14px; border: 1px solid rgba(255,255,255,.13); border-radius: 13px; background: rgba(255,255,255,.05); }
+    .fact-list .fact-no { display: block; color: var(--yellow); font-size: 21px; font-weight: 950; line-height: 1; letter-spacing: -.05em; }
+    .fact-list li strong { display: block; margin-top: 8px; color: var(--white); font-size: 11px; line-height: 1.25; }
+    .fact-list li span { display: block; margin-top: 3px; color: rgba(255,255,255,.53); font-size: 10px; }
+    .packshot-card { display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; min-height: 420px; border: 1px solid var(--line); border-radius: 22px; background: var(--paper); }
+    .packshot-visual { display: grid; place-items: center; min-height: 325px; padding: 26px; background: radial-gradient(circle at 50% 45%, #fff8cf 0 26%, #ffd15d 27% 50%, #f58232 80%); }
+    .packshot-visual img { width: min(72%, 250px); max-height: 280px; object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(10px 18px 13px rgba(91,43,13,.22)); }
+    .packshot-caption { padding: 18px 20px 20px; border-top: 1px solid var(--line); }
+    .packshot-caption h3 { margin: 0 0 4px; color: var(--navy); font-size: 19px; letter-spacing: -.04em; }
+    .packshot-caption p { margin: 0; color: var(--muted); font-size: 11px; }
+    .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .source-card { padding: 20px; }
+    .source-card h3 { margin: 10px 0 6px; color: var(--navy); font-size: 17px; letter-spacing: -.04em; }
+    .source-card p { margin: 0; color: var(--muted); font-size: 11px; }
+    .source-card a { display: inline-block; margin-top: 13px; color: var(--orange-dark); font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .source-card a:hover { text-decoration: underline; }
+    .validation { display: flex; gap: 12px; align-items: start; margin-top: 16px; padding: 18px 20px; border: 1px solid rgba(243,107,43,.26); border-radius: 18px; background: rgba(255, 235, 202, .5); }
+    .validation .v-icon { width: 24px; height: 24px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; color: var(--white); background: var(--orange); font-weight: 900; }
+    .validation h3 { margin: 0 0 3px; color: var(--navy); font-size: 14px; }
+    .validation p { margin: 0; color: var(--muted); font-size: 11px; }
+
+    footer { max-width: 1500px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 64px) 30px; color: var(--muted); font-size: 10px; }
+    footer strong { color: var(--navy); }
+    .footer-line { display: flex; justify-content: space-between; gap: 15px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+    @media (max-width: 1080px) {
+      .film-grid { grid-template-columns: 1fr; }
+      .film-side { display: grid; grid-template-columns: 1fr 1fr; }
+      .side-card.dark { grid-row: span 2; }
+      .research-grid { grid-template-columns: 1fr; }
+      .packshot-card { min-height: 0; }
+      .packshot-visual { min-height: 270px; }
+    }
+    @media (max-width: 760px) {
+      .topbar { height: auto; min-height: 72px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
+      .top-meta { display: none; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      .nav button { flex: 1; padding-left: 9px; padding-right: 9px; }
+      main { padding-top: 28px; }
+      .film-intro, .section-heading { display: block; }
+      .film-intro .intro-copy, .section-heading p { margin-top: 17px; }
+      .film-side { display: flex; }
+      .concept-grid { grid-template-columns: 1fr; }
+      .storyboard { grid-template-columns: 1fr 1fr; }
+      .production-grid, .source-grid { grid-template-columns: 1fr; }
+      .fact-list { grid-template-columns: 1fr; }
+      .concept-hero { min-height: 285px; }
+    }
+    @media (max-width: 480px) {
+      .mini-brand small { display: none; }
+      .film-stage { border-radius: 17px; }
+      .scene .copy { max-width: 65%; top: 25%; }
+      .scene .copy h2 { font-size: 34px; }
+      .bottle-hero { right: 5%; transform: scale(.78); }
+      .bottle-pour { right: 4%; transform: scale(.55) rotate(11deg); }
+      .glass-a { right: 40%; transform: scale(.72) rotate(-4deg); }
+      .glass-b { right: 22%; }
+      .glass-c { display: none; }
+      .person { width: 76px; transform: scale(.65); }
+      .person.p-a { left: 7%; } .person.p-b { left: 35%; } .person.p-c { right: 4%; }
+      .scene-2 .bottle-final { left: 52%; }
+      .final-logo .word { font-size: 34px; }
+      .final-copy strong { font-size: 25px; }
+      .storyboard { grid-template-columns: 1fr; }
+      .story-visual { height: 145px; }
+      .film-controls { flex-wrap: wrap; }
+      .time-readout { width: 100%; margin-left: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="mini-brand" href="#film" aria-label="Sunquick — retour au film">
+        <span class="mark" aria-hidden="true"></span>
+        <strong>sunquick</strong>
+        <small>concept film</small>
+      </a>
+      <nav class="nav" aria-label="Sections de la présentation">
+        <button class="active" data-nav="film">Film</button>
+        <button data-nav="direction">Intention</button>
+        <button data-nav="research">Recherche</button>
+      </nav>
+      <div class="top-meta"><b>V01</b><span class="dot"></span><span>30 s · 16:9</span></div>
+    </header>
+
+    <main>
+      <section class="view active" id="filmView" data-view="film">
+        <div class="film-intro">
+          <div>
+            <span class="eyebrow">Proposition de film publicitaire · Sénégal</span>
+            <h1>Le soleil <em>se partage.</em></h1>
+          </div>
+          <p class="intro-copy">Une mini-histoire en quatre temps : un rayon de soleil, un geste simple, une table qui se remplit, puis le goût Sunquick comme signature du moment.</p>
+        </div>
+
+        <div class="film-grid">
+          <div class="film-card">
+            <div class="film-stage" id="filmStage" data-scene="0" aria-label="Film publicitaire Sunquick interactif">
+              <div class="stage-ui"><span class="live">Concept en lecture</span><span class="frame-count" id="frameCount">01 / 04</span></div>
+
+              <article class="scene scene-0 active" data-scene-index="0" aria-label="Ouverture : un moment commence">
+                <div class="sun-disc"></div><div class="sun-rays"></div><div class="curve curve-a"></div><div class="curve curve-b"></div>
+                <div class="copy"><span class="mini">Un rayon. Une envie.</span><h2>Tout commence<br><em>par un moment.</em></h2><p>Le soleil descend, la table s'ouvre. Il suffit d'un geste pour donner le ton.</p></div>
+                <div class="orange-fruit fruit-a" aria-hidden="true"></div><div class="orange-fruit fruit-b" aria-hidden="true"></div>
+                <div class="bottle bottle-hero" aria-label="Bouteille Sunquick Orange">
+                  <span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span>
+                  <span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span>
+                </div>
+                <span class="scene-tag">orange · concentré fruité</span><span class="scene-number">01 / 04</span>
+              </article>
+
+              <article class="scene scene-1" data-scene-index="1" aria-label="Le geste : on verse">
+                <div class="sun-disc" style="right:-22%;top:-39%;opacity:.72"></div><div class="pour-table"></div>
+                <div class="copy"><span class="mini">Le geste qui rassemble</span><h2>On verse.<br><em>On se retrouve.</em></h2><p>Une couleur vive, un parfum d'orange, et le moment prend une nouvelle dimension.</p></div>
+                <div class="bottle bottle-pour" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
+                <div class="pour-arc"></div><div class="pour-drop"></div>
+                <div class="glass glass-a"><span class="drink"></span><span class="slice"></span></div><div class="glass glass-b"><span class="drink"></span></div><div class="glass glass-c"><span class="drink"></span></div>
+                <span class="scene-tag">simple à préparer · facile à partager</span><span class="scene-number">02 / 04</span>
+              </article>
+
+              <article class="scene scene-2" data-scene-index="2" aria-label="Le partage : une table se remplit">
+                <div class="sharing-sun"></div><div class="table-leg leg-a"></div><div class="table-leg leg-b"></div><div class="table-oval"></div>
+                <div class="copy"><span class="mini">Le goût du partage</span><h2>Un même goût.<br><em>Des sourires.</em></h2><p>À la maison, entre amis, au détour d'un après-midi : le plaisir grandit quand il circule.</p></div>
+                <div class="person p-a"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
+                <div class="person p-b"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
+                <div class="person p-c"><span class="head"></span><span class="body"></span><span class="arm a"></span><span class="arm b"></span></div>
+                <div class="bottle bottle-final" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
+                <div class="glass glass-a"><span class="drink"></span></div><div class="glass glass-b"><span class="drink"></span></div><div class="glass glass-c"><span class="drink"></span></div>
+                <span class="scene-tag">une bouteille · plusieurs moments</span><span class="scene-number">03 / 04</span>
+              </article>
+
+              <article class="scene scene-3" data-scene-index="3" aria-label="Signature : Sunquick">
+                <div class="final-rays"></div><div class="final-halo"></div>
+                <div class="final-logo"><span class="round"></span><span class="word">sunquick</span></div>
+                <div class="bottle bottle-final" aria-label="Bouteille Sunquick Orange"><span class="cap"></span><span class="neck"></span><span class="body"></span><span class="shine"></span><span class="label"><span class="heart">♥</span><span class="word">sunquick</span><span class="line"></span><span class="flavor">orange</span><span class="subline">fruit concentrate</span></span></div>
+                <div class="final-copy"><span class="line">Le goût fruité qui rapproche</span><strong>Le soleil se partage.</strong><span class="final-pill">Sunquick · orange · à diluer</span></div>
+                <span class="scene-number">04 / 04</span>
+              </article>
+            </div>
+
+            <div class="film-controls">
+              <button class="play-btn" id="playButton" type="button"><span class="play-icon" aria-hidden="true"></span><span id="playLabel">Lancer le film</span></button>
+              <button class="outline-btn" id="resetButton" type="button">Rejouer</button>
+              <span class="time-readout" id="timeReadout">00:00 / 00:30</span>
+            </div>
+          </div>
+
+          <aside class="film-side" aria-label="Informations de réalisation">
+            <div class="side-card dark">
+              <span class="side-label">Direction créative</span>
+              <h2>Transformer une boisson en souvenir.</h2>
+              <p>Le film ne vend pas seulement un concentré : il met en scène le passage d'un moment ordinaire à un moment partagé.</p>
+              <div class="scene-readout"><div class="row"><span id="scenePhase">01 · OUVERTURE</span><strong id="sceneTitle">Le moment commence</strong></div><div class="bar"><i id="sceneProgress"></i></div></div>
+            </div>
+            <div class="side-card">
+              <span class="side-label">Découpage</span>
+              <div class="beat-list" id="beatList">
+                <button class="beat active" data-jump="0"><span class="bullet"></span><time>00–07</time><span>Un rayon</span></button>
+                <button class="beat" data-jump="1"><span class="bullet"></span><time>07–15</time><span>On verse</span></button>
+                <button class="beat" data-jump="2"><span class="bullet"></span><time>15–23</time><span>On partage</span></button>
+                <button class="beat" data-jump="3"><span class="bullet"></span><time>23–30</time><span>Signature</span></button>
+              </div>
+              <div class="claim-note"><b>✦</b><span>Les bénéfices produit restent formulés avec prudence : les mentions d'étiquette et les formats locaux doivent être validés par Finamark avant diffusion.</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="directionView" data-view="direction">
+        <div class="section-heading">
+          <div><span class="eyebrow">Note d'intention · à présenter au directeur</span><h1>Une signature solaire,<br><em>sans surjouer.</em></h1></div>
+          <p>Un film court, chaleureux et reconnaissable : l'orange devient un fil visuel, le geste de verser devient la transition, et le partage devient la preuve émotionnelle.</p>
+        </div>
+        <div class="concept-grid">
+          <article class="concept-hero"><span class="card-kicker">Big idea · proposition de ligne</span><h2>Le soleil<br><em>se partage.</em></h2><p>La promesse créative proposée pour le Sénégal : Sunquick apporte la couleur et l'énergie d'un rayon de soleil aux moments que l'on choisit de vivre ensemble.</p></article>
+          <div class="metric-stack"><article class="metric-card"><span class="card-kicker">Durée</span><span class="metric">30 s</span><p>Film master 16:9 · pensé pour une déclinaison 9:16 et 1:1.</p></article><article class="metric-card"><span class="card-kicker">Personnalité</span><span class="metric">Joyful</span><p>Orange, fluide, vivant : une énergie généreuse, jamais agressive.</p></article></div>
+        </div>
+        <div class="storyboard-title"><h2>Storyboard de la proposition</h2><span>Setup · action · émotion · résolution</span></div>
+        <div class="storyboard">
+          <article class="story-card"><div class="story-visual sv-0"><span class="sv-sun"></span><span class="sv-word">00–07 s</span><span class="sv-title">Un rayon<br>de soleil</span></div><div class="story-copy"><span class="time">01 · OUVERTURE</span><h3>Tout commence par un moment.</h3><p>Le packshot arrive comme un objet chaud et précieux.</p></div></article>
+          <article class="story-card"><div class="story-visual sv-1"><span class="sv-sun"></span><span class="sv-word">07–15 s</span><span class="sv-title">On verse.<br>On se retrouve.</span><span class="sv-drop"></span><span class="sv-glass"></span></div><div class="story-copy"><span class="time">02 · GESTE</span><h3>La couleur en mouvement.</h3><p>Le liquide devient la transition graphique du film.</p></div></article>
+          <article class="story-card"><div class="story-visual sv-2"><span class="sv-word">15–23 s</span><span class="sv-title">Des sourires<br>qui circulent.</span><span class="sv-heads"></span></div><div class="story-copy"><span class="time">03 · PARTAGE</span><h3>Le produit devient lien.</h3><p>Une table stylisée, inclusive et immédiatement lisible.</p></div></article>
+          <article class="story-card"><div class="story-visual sv-3"><span class="sv-sun"></span><span class="sv-word">23–30 s</span><span class="sv-title">Le soleil<br>se partage.</span><span class="sv-pack"></span></div><div class="story-copy"><span class="time">04 · SIGNATURE</span><h3>Une fin mémorable.</h3><p>Logo, packshot, ligne de campagne et call-to-action.</p></div></article>
+        </div>
+        <div class="production-grid">
+          <article class="production-card"><div class="icon-line"><i></i><span>✦</span></div><h3>Direction artistique</h3><p>Un monde solaire et tactile : bleu profond pour la confiance, orange pour l'appétit, jaune pour la joie.</p></article>
+          <article class="production-card"><div class="icon-line"><i></i><span>↗</span></div><h3>Motion language</h3><p>Arcs, rebonds légers et entrées fluides. Le mouvement principal reste lisible, soutenu par un grain et des halos vivants.</p></article>
+          <article class="production-card"><div class="icon-line"><i></i><span>♪</span></div><h3>Son proposé</h3><p>Guitare percussive légère, claps de table et splash fruité. Voix off souriante, courte, avec respiration avant la signature.</p></article>
+        </div>
+        <div class="side-card" style="margin-top:16px; background:rgba(255,255,255,.66)"><span class="side-label">Voix off · proposition</span><p style="margin:10px 0 0;color:var(--navy);font-size:19px;font-weight:800;letter-spacing:-.03em;max-width:830px">« Un rayon de soleil. Un geste simple. Et le moment devient grand. Sunquick — le soleil se partage. »</p><p style="margin:10px 0 0">Texte de travail à enregistrer en français ou en wolof selon la cible média et à valider avec la plateforme de marque.</p></div>
+      </section>
+
+      <section class="view" id="researchView" data-view="research">
+        <div class="section-heading">
+          <div><span class="eyebrow">Recherche rapide · sources ouvertes</span><h1>Faire rêver,<br><em>sans inventer.</em></h1></div>
+          <p>La direction du film s'appuie sur le territoire de marque officiel et sur la réalité de la distribution au Sénégal.</p>
+        </div>
+        <div class="research-grid">
+          <article class="research-main"><span class="card-kicker" style="color:var(--yellow)">Ce que la marque raconte</span><h1>Une boisson fruitée<br>faite pour <em>partager.</em></h1><p>Sunquick présente son histoire autour du plaisir, de la nature, de la convivialité et des moments partagés. Le concentré orange a été lancé en 1966 et la marque indique être présente dans plus de 70 pays.</p><ul class="fact-list"><li><span class="fact-no">1966</span><strong>Lancement du concentré orange</strong><span>Histoire officielle Sunquick</span></li><li><span class="fact-no">70+</span><strong>Pays couverts par la marque</strong><span>Information de marque, à date de la recherche</span></li><li><span class="fact-no">FRUIT</span><strong>Un goût inspiré par la nature</strong><span>Territoire créatif retenu</span></li><li><span class="fact-no">JOY</span><strong>Le plaisir est meilleur quand il est partagé</strong><span>Territoire de communication officiel</span></li></ul></article>
+          <article class="packshot-card"><div class="packshot-visual"><img src="assets/sunquick-packshot-reference.jpg" alt="Packshot de référence d'une bouteille Sunquick Orange"></div><div class="packshot-caption"><h3>Packshot de référence</h3><p>Image de recherche utilisée pour cadrer la silhouette et les codes de l'étiquette. À remplacer par le master produit validé par Finamark / CO-RO avant production finale.</p></div></article>
+        </div>
+        <div class="source-grid">
+          <article class="source-card"><span class="card-kicker">Source 01 · officiel</span><h3>Sunquick · Our story</h3><p>Histoire, territoire « share the joy », lancement du concentré en 1966 et présence internationale.</p><a href="https://www.sunquick.com/about/" target="_blank" rel="noreferrer">Ouvrir la source ↗</a></article>
+          <article class="source-card"><span class="card-kicker">Source 02 · officiel</span><h3>Sunquick · Orange</h3><p>Fiche produit consultée : concentré d'orange, jus de fruit, vitamine C et mentions liées aux arômes/couleurs selon le marché.</p><a href="https://www.sunquick.com/products/sunquick-orange/" target="_blank" rel="noreferrer">Ouvrir la fiche ↗</a></article>
+          <article class="source-card"><span class="card-kicker">Source 03 · local</span><h3>Finamark · Sénégal</h3><p>Finamark présente Sunquick et Suntop comme des marques importées et distribuées au Sénégal, aux côtés de sa production locale SIM.</p><a href="https://finamark.sn/" target="_blank" rel="noreferrer">Ouvrir Finamark ↗</a></article>
+        </div>
+        <div class="validation"><span class="v-icon">!</span><div><h3>Point de validation avant tournage</h3><p>Confirmer le packshot exact du format commercialisé au Sénégal, les mentions autorisées sur l'étiquette, le volume rendu après dilution et la présence de la signature « Le soleil se partage » dans les territoires de marque.</p></div></div>
+      </section>
+    </main>
+
+    <footer><div class="footer-line"><span><strong>Sunquick · Le soleil se partage.</strong> Proposition créative non officielle — V01.</span><span>Concept motion design · 16:9 · 30 s</span></div></footer>
+  </div>
+
+  <script>
+    (() => {
+      const stage = document.getElementById('filmStage');
+      const scenes = [...document.querySelectorAll('.scene')];
+      const beats = [...document.querySelectorAll('.beat')];
+      const playButton = document.getElementById('playButton');
+      const playLabel = document.getElementById('playLabel');
+      const resetButton = document.getElementById('resetButton');
+      const timeReadout = document.getElementById('timeReadout');
+      const frameCount = document.getElementById('frameCount');
+      const scenePhase = document.getElementById('scenePhase');
+      const sceneTitle = document.getElementById('sceneTitle');
+      const sceneProgress = document.getElementById('sceneProgress');
+      const navButtons = [...document.querySelectorAll('[data-nav]')];
+      const views = [...document.querySelectorAll('.view')];
+      const sceneTitles = ['Le moment commence', 'Le geste rassemble', 'Le goût circule', 'La signature reste'];
+      const scenePhases = ['01 · OUVERTURE', '02 · GESTE', '03 · PARTAGE', '04 · SIGNATURE'];
+      const durations = [7000, 8000, 8000, 7000];
+      const totalDuration = durations.reduce((a, b) => a + b, 0);
+      let currentScene = 0;
+      let sceneElapsed = 0;
+      let isPlaying = false;
+      let raf = null;
+      let lastTime = 0;
+
+      const formatTime = (ms) => {
+        const secs = Math.max(0, Math.min(30, Math.floor(ms / 1000)));
+        return `00:${String(secs).padStart(2, '0')}`;
+      };
+
+      function overallElapsed() {
+        return durations.slice(0, currentScene).reduce((a, b) => a + b, 0) + sceneElapsed;
+      }
+
+      function updateReadout() {
+        const overall = overallElapsed();
+        timeReadout.textContent = `${formatTime(overall)} / 00:30`;
+        sceneProgress.style.width = `${Math.min(100, (sceneElapsed / durations[currentScene]) * 100)}%`;
+      }
+
+      function setScene(index, resetTime = true) {
+        currentScene = Math.max(0, Math.min(scenes.length - 1, index));
+        if (resetTime) sceneElapsed = 0;
+        scenes.forEach((scene, i) => {
+          scene.classList.toggle('active', i === currentScene);
+          scene.setAttribute('aria-hidden', i === currentScene ? 'false' : 'true');
+        });
+        beats.forEach((beat, i) => beat.classList.toggle('active', i === currentScene));
+        stage.dataset.scene = String(currentScene);
+        frameCount.textContent = `0${currentScene + 1} / 04`;
+        scenePhase.textContent = scenePhases[currentScene];
+        sceneTitle.textContent = sceneTitles[currentScene];
+        updateReadout();
+      }
+
+      function render(now) {
+        if (!isPlaying) return;
+        const delta = Math.min(80, now - lastTime);
+        lastTime = now;
+        sceneElapsed += delta;
+        if (sceneElapsed >= durations[currentScene]) {
+          if (currentScene < scenes.length - 1) {
+            setScene(currentScene + 1, true);
+          } else {
+            sceneElapsed = durations[currentScene];
+            pause();
+            updateReadout();
+            return;
+          }
+        }
+        updateReadout();
+        raf = requestAnimationFrame(render);
+      }
+
+      function play() {
+        if (currentScene === scenes.length - 1 && sceneElapsed >= durations[currentScene]) setScene(0, true);
+        isPlaying = true;
+        playButton.classList.add('is-playing');
+        playLabel.textContent = 'Pause';
+        lastTime = performance.now();
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(render);
+      }
+
+      function pause() {
+        isPlaying = false;
+        playButton.classList.remove('is-playing');
+        playLabel.textContent = currentScene === scenes.length - 1 && sceneElapsed >= durations[currentScene] ? 'Rejouer le film' : 'Lancer le film';
+        cancelAnimationFrame(raf);
+      }
+
+      function reset() {
+        pause();
+        setScene(0, true);
+        playLabel.textContent = 'Lancer le film';
+      }
+
+      playButton.addEventListener('click', () => isPlaying ? pause() : play());
+      resetButton.addEventListener('click', reset);
+      stage.addEventListener('click', (event) => {
+        if (event.target.closest('button, a')) return;
+        isPlaying ? pause() : play();
+      });
+      beats.forEach((beat) => beat.addEventListener('click', () => {
+        setScene(Number(beat.dataset.jump), true);
+        play();
+      }));
+
+      function showView(name) {
+        navButtons.forEach((button) => button.classList.toggle('active', button.dataset.nav === name));
+        views.forEach((view) => view.classList.toggle('active', view.dataset.view === name));
+        if (name !== 'film') pause();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      navButtons.forEach((button) => button.addEventListener('click', () => showView(button.dataset.nav)));
+      document.querySelectorAll('[data-nav="film"]').forEach((button) => button.addEventListener('click', () => showView('film')));
+
+      setScene(0, true);
+    })();
+  </script>
+</body>
+</html>
