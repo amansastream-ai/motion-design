@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b13">
+  <title>FINAMARK SARL — Premium Corporate Motion Design</title>
+  <style>
+    :root {
+      --night: #070b13;
+      --night-2: #0d1421;
+      --ink: #142135;
+      --blue: #325e9b;
+      --blue-bright: #6da9ff;
+      --ice: #e7f0f8;
+      --silver: #b9c9da;
+      --paper: #f5f7f8;
+      --white: #fff;
+      --gold: #d8b16f;
+      --red: #a63d34;
+      --green: #4e9a78;
+      --line: rgba(16, 30, 50, .13);
+      --dark-line: rgba(255,255,255,.13);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --ease-soft: cubic-bezier(.22, .8, .2, 1);
+      --ease-spring: cubic-bezier(.18, .92, .32, 1.15);
+      --shadow: 0 25px 75px rgba(6, 15, 30, .2);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: #edf0f2;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    ::selection { color: var(--white); background: var(--blue); }
+
+    .app { min-height: 100vh; overflow: hidden; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 0 clamp(18px, 4.6vw, 72px);
+      color: var(--ink);
+      background: rgba(245,247,248,.88);
+      border-bottom: 1px solid rgba(16,30,50,.1);
+      backdrop-filter: blur(20px);
+    }
+    .brand-lockup { display: flex; align-items: center; gap: 11px; min-width: max-content; }
+    .brand-lockup .brand-mark { position: relative; width: 32px; height: 32px; transform: rotate(30deg); border: 1px solid var(--blue); }
+    .brand-lockup .brand-mark::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--gold); }
+    .brand-lockup .brand-name { font-size: 17px; font-weight: 900; letter-spacing: .16em; }
+    .brand-lockup small { padding-left: 11px; border-left: 1px solid var(--line); color: #768494; font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .nav { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.6); }
+    .nav button { border: 0; border-radius: 999px; padding: 8px 14px; color: #778493; background: transparent; font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; transition: .25s var(--ease); }
+    .nav button:hover { color: var(--ink); transform: translateY(-1px); }
+    .nav button.active { color: var(--white); background: var(--night); }
+    .top-meta { display: flex; align-items: center; gap: 8px; color: #778493; font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+    .top-meta b { color: var(--blue); }
+    .top-meta i { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+
+    main { padding: 44px clamp(18px, 4.6vw, 72px) 70px; }
+    .view { display: none; max-width: 1460px; margin: 0 auto; }
+    .view.active { display: block; animation: view-in .7s var(--ease) both; }
+    @keyframes view-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--blue); font-size: 10px; font-weight: 950; letter-spacing: .18em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--gold); }
+    .intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 25px; }
+    .intro h1 { max-width: 900px; margin: 10px 0 0; color: var(--night); font-size: clamp(34px, 5vw, 70px); line-height: .89; letter-spacing: -.085em; font-weight: 950; }
+    .intro h1 em { color: var(--blue); font-style: normal; }
+    .intro p { max-width: 350px; margin: 0 0 3px; color: #718091; font-size: 13px; }
+
+    /* Film frame */
+    .film-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(315px, .45fr); gap: 22px; align-items: start; }
+    .film-card { min-width: 0; }
+    .stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 24px;
+      color: var(--white);
+      background: var(--night);
+      box-shadow: var(--shadow);
+    }
+    .stage::before { content: ""; position: absolute; inset: 0; z-index: 40; pointer-events: none; opacity: .15; mix-blend-mode: screen; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.35'/%3E%3C/svg%3E"); }
+    .stage::after { content: ""; position: absolute; inset: 0; z-index: 39; pointer-events: none; border: 1px solid rgba(255,255,255,.13); border-radius: inherit; box-shadow: inset 0 0 90px rgba(0,0,0,.32); }
+    .stage-ui { position: absolute; z-index: 45; top: 17px; left: 21px; right: 21px; display: flex; justify-content: space-between; color: rgba(255,255,255,.68); font-size: 9px; font-weight: 950; letter-spacing: .18em; text-transform: uppercase; pointer-events: none; }
+    .stage-ui .live { display: inline-flex; align-items: center; gap: 7px; }
+    .stage-ui .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px rgba(216,177,111,.14); }
+    .stage-ui .timecode { color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
+    .scene { position: absolute; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .55s var(--ease-soft); }
+    .scene.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    .scene > * { position: absolute; }
+    .scene-kicker { z-index: 11; left: 7.5%; top: 24%; color: rgba(255,255,255,.58); font-size: clamp(8px, .75vw, 11px); font-weight: 900; letter-spacing: .22em; text-transform: uppercase; }
+    .scene-copy { z-index: 11; left: 7.5%; top: 33%; max-width: 65%; }
+    .scene-copy h2 { margin: 0; color: var(--white); font-size: clamp(32px, 5vw, 77px); line-height: .91; letter-spacing: -.09em; font-weight: 950; }
+    .scene-copy h2 em { color: var(--blue-bright); font-style: normal; }
+    .scene-copy p { max-width: 390px; margin: 18px 0 0; color: rgba(255,255,255,.64); font-size: clamp(11px, 1.05vw, 15px); }
+    .scene-caption { z-index: 12; left: 7.5%; bottom: 7%; display: flex; align-items: center; gap: 9px; color: rgba(255,255,255,.64); font-size: 9px; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
+    .scene-caption::before { content: ""; width: 28px; height: 1px; background: var(--gold); }
+    .scene-index { z-index: 12; right: 7.5%; bottom: 7%; color: rgba(255,255,255,.42); font-size: 10px; font-weight: 900; letter-spacing: .17em; }
+
+    /* Working wordmark — replace with the supplied official logo master before final export. */
+    .film-wordmark { z-index: 14; display: flex; align-items: center; gap: 12px; color: var(--white); }
+    .film-wordmark .wm-mark { position: relative; width: 50px; height: 50px; border: 1px solid rgba(255,255,255,.78); transform: rotate(30deg); }
+    .film-wordmark .wm-mark::before { content: ""; position: absolute; inset: 9px; border: 1px solid var(--gold); }
+    .film-wordmark .wm-word { font-size: clamp(22px, 3.2vw, 50px); font-weight: 950; letter-spacing: .14em; line-height: .85; }
+    .film-wordmark .wm-sub { display: block; margin-top: 8px; color: rgba(255,255,255,.5); font-size: 8px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase; }
+
+    /* Scene 01: cinematic intro */
+    .scene-0 { background: radial-gradient(circle at 74% 36%, #162b4c 0, #09101c 43%, #05080e 76%); }
+    .scene-0 .architecture { z-index: 1; inset: -25%; background: linear-gradient(90deg, transparent 0 49%, rgba(116,169,230,.18) 49.2% 49.4%, transparent 49.6%), repeating-linear-gradient(90deg, transparent 0 6.9%, rgba(140,180,225,.11) 7% 7.15%), repeating-linear-gradient(0deg, transparent 0 9%, rgba(140,180,225,.11) 9.1% 9.25%); transform: perspective(520px) rotateX(58deg) rotateZ(-13deg) translateY(37%); opacity: .55; }
+    .scene-0 .architecture::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 18%, rgba(3,5,10,.74) 75%); }
+    .scene-0 .light-beam { z-index: 5; top: -15%; bottom: -15%; left: -20%; width: 22%; background: linear-gradient(90deg, transparent, rgba(196,225,255,.42), transparent); filter: blur(13px); transform: skewX(-14deg); animation: light-sweep 4.8s .3s var(--ease) both; }
+    .scene-0 .light-line { z-index: 6; left: -20%; top: 54%; width: 140%; height: 1px; background: linear-gradient(90deg, transparent, rgba(109,169,255,.8), transparent); box-shadow: 0 0 18px 2px rgba(109,169,255,.4); transform: rotate(-11deg); animation: line-sweep 3.5s .4s var(--ease) both; }
+    .particles { z-index: 4; inset: 0; }
+    .particles i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #c7e1ff; box-shadow: 0 0 10px 2px rgba(109,169,255,.8); opacity: 0; animation: particle-rise 3.5s ease-in-out infinite; }
+    .particles i:nth-child(1) { left: 18%; top: 78%; animation-delay: .3s; } .particles i:nth-child(2) { left: 26%; top: 69%; animation-delay: 1.1s; } .particles i:nth-child(3) { left: 33%; top: 83%; animation-delay: .5s; } .particles i:nth-child(4) { left: 47%; top: 73%; animation-delay: 1.8s; } .particles i:nth-child(5) { left: 59%; top: 66%; animation-delay: .8s; } .particles i:nth-child(6) { left: 72%; top: 78%; animation-delay: 1.4s; } .particles i:nth-child(7) { left: 81%; top: 61%; animation-delay: 2.1s; } .particles i:nth-child(8) { left: 64%; top: 39%; animation-delay: 1.9s; }
+    .scene-0 .intro-mark { left: 50%; top: 46%; transform: translate(-50%, -50%); opacity: 0; animation: mark-reveal 1.4s 1.4s var(--ease-spring) forwards; }
+    .scene-0 .intro-mark .film-wordmark { flex-direction: column; gap: 15px; text-align: center; }
+    .scene-0 .intro-mark .wm-mark { width: 64px; height: 64px; }
+    .scene-0 .intro-mark .wm-word { font-size: clamp(25px, 4.5vw, 66px); letter-spacing: .2em; }
+    .scene-0 .intro-sub { left: 50%; top: 76%; transform: translateX(-50%); color: var(--gold); font-size: clamp(8px, .9vw, 12px); font-weight: 900; letter-spacing: .34em; text-align: center; text-transform: uppercase; opacity: 0; animation: fade-up .8s 2.2s var(--ease) forwards; }
+    .scene-0 .scene-caption { animation: fade-up .7s 2.2s both; }
+
+    /* Scene 02: push through and kinetic type */
+    .scene-1 { background: radial-gradient(circle at 50% 45%, #18365a 0, #0d1727 53%, #070b13 100%); }
+    .tunnel { z-index: 1; inset: -15%; transform-style: preserve-3d; perspective: 500px; }
+    .tunnel i { position: absolute; left: 50%; top: 50%; width: 54%; height: 72%; border: 1px solid rgba(109,169,255,.28); box-shadow: inset 0 0 50px rgba(109,169,255,.08), 0 0 25px rgba(109,169,255,.08); transform: translate(-50%, -50%) rotateX(64deg) rotateZ(12deg); animation: tunnel-push 5.2s var(--ease) infinite; }
+    .tunnel i:nth-child(2) { width: 65%; height: 84%; opacity: .68; animation-delay: .3s; } .tunnel i:nth-child(3) { width: 78%; height: 100%; opacity: .43; animation-delay: .6s; } .tunnel i:nth-child(4) { width: 90%; height: 115%; opacity: .22; animation-delay: .9s; }
+    .scene-1 .film-wordmark { top: 10%; left: 7.5%; opacity: 0; animation: fade-up .7s .18s var(--ease) forwards; }
+    .scene-1 .film-wordmark .wm-mark { width: 27px; height: 27px; }
+    .scene-1 .film-wordmark .wm-mark::before { inset: 5px; }
+    .scene-1 .film-wordmark .wm-word { font-size: 13px; letter-spacing: .16em; }
+    .scene-1 .film-wordmark .wm-sub { display: none; }
+    .kinetic-headline { z-index: 12; left: 7.5%; top: 34%; max-width: 83%; color: var(--white); font-size: clamp(31px, 5.3vw, 82px); font-weight: 950; line-height: .9; letter-spacing: -.08em; }
+    .kinetic-headline span { display: inline-block; opacity: 0; transform: translateY(28px) rotateX(70deg); transform-origin: 50% 100%; animation: type-in .7s calc(.23s * var(--i)) var(--ease-spring) forwards; }
+    .kinetic-headline .accent { color: var(--blue-bright); }
+    .scene-1 .scene-copy { top: auto; bottom: 15%; max-width: 390px; opacity: 0; animation: fade-up .8s 1.6s var(--ease) forwards; }
+    .scene-1 .scene-copy p { margin: 0; }
+    .scene-1 .scene-caption { animation: fade-up .7s 1.75s both; }
+
+    /* Scene 03: floating business panels */
+    .scene-2 { background: radial-gradient(circle at 50% 40%, #203750 0, #0f1b2a 48%, #070b13 100%); perspective: 900px; }
+    .scene-2 .grid-floor { z-index: 1; left: -10%; right: -10%; bottom: -28%; height: 60%; background: linear-gradient(90deg, transparent 49.8%, rgba(109,169,255,.17) 50%, transparent 50.2%), linear-gradient(0deg, transparent 49.8%, rgba(109,169,255,.13) 50%, transparent 50.2%); background-size: 76px 76px; transform: perspective(450px) rotateX(66deg) rotateZ(-5deg); opacity: .4; mask-image: linear-gradient(0deg, #000, transparent 72%); }
+    .scene-2 .scene-copy { top: 11%; max-width: 42%; }
+    .scene-2 .scene-copy h2 { font-size: clamp(22px, 3vw, 44px); }
+    .scene-2 .scene-copy p { margin-top: 10px; }
+    .panel-rig { z-index: 8; inset: 20% 4% 8% 40%; transform-style: preserve-3d; perspective: 800px; }
+    .glass-panel { position: absolute; width: 48%; height: 62%; padding: 15px; border: 1px solid rgba(255,255,255,.28); border-radius: 11px; color: var(--white); background: linear-gradient(135deg, rgba(255,255,255,.17), rgba(255,255,255,.035)); box-shadow: 0 22px 42px rgba(0,0,0,.23), inset 0 1px 0 rgba(255,255,255,.2); backdrop-filter: blur(8px); transform-style: preserve-3d; opacity: 0; }
+    .glass-panel::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(110deg, rgba(255,255,255,.14), transparent 28% 72%, rgba(109,169,255,.14)); pointer-events: none; }
+    .glass-panel.p1 { left: 0; top: 14%; transform: translateZ(-100px) rotateY(21deg) rotateZ(-2deg); }
+    .glass-panel.p2 { left: 26%; top: 1%; transform: translateZ(20px) rotateY(6deg); }
+    .glass-panel.p3 { right: 0; top: 18%; transform: translateZ(-40px) rotateY(-18deg) rotateZ(2deg); }
+    .scene-2.active .glass-panel.p1 { animation: panel-in-left .9s .22s var(--ease-spring) forwards; }
+    .scene-2.active .glass-panel.p2 { animation: panel-in-front .9s .42s var(--ease-spring) forwards; }
+    .scene-2.active .glass-panel.p3 { animation: panel-in-right .9s .62s var(--ease-spring) forwards; }
+    .panel-index { display: flex; justify-content: space-between; color: var(--gold); font-size: 8px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .panel-index span:last-child { color: rgba(255,255,255,.48); }
+    .panel-line { width: 24px; height: 1px; margin: 18px 0 10px; background: var(--gold); }
+    .glass-panel h3 { margin: 0; font-size: clamp(15px, 1.6vw, 24px); line-height: .95; letter-spacing: -.06em; }
+    .glass-panel p { position: relative; z-index: 1; margin: 10px 0 0; color: rgba(255,255,255,.62); font-size: clamp(9px, .85vw, 12px); line-height: 1.3; }
+    .panel-media { position: absolute; z-index: 0; right: 8%; bottom: 7%; width: 43%; height: 42%; overflow: hidden; border: 1px solid rgba(255,255,255,.17); border-radius: 7px; background: rgba(255,255,255,.68); transform: translateZ(20px); }
+    .panel-media img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; filter: saturate(1.05) contrast(1.04); }
+    .scene-2 .scene-caption { animation: fade-up .7s .9s both; }
+
+    /* Scene 04: orbital product / data showcase */
+    .scene-3 { background: radial-gradient(circle at 49% 49%, #1a3761 0, #0c1526 45%, #060910 100%); perspective: 950px; }
+    .orbit-stage { z-index: 3; left: 50%; top: 50%; width: 38%; aspect-ratio: 1; transform: translate(-50%, -50%); transform-style: preserve-3d; animation: orbit-tilt 8s 1s ease-in-out infinite alternate; }
+    .orbit-stage::before, .orbit-stage::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(109,169,255,.48); border-radius: 50%; transform: rotateX(68deg) rotateZ(15deg); box-shadow: 0 0 22px rgba(109,169,255,.17); }
+    .orbit-stage::after { inset: 12%; border-color: rgba(216,177,111,.47); transform: rotateY(63deg) rotateX(22deg); }
+    .orbit-core { position: absolute; inset: 27%; display: grid; place-items: center; color: var(--white); border: 1px solid rgba(255,255,255,.36); background: radial-gradient(circle, rgba(109,169,255,.34), rgba(13,27,53,.75)); transform: translateZ(55px) rotateZ(45deg); box-shadow: 0 0 50px rgba(109,169,255,.25); }
+    .orbit-core span { transform: rotateZ(-45deg); font-size: clamp(13px, 2vw, 27px); font-weight: 950; letter-spacing: .14em; }
+    .orbit-card { position: absolute; z-index: 4; width: 23%; height: 29%; overflow: hidden; border: 1px solid rgba(255,255,255,.48); border-radius: 8px; background: rgba(255,255,255,.78); box-shadow: 0 14px 24px rgba(0,0,0,.28); transform-style: preserve-3d; }
+    .orbit-card img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+    .orbit-card.oc1 { left: -2%; top: 13%; transform: translateZ(88px) rotateY(28deg) rotateZ(-8deg); }
+    .orbit-card.oc2 { right: -2%; top: 8%; transform: translateZ(112px) rotateY(-28deg) rotateZ(9deg); }
+    .orbit-card.oc3 { right: 8%; bottom: -3%; transform: translateZ(70px) rotateY(-16deg) rotateZ(-6deg); }
+    .orbit-card.oc4 { left: 5%; bottom: 0; transform: translateZ(95px) rotateY(17deg) rotateZ(5deg); }
+    .data-line { z-index: 2; height: 1px; background: linear-gradient(90deg, transparent, rgba(109,169,255,.7), transparent); transform-origin: left; opacity: .45; }
+    .data-line.d1 { left: 10%; top: 28%; width: 82%; transform: rotate(-16deg); } .data-line.d2 { left: 20%; top: 68%; width: 71%; transform: rotate(16deg); } .data-line.d3 { left: 44%; top: 9%; width: 65%; transform: rotate(75deg); }
+    .scene-3 .scene-copy { left: 7.5%; top: 14%; max-width: 27%; }
+    .scene-3 .scene-copy h2 { font-size: clamp(24px, 3.5vw, 50px); }
+    .scene-3 .scene-copy p { margin-top: 12px; }
+    .verb-stack { z-index: 12; right: 7.5%; bottom: 13%; color: var(--white); text-align: right; }
+    .verb-stack span { display: block; opacity: 0; font-size: clamp(17px, 2.5vw, 37px); font-weight: 950; line-height: .93; letter-spacing: -.07em; }
+    .verb-stack span:nth-child(1) { color: var(--blue-bright); animation: fade-up .65s .45s var(--ease) forwards; } .verb-stack span:nth-child(2) { color: var(--gold); animation: fade-up .65s .68s var(--ease) forwards; } .verb-stack span:nth-child(3) { animation: fade-up .65s .91s var(--ease) forwards; }
+    .scene-3 .scene-caption { animation: fade-up .7s 1.15s both; }
+
+    /* Scene 05: bright portfolio environment */
+    .scene-4 { color: var(--ink); background: linear-gradient(135deg, #f5f8fa, #dbe6ef); }
+    .scene-4::before { content: ""; position: absolute; z-index: 1; top: -40%; right: -14%; width: 71%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.92) 0 26%, rgba(109,169,255,.24) 27% 42%, transparent 67%); }
+    .scene-4 .light-frames { z-index: 2; inset: -10%; background: linear-gradient(113deg, transparent 0 46%, rgba(255,255,255,.8) 46.2% 46.45%, transparent 46.65% 57%, rgba(255,255,255,.7) 57.2% 57.45%, transparent 57.65%); transform: skewX(-16deg); opacity: .7; }
+    .scene-4 .scene-copy { z-index: 11; top: 18%; color: var(--ink); max-width: 35%; }
+    .scene-4 .scene-copy h2 { color: var(--ink); font-size: clamp(27px, 4.2vw, 61px); }
+    .scene-4 .scene-copy h2 em { color: var(--blue); }
+    .scene-4 .scene-copy p { color: #667788; }
+    .scene-4 .scene-caption { color: #647486; }
+    .scene-4 .scene-caption::before { background: var(--blue); }
+    .portfolio-grid { z-index: 8; right: 5%; top: 13%; width: 52%; height: 70%; display: grid; grid-template-columns: 1.05fr .95fr; grid-template-rows: 1fr 1fr; gap: 10px; perspective: 700px; }
+    .portfolio-item { position: relative; display: flex; align-items: end; overflow: hidden; padding: 12px; border: 1px solid rgba(20,33,53,.15); border-radius: 11px; background: rgba(255,255,255,.74); box-shadow: 0 18px 28px rgba(30,57,87,.12); opacity: 0; transform: translateY(28px) rotateX(12deg); }
+    .portfolio-item:nth-child(1) { grid-row: span 2; }
+    .portfolio-item:nth-child(2) { transform: translateY(28px) rotateX(12deg) rotateY(-5deg); }
+    .portfolio-item:nth-child(3) { transform: translateY(28px) rotateX(12deg) rotateY(5deg); }
+    .scene-4.active .portfolio-item:nth-child(1) { animation: portfolio-in .8s .16s var(--ease-spring) forwards; }
+    .scene-4.active .portfolio-item:nth-child(2) { animation: portfolio-in .8s .36s var(--ease-spring) forwards; }
+    .scene-4.active .portfolio-item:nth-child(3) { animation: portfolio-in .8s .56s var(--ease-spring) forwards; }
+    .portfolio-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; filter: saturate(1.06); }
+    .portfolio-item:first-child img { object-fit: cover; }
+    .portfolio-item .pi-tag { position: relative; z-index: 2; padding: 6px 8px; color: var(--white); border-radius: 5px; background: rgba(20,33,53,.78); font-size: 8px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .portfolio-item:nth-child(2) .pi-tag, .portfolio-item:nth-child(3) .pi-tag { color: var(--ink); background: rgba(255,255,255,.8); }
+    .scene-4 .scene-index { color: #778493; }
+
+    /* Scene 06: final reveal */
+    .scene-5 { background: radial-gradient(circle at 50% 46%, #1a3761 0, #0c1526 47%, #05080e 100%); }
+    .final-light { z-index: 2; left: 50%; top: 46%; width: 55%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(109,169,255,.32) 0 13%, rgba(109,169,255,.1) 14% 28%, transparent 66%); filter: blur(1px); animation: final-glow 4s ease-in-out infinite alternate; }
+    .final-rings { z-index: 3; left: 50%; top: 46%; width: 50%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 1px solid rgba(255,255,255,.32); border-radius: 50%; box-shadow: 0 0 0 35px rgba(255,255,255,.035), 0 0 0 72px rgba(109,169,255,.05); animation: ring-turn 12s linear infinite; }
+    .final-wordmark { z-index: 12; left: 50%; top: 31%; transform: translateX(-50%); opacity: 0; animation: final-mark-in 1.1s .5s var(--ease-spring) forwards; }
+    .final-wordmark .film-wordmark { flex-direction: column; gap: 15px; text-align: center; }
+    .final-wordmark .wm-mark { width: 59px; height: 59px; }
+    .final-wordmark .wm-word { font-size: clamp(25px, 4.3vw, 64px); letter-spacing: .2em; }
+    .final-wordmark .wm-sub { margin-top: 12px; }
+    .final-copy { z-index: 12; left: 50%; bottom: 10%; width: 85%; transform: translateX(-50%); text-align: center; opacity: 0; animation: fade-up .85s 1.3s var(--ease) forwards; }
+    .final-copy strong { display: block; margin-top: 7px; color: var(--white); font-size: clamp(21px, 3.1vw, 44px); line-height: .9; letter-spacing: -.07em; }
+    .final-copy span { color: rgba(255,255,255,.6); font-size: 9px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
+    .final-cta { display: inline-flex; margin-top: 15px; padding: 8px 11px; border: 1px solid rgba(216,177,111,.68); border-radius: 999px; color: var(--gold) !important; font-size: 8px !important; letter-spacing: .14em !important; }
+
+    /* Animation choreography */
+    @keyframes light-sweep { from { transform: translateX(-30%) skewX(-14deg); opacity: 0; } 34% { opacity: 1; } to { transform: translateX(620%) skewX(-14deg); opacity: .12; } }
+    @keyframes line-sweep { from { transform: translateX(-30%) rotate(-11deg); opacity: 0; } 35% { opacity: 1; } to { transform: translateX(38%) rotate(-11deg); opacity: .1; } }
+    @keyframes particle-rise { 0%, 100% { opacity: 0; transform: translate(0, 12px) scale(.6); } 30%, 70% { opacity: .8; } 50% { transform: translate(10px, -28px) scale(1.2); } }
+    @keyframes mark-reveal { from { opacity: 0; transform: translate(-50%, -46%) scale(.8); filter: blur(8px); } 70% { opacity: 1; transform: translate(-50%, -50%) scale(1.04); filter: blur(0); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); } }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes tunnel-push { from { opacity: .1; transform: translate(-50%, -50%) rotateX(64deg) rotateZ(12deg) translateZ(-100px) scale(.75); } 50% { opacity: .7; } to { opacity: .1; transform: translate(-50%, -50%) rotateX(64deg) rotateZ(12deg) translateZ(180px) scale(1.2); } }
+    @keyframes type-in { from { opacity: 0; transform: translateY(35px) rotateX(70deg); } to { opacity: 1; transform: translateY(0) rotateX(0); } }
+    @keyframes panel-in-left { from { opacity: 0; transform: translate3d(-90px, 28px, -230px) rotateY(42deg) rotateZ(-5deg); } to { opacity: 1; transform: translateZ(-100px) rotateY(21deg) rotateZ(-2deg); } }
+    @keyframes panel-in-front { from { opacity: 0; transform: translate3d(0, 20px, -330px) rotateY(0) scale(.72); } to { opacity: 1; transform: translateZ(20px) rotateY(6deg) scale(1); } }
+    @keyframes panel-in-right { from { opacity: 0; transform: translate3d(90px, 28px, -220px) rotateY(-40deg) rotateZ(5deg); } to { opacity: 1; transform: translateZ(-40px) rotateY(-18deg) rotateZ(2deg); } }
+    @keyframes orbit-tilt { from { transform: translate(-50%, -50%) rotateX(4deg) rotateY(-11deg); } to { transform: translate(-50%, -50%) rotateX(-5deg) rotateY(13deg); } }
+    @keyframes portfolio-in { from { opacity: 0; transform: translateY(28px) rotateX(12deg) scale(.9); } to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); } }
+    @keyframes final-glow { from { scale: .93; opacity: .65; } to { scale: 1.07; opacity: 1; } }
+    @keyframes ring-turn { from { rotate: 0deg; } to { rotate: 360deg; } }
+    @keyframes final-mark-in { from { opacity: 0; translate: 0 25px; scale: .8; filter: blur(8px); } to { opacity: 1; translate: 0 0; scale: 1; filter: blur(0); } }
+
+    /* Controls */
+    .film-controls { display: flex; align-items: center; gap: 11px; padding: 14px 2px 0; }
+    .play-btn, .outline-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 17px; border: 1px solid transparent; border-radius: 999px; color: var(--white); background: var(--night); font-size: 10px; font-weight: 950; letter-spacing: .14em; text-transform: uppercase; transition: .25s var(--ease); }
+    .play-btn:hover, .outline-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 23px rgba(7,11,19,.16); }
+    .play-btn .play-icon { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid currentColor; }
+    .play-btn.is-playing .play-icon { width: 8px; height: 10px; border: 0; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
+    .outline-btn { color: var(--ink); border-color: var(--line); background: transparent; }
+    .time-readout { margin-left: auto; color: #758293; font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+    .side-stack { display: flex; flex-direction: column; gap: 14px; }
+    .side-card { padding: 22px; border: 1px solid var(--line); border-radius: 19px; background: rgba(255,255,255,.64); }
+    .side-card.dark { color: var(--white); border-color: var(--night); background: var(--night); }
+    .side-label { color: var(--blue); font-size: 9px; font-weight: 950; letter-spacing: .17em; text-transform: uppercase; }
+    .dark .side-label { color: var(--gold); }
+    .side-card h2 { margin: 9px 0 10px; color: inherit; font-size: 26px; line-height: .94; letter-spacing: -.07em; }
+    .side-card p { margin: 0; color: #758293; font-size: 12px; }
+    .dark p { color: rgba(255,255,255,.61); }
+    .current-scene { padding-top: 17px; margin-top: 19px; border-top: 1px solid var(--dark-line); }
+    .current-scene .row { display: flex; justify-content: space-between; gap: 10px; color: rgba(255,255,255,.46); font-size: 9px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .current-scene strong { color: var(--white); font-size: 11px; letter-spacing: .03em; text-transform: none; }
+    .current-scene .progress { height: 4px; margin-top: 13px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.13); }
+    .current-scene .progress i { display: block; width: 16%; height: 100%; border-radius: inherit; background: var(--gold); transform-origin: left; transition: width .25s linear; }
+    .chapter-list { display: grid; gap: 9px; margin-top: 15px; }
+    .chapter { display: grid; grid-template-columns: 10px 46px 1fr; align-items: center; gap: 9px; width: 100%; padding: 0; border: 0; color: #7a8795; background: transparent; text-align: left; transition: .2s; }
+    .chapter:hover { color: var(--ink); transform: translateX(3px); }
+    .chapter.active { color: var(--ink); }
+    .chapter b { width: 7px; height: 7px; border-radius: 50%; background: #d3d9df; transition: .2s; }
+    .chapter.active b { background: var(--blue); transform: scale(1.3); }
+    .chapter time { font-size: 10px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .chapter span { font-size: 11px; font-weight: 850; }
+    .director-note { display: flex; gap: 9px; padding-top: 14px; margin-top: 16px; border-top: 1px solid var(--line); color: #758293; font-size: 10px; }
+    .director-note b { color: var(--gold); font-size: 14px; line-height: 1; }
+
+    /* Direction and research views */
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 25px; }
+    .section-head h1 { margin: 10px 0 0; color: var(--night); font-size: clamp(36px, 5vw, 72px); line-height: .88; letter-spacing: -.08em; }
+    .section-head h1 em { color: var(--blue); font-style: normal; }
+    .section-head p { max-width: 380px; margin: 0 0 3px; color: #758293; font-size: 13px; }
+    .brief-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 15px; }
+    .brief-hero { position: relative; min-height: 300px; overflow: hidden; padding: 31px; color: var(--white); border-radius: 21px; background: var(--night); }
+    .brief-hero::before { content: ""; position: absolute; width: 450px; aspect-ratio: 1; right: -80px; top: -210px; border-radius: 50%; background: radial-gradient(circle, rgba(109,169,255,.74), rgba(109,169,255,.08) 46%, transparent 67%); }
+    .brief-hero::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(115deg, transparent 0 90px, rgba(255,255,255,.055) 90px 91px); }
+    .brief-hero > * { position: relative; z-index: 1; }
+    .brief-hero h2 { margin: 52px 0 14px; font-size: clamp(42px, 6vw, 82px); line-height: .85; letter-spacing: -.09em; }
+    .brief-hero h2 em { color: var(--gold); font-style: normal; }
+    .brief-hero p { max-width: 510px; margin: 0; color: rgba(255,255,255,.62); font-size: 13px; }
+    .stat-stack { display: grid; gap: 15px; }
+    .stat-card { padding: 23px; border: 1px solid var(--line); border-radius: 21px; background: rgba(255,255,255,.7); }
+    .stat-card strong { display: block; margin: 14px 0 3px; color: var(--night); font-size: 40px; line-height: .9; letter-spacing: -.08em; }
+    .stat-card p { margin: 0; color: #758293; font-size: 11px; }
+    .story-heading { display: flex; justify-content: space-between; align-items: end; margin: 34px 0 12px; }
+    .story-heading h2 { margin: 0; color: var(--night); font-size: 22px; letter-spacing: -.05em; }
+    .story-heading span { color: #758293; font-size: 9px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    .story-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .story-card { overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.65); }
+    .story-visual { position: relative; height: 155px; overflow: hidden; }
+    .story-visual.sv-a { background: radial-gradient(circle at 70% 20%, #1f4a7e, #070b13 74%); }
+    .story-visual.sv-b { background: linear-gradient(135deg, #dfeaf4, #7ba1c9); }
+    .story-visual.sv-c { background: radial-gradient(circle at 45% 42%, #244a7e, #070b13 72%); }
+    .story-visual .sv-label { position: absolute; top: 15px; left: 16px; z-index: 2; color: rgba(255,255,255,.64); font-size: 9px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .story-visual .sv-title { position: absolute; left: 16px; bottom: 17px; z-index: 2; color: var(--white); font-size: 27px; line-height: .86; font-weight: 950; letter-spacing: -.08em; }
+    .story-visual.sv-b .sv-label, .story-visual.sv-b .sv-title { color: var(--ink); }
+    .sv-beam { position: absolute; width: 160%; height: 18px; left: -20%; top: 50%; background: rgba(255,255,255,.78); filter: blur(6px); transform: rotate(-23deg); }
+    .sv-orbit { position: absolute; width: 145px; height: 145px; right: -25px; top: 15px; border: 1px solid rgba(109,169,255,.7); border-radius: 50%; transform: rotateX(65deg) rotateZ(18deg); box-shadow: 0 0 0 21px rgba(109,169,255,.06); }
+    .sv-products { position: absolute; right: 16px; bottom: 13px; display: flex; align-items: end; gap: 5px; height: 106px; }
+    .sv-products img { width: 47px; height: 88px; object-fit: contain; mix-blend-mode: screen; filter: drop-shadow(5px 8px 7px rgba(0,0,0,.35)); }
+    .sv-products img:nth-child(2) { width: 42px; height: 76px; }
+    .sv-products img:nth-child(3) { width: 42px; height: 83px; }
+    .story-copy { padding: 15px 17px 17px; }
+    .story-copy .time { color: var(--blue); font-size: 9px; font-weight: 950; letter-spacing: .15em; }
+    .story-copy h3 { margin: 8px 0 4px; color: var(--night); font-size: 17px; line-height: .95; letter-spacing: -.05em; }
+    .story-copy p { margin: 0; color: #758293; font-size: 11px; }
+    .sound-card { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .sound-item { padding: 19px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.66); }
+    .sound-item b { color: var(--blue); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
+    .sound-item h3 { margin: 10px 0 5px; color: var(--night); font-size: 17px; letter-spacing: -.04em; }
+    .sound-item p { margin: 0; color: #758293; font-size: 11px; }
+
+    .research-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 15px; }
+    .research-main { padding: 31px; border-radius: 21px; color: var(--white); background: var(--night); }
+    .research-main h1 { max-width: 680px; margin: 13px 0; font-size: clamp(37px, 5vw, 70px); line-height: .87; letter-spacing: -.085em; }
+    .research-main h1 em { color: var(--gold); font-style: normal; }
+    .research-main > p { max-width: 630px; margin: 0; color: rgba(255,255,255,.62); font-size: 13px; }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+    .facts li { min-height: 105px; padding: 14px; border: 1px solid var(--dark-line); border-radius: 12px; background: rgba(255,255,255,.045); }
+    .facts .big { display: block; color: var(--gold); font-size: 20px; font-weight: 950; line-height: 1; letter-spacing: -.05em; }
+    .facts strong { display: block; margin-top: 8px; font-size: 11px; line-height: 1.2; }
+    .facts span { display: block; margin-top: 5px; color: rgba(255,255,255,.48); font-size: 10px; }
+    .asset-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 18px; border: 1px solid var(--line); border-radius: 21px; background: rgba(255,255,255,.65); }
+    .asset-board .asset { position: relative; min-height: 180px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f5f3ed; }
+    .asset-board .asset:first-child { grid-column: span 2; min-height: 220px; }
+    .asset img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+    .asset:first-child img { object-fit: contain; }
+    .asset label { position: absolute; left: 10px; bottom: 10px; padding: 5px 7px; color: var(--white); border-radius: 5px; background: rgba(20,33,53,.78); font-size: 8px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .source-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
+    .source-card { padding: 19px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.66); }
+    .source-card b { color: var(--blue); font-size: 9px; font-weight: 950; letter-spacing: .15em; text-transform: uppercase; }
+    .source-card h3 { margin: 10px 0 5px; color: var(--night); font-size: 17px; letter-spacing: -.04em; }
+    .source-card p { margin: 0; color: #758293; font-size: 11px; }
+    .source-card a { display: inline-block; margin-top: 12px; color: var(--blue); font-size: 10px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .source-card a:hover { text-decoration: underline; }
+    .validation { display: flex; gap: 12px; align-items: start; margin-top: 15px; padding: 17px 19px; border: 1px solid rgba(166,61,52,.25); border-radius: 17px; background: rgba(253,240,237,.72); }
+    .validation .vicon { display: grid; place-items: center; width: 23px; height: 23px; flex: 0 0 auto; border-radius: 50%; color: var(--white); background: var(--red); font-weight: 900; }
+    .validation h3 { margin: 0 0 3px; color: var(--night); font-size: 13px; }
+    .validation p { margin: 0; color: #758293; font-size: 11px; }
+
+    footer { max-width: 1460px; margin: 0 auto; padding: 0 clamp(18px, 4.6vw, 72px) 28px; color: #7a8795; font-size: 10px; }
+    .footer-line { display: flex; justify-content: space-between; gap: 18px; padding-top: 19px; border-top: 1px solid var(--line); }
+    .footer-line strong { color: var(--ink); }
+
+    @media (max-width: 1100px) {
+      .film-layout, .brief-grid, .research-layout { grid-template-columns: 1fr; }
+      .side-stack { display: grid; grid-template-columns: 1fr 1fr; }
+      .side-card.dark { grid-row: span 2; }
+    }
+    @media (max-width: 760px) {
+      .topbar { flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
+      .top-meta { display: none; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      .nav button { flex: 1; padding-left: 9px; padding-right: 9px; }
+      main { padding-top: 29px; }
+      .intro, .section-head { display: block; }
+      .intro p, .section-head p { margin-top: 17px; }
+      .side-stack { display: flex; }
+      .story-grid, .sound-card, .source-row { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
+      .scene-copy { max-width: 78%; }
+      .scene-2 .scene-copy { max-width: 38%; }
+      .panel-rig { left: 33%; }
+      .scene-3 .scene-copy { max-width: 32%; }
+      .portfolio-grid { width: 56%; right: 3%; }
+      .film-wordmark .wm-mark { width: 34px; height: 34px; }
+      .film-wordmark .wm-word { font-size: 17px; }
+      .film-wordmark .wm-sub { display: none; }
+    }
+    @media (max-width: 470px) {
+      .brand-lockup small { display: none; }
+      .stage { border-radius: 16px; }
+      .scene-copy h2 { font-size: 32px; }
+      .scene-0 .intro-mark .wm-word, .final-wordmark .wm-word { font-size: 24px; }
+      .scene-0 .intro-mark .wm-mark, .final-wordmark .wm-mark { width: 40px; height: 40px; }
+      .scene-2 .scene-copy h2, .scene-3 .scene-copy h2, .scene-4 .scene-copy h2 { font-size: 23px; }
+      .scene-2 .scene-copy p, .scene-3 .scene-copy p, .scene-4 .scene-copy p { display: none; }
+      .panel-rig { left: 30%; inset-right: 0; }
+      .glass-panel { padding: 8px; }
+      .glass-panel h3 { font-size: 11px; }
+      .glass-panel p { display: none; }
+      .panel-line { margin: 8px 0; }
+      .portfolio-grid { width: 57%; height: 67%; }
+      .final-copy { width: 94%; }
+      .final-copy strong { font-size: 24px; }
+      .film-controls { flex-wrap: wrap; }
+      .time-readout { width: 100%; margin-left: 0; }
+      .asset-board { grid-template-columns: 1fr; }
+      .asset-board .asset:first-child { grid-column: span 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand-lockup" href="#film" aria-label="FINAMARK — retour au film">
+        <span class="brand-mark" aria-hidden="true"></span><span class="brand-name">FINAMARK</span><small>corporate film</small>
+      </a>
+      <nav class="nav" aria-label="Sections de la présentation"><button class="active" data-nav="film">Film</button><button data-nav="direction">Direction</button><button data-nav="sources">Sources</button></nav>
+      <div class="top-meta"><b>V01</b><i></i><span>42 s · 16:9 · 4K ready</span></div>
+    </header>
+
+    <main>
+      <section class="view active" data-view="film">
+        <div class="intro"><div><span class="eyebrow">Premium corporate motion design · Sénégal</span><h1>Une identité qui<br><em>avance avec ambition.</em></h1></div><p>Proposition de film corporate pour FINAMARK SARL : lumière, architecture, produits réels et typographie cinétique en six mouvements.</p></div>
+        <div class="film-layout">
+          <div class="film-card">
+            <div class="stage" id="filmStage" data-scene="0" aria-label="Film corporate FINAMARK animé">
+              <div class="stage-ui"><span class="live">FINAMARK · corporate film</span><span class="timecode" id="timecode">00:00 / 00:42</span></div>
+
+              <article class="scene scene-0 active" data-index="0" aria-label="Introduction cinématique">
+                <div class="architecture"></div><div class="light-beam"></div><div class="light-line"></div><div class="particles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="intro-mark"><div class="film-wordmark"><span class="wm-mark"></span><div><span class="wm-word">FINAMARK</span><span class="wm-sub">SARL · DAKAR</span></div></div></div>
+                <div class="intro-sub">VISION · STRATÉGIE · PERFORMANCE</div><span class="scene-caption">01 · ouverture</span><span class="scene-index">01 / 06</span>
+              </article>
+
+              <article class="scene scene-1" data-index="1" aria-label="Transition et headline">
+                <div class="tunnel"><i></i><i></i><i></i><i></i></div>
+                <div class="film-wordmark"><span class="wm-mark"></span><div><span class="wm-word">FINAMARK</span><span class="wm-sub">SARL</span></div></div>
+                <div class="kinetic-headline"><span style="--i:0">DONNER</span> <span style="--i:1">UNE</span><br><span class="accent" style="--i:2">NOUVELLE</span><br><span style="--i:3">DIMENSION</span><br><span style="--i:4">À VOS</span> <span class="accent" style="--i:5">AMBITIONS.</span></div>
+                <div class="scene-copy"><p>Un mouvement de marque précis, énergique et maîtrisé.</p></div><span class="scene-caption">02 · impact typographique</span><span class="scene-index">02 / 06</span>
+              </article>
+
+              <article class="scene scene-2" data-index="2" aria-label="Vision expertise engagement">
+                <div class="grid-floor"></div><div class="scene-copy"><span class="scene-kicker">Finamark en trois preuves</span><h2>Un écosystème<br><em>qui crée de la valeur.</em></h2><p>Des activités lisibles, un même niveau d'exigence.</p></div>
+                <div class="panel-rig">
+                  <div class="glass-panel p1"><div class="panel-index"><span>01 · Local</span><span>01/03</span></div><div class="panel-line"></div><h3>PRODUCTION<br>LOCALE</h3><p>Yaourts, lait caillé, crèmes desserts et glaces SIM.</p><div class="panel-media"><img src="assets/finamark-sim-lait-caille.jpg" alt="Produit SIM lait caillé"></div></div>
+                  <div class="glass-panel p2"><div class="panel-index"><span>02 · Global</span><span>02/03</span></div><div class="panel-line"></div><h3>IMPORTATION<br>INTERNATIONALE</h3><p>Sunquick, Suntop, Elle & Vire et autres marques partenaires.</p><div class="panel-media"><img src="assets/finamark-sunquick-orange.jpg" alt="Bouteille Sunquick distribuée par Finamark"></div></div>
+                  <div class="glass-panel p3"><div class="panel-index"><span>03 · Sénégal</span><span>03/03</span></div><div class="panel-line"></div><h3>DISTRIBUTION<br>NATIONALE</h3><p>Une présence dans les supermarchés, supérettes et boutiques du pays.</p><div class="panel-media"><img src="assets/finamark-suntop-orange.webp" alt="Produit Suntop distribué par Finamark"></div></div>
+                </div><span class="scene-caption">03 · dynamique corporate</span><span class="scene-index">03 / 06</span>
+              </article>
+
+              <article class="scene scene-3" data-index="3" aria-label="Showcase caméra et portefeuille produits">
+                <div class="orbit-stage"><div class="orbit-core"><span>FM</span></div><div class="orbit-card oc1"><img src="assets/finamark-sim-glace.jpg" alt="Crème glacée SIM"></div><div class="orbit-card oc2"><img src="assets/finamark-sunquick-orange.jpg" alt="Sunquick Orange"></div><div class="orbit-card oc3"><img src="assets/finamark-sim-lait-caille.jpg" alt="Lait caillé SIM"></div><div class="orbit-card oc4"><img src="assets/finamark-suntop-orange.webp" alt="Suntop Orange"></div></div>
+                <div class="data-line d1"></div><div class="data-line d2"></div><div class="data-line d3"></div>
+                <div class="scene-copy"><span class="scene-kicker">La force du portefeuille</span><h2>Des marques<br><em>en mouvement.</em></h2><p>Chaque produit est une porte d'entrée vers un moment de consommation.</p></div>
+                <div class="verb-stack"><span>INNOVER.</span><span>CONSTRUIRE.</span><span>AVANCER.</span></div><span class="scene-caption">04 · caméra showcase</span><span class="scene-index">04 / 06</span>
+              </article>
+
+              <article class="scene scene-4" data-index="4" aria-label="Expérience de marque et produits">
+                <div class="light-frames"></div><div class="scene-copy"><span class="scene-kicker">Une présence concrète</span><h2>Du local<br><em>à l'international.</em></h2><p>Finamark relie la production, l'importation et la distribution autour d'une expérience produit cohérente.</p></div>
+                <div class="portfolio-grid"><div class="portfolio-item"><img src="assets/finamark-sim-glace.jpg" alt="Crème glacée SIM"><span class="pi-tag">Production locale · SIM</span></div><div class="portfolio-item"><img src="assets/finamark-sunquick-orange.jpg" alt="Sunquick Orange"><span class="pi-tag">Importation · Sunquick</span></div><div class="portfolio-item"><img src="assets/finamark-suntop-orange.webp" alt="Suntop Orange"><span class="pi-tag">Distribution · Suntop</span></div></div><span class="scene-caption">05 · expérience de marque</span><span class="scene-index">05 / 06</span>
+              </article>
+
+              <article class="scene scene-5" data-index="5" aria-label="Révélation finale">
+                <div class="final-light"></div><div class="final-rings"></div><div class="final-wordmark"><div class="film-wordmark"><span class="wm-mark"></span><div><span class="wm-word">FINAMARK</span><span class="wm-sub">SARL · DAKAR · SÉNÉGAL</span></div></div></div>
+                <div class="final-copy"><span>L'ambition de voir plus loin.</span><strong>FINAMARK SARL</strong><span class="final-cta">finamark.sn · concrétisons vos projets</span></div><span class="scene-index">06 / 06</span>
+              </article>
+            </div>
+            <div class="film-controls"><button class="play-btn" id="playButton" type="button"><span class="play-icon" aria-hidden="true"></span><span id="playLabel">Lancer le film</span></button><button class="outline-btn" id="resetButton" type="button">Rejouer</button><span class="time-readout" id="timeReadout">00:00 / 00:42</span></div>
+          </div>
+
+          <aside class="side-stack" aria-label="Direction de film">
+            <div class="side-card dark"><span class="side-label">Direction créative</span><h2>Une architecture de marque qui respire la maîtrise.</h2><p>Le film construit la confiance par la précision : d'abord la matière, ensuite le message, puis les preuves réelles de l'écosystème Finamark.</p><div class="current-scene"><div class="row"><span id="currentPhase">01 · OUVERTURE</span><strong id="currentTitle">La marque apparaît</strong></div><div class="progress"><i id="sceneProgress"></i></div></div></div>
+            <div class="side-card"><span class="side-label">Découpage 42 secondes</span><div class="chapter-list"><button class="chapter active" data-jump="0"><b></b><time>00–05</time><span>Intro cinématique</span></button><button class="chapter" data-jump="1"><b></b><time>05–11</time><span>Headline / transition</span></button><button class="chapter" data-jump="2"><b></b><time>11–19</time><span>Vision · expertise · engagement</span></button><button class="chapter" data-jump="3"><b></b><time>19–27</time><span>3D camera showcase</span></button><button class="chapter" data-jump="4"><b></b><time>27–35</time><span>Portfolio réel</span></button><button class="chapter" data-jump="5"><b></b><time>35–42</time><span>Final reveal</span></button></div><div class="director-note"><b>✦</b><span>Les textes métier sont basés sur les informations publiques de Finamark. Les chiffres, certifications et contacts doivent être fournis par l'entreprise avant export.</span></div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="direction">
+        <div class="section-head"><div><span class="eyebrow">Note d'intention · premium corporate</span><h1>Le produit prouve.<br><em>Le mouvement convainc.</em></h1></div><p>Un film de marque qui ne se contente pas d'aligner des produits : il transforme l'écosystème Finamark en architecture visuelle et en trajectoire.</p></div>
+        <div class="brief-grid"><article class="brief-hero"><span class="side-label" style="color:var(--gold)">Big idea · proposition</span><h2>Voir plus loin.<br><em>Construire mieux.</em></h2><p>La direction proposée : un univers sombre et précis pour la maîtrise, des accents or pour l'ambition, et les packshots réels pour ancrer le récit dans la réalité de Finamark.</p></article><div class="stat-stack"><article class="stat-card"><span class="side-label">Master</span><strong>42 s</strong><p>16:9 · base 4K UHD · cadence 60 fps à l'export.</p></article><article class="stat-card"><span class="side-label">Motion language</span><strong>3D / 2D</strong><p>Parallaxe, panneaux flottants, typographie extrudée, camera push-through et orbit.</p></article></div></div>
+        <div class="story-heading"><h2>Storyboard de réalisation</h2><span>Setup · révélation · preuves · signature</span></div>
+        <div class="story-grid"><article class="story-card"><div class="story-visual sv-a"><span class="sv-orbit"></span><span class="sv-label">00–11 s · intro</span><span class="sv-title">La lumière<br>révèle.</span></div><div class="story-copy"><span class="time">01–02 · IDENTITÉ</span><h3>Le noir devient une scène.</h3><p>Un faisceau, des particules, une architecture et le wordmark en lumière.</p></div></article><article class="story-card"><div class="story-visual sv-b"><span class="sv-beam"></span><span class="sv-label">11–27 s · preuves</span><span class="sv-title">Les activités<br>s'alignent.</span></div><div class="story-copy"><span class="time">03–04 · ÉCOSYSTÈME</span><h3>Les cartes prennent de la profondeur.</h3><p>La caméra donne un rythme premium aux informations réelles et aux produits.</p></div></article><article class="story-card"><div class="story-visual sv-c"><div class="sv-products"><img src="assets/finamark-sim-glace.jpg" alt="SIM glace"><img src="assets/finamark-sunquick-orange.jpg" alt="Sunquick"><img src="assets/finamark-suntop-orange.webp" alt="Suntop"></div><span class="sv-label">27–42 s · final</span><span class="sv-title">L'ambition<br>reste.</span></div><div class="story-copy"><span class="time">05–06 · SIGNATURE</span><h3>Le portfolio devient une vision.</h3><p>Les vrais produits convergent vers une signature corporate mémorable.</p></div></article></div>
+        <div class="sound-card"><article class="sound-item"><b>Sound design</b><h3>Impact profond</h3><p>Bass hit à l'apparition du logo, risers métalliques et transitions qui respirent.</p></article><article class="sound-item"><b>Voix off</b><h3>À écrire avec Finamark</h3><p>Voix posée, confiante, peu bavarde : les visuels et les produits portent la preuve.</p></article><article class="sound-item"><b>Export social</b><h3>9:16 / 1:1</h3><p>Recomposer les panneaux et le final pour TikTok, Reels, Stories et écrans retail.</p></article></div>
+      </section>
+
+      <section class="view" data-view="sources">
+        <div class="section-head"><div><span class="eyebrow">Recherche · preuves et validation</span><h1>Une image premium,<br><em>des faits vérifiés.</em></h1></div><p>Les visuels produits utilisés dans le film proviennent des pages publiques de Finamark ou de références de marque. La production finale devra intégrer les masters fournis par l'entreprise.</p></div>
+        <div class="research-layout"><article class="research-main"><span class="side-label" style="color:var(--gold)">Informations publiques utilisées</span><h1>Un acteur agroalimentaire<br><em>ancré au Sénégal.</em></h1><p>Finamark se présente comme une entreprise qui combine production locale de produits laitiers et de glaces, importation de marques internationales et distribution nationale.</p><ul class="facts"><li><span class="big">LOCAL</span><strong>Gamme SIM</strong><span>Yaourts, lait caillé, crèmes desserts et glaces.</span></li><li><span class="big">GLOBAL</span><strong>Marques partenaires</strong><span>Sunquick, Suntop, Elle & Vire et 1964.</span></li><li><span class="big">SÉNÉGAL</span><strong>Distribution maîtrisée</strong><span>Supermarchés, supérettes et boutiques de quartier.</span></li><li><span class="big">DAKAR</span><strong>Unité de production</strong><span>Parcelles Assainies, Dakar, Sénégal.</span></li></ul></article><div class="asset-board"><div class="asset"><img src="assets/finamark-sim-lait-caille.jpg" alt="Pot SIM lait caillé sucré"><label>SIM · production locale</label></div><div class="asset"><img src="assets/finamark-sunquick-orange.jpg" alt="Bouteille Sunquick Orange"><label>Sunquick · importation</label></div><div class="asset"><img src="assets/finamark-suntop-orange.webp" alt="Carton Suntop Orange"><label>Suntop · partenaire</label></div></div></div>
+        <div class="source-row"><article class="source-card"><b>Source 01 · officiel</b><h3>Finamark · accueil</h3><p>Mission, production locale, importation et distribution nationale.</p><a href="https://finamark.sn/" target="_blank" rel="noreferrer">Ouvrir la source ↗</a></article><article class="source-card"><b>Source 02 · officiel</b><h3>Notre production locale</h3><p>Produits SIM, glaces, yaourts, lait caillé et SIM Top.</p><a href="https://finamark.sn/?page_id=27" target="_blank" rel="noreferrer">Ouvrir la source ↗</a></article><article class="source-card"><b>Source 03 · produits</b><h3>Sunquick / Suntop</h3><p>Pages produits et catégories publiées par Finamark.</p><a href="https://finamark.sn/?product=sunquick-orange-2l" target="_blank" rel="noreferrer">Ouvrir la source ↗</a></article></div>
+        <div class="validation"><span class="vicon">!</span><div><h3>Validation indispensable avant le film final</h3><p>Fournir le logo officiel en vectoriel, la charte de marque, les masters packshot, le texte de présentation validé, les coordonnées officielles, les éventuelles certifications et les droits d'utilisation des images. Le lockup FINAMARK présenté ici est une construction typographique de travail.</p></div></div>
+      </section>
+    </main>
+
+    <footer><div class="footer-line"><span><strong>FINAMARK SARL · Premium corporate motion design.</strong> Concept de travail V01.</span><span>Prototype animé · 16:9 · 42 s</span></div></footer>
+  </div>
+
+  <script>
+    (() => {
+      const scenes = [...document.querySelectorAll('.scene')];
+      const chapters = [...document.querySelectorAll('.chapter')];
+      const playButton = document.getElementById('playButton');
+      const playLabel = document.getElementById('playLabel');
+      const resetButton = document.getElementById('resetButton');
+      const timeReadout = document.getElementById('timeReadout');
+      const timecode = document.getElementById('timecode');
+      const currentPhase = document.getElementById('currentPhase');
+      const currentTitle = document.getElementById('currentTitle');
+      const sceneProgress = document.getElementById('sceneProgress');
+      const stage = document.getElementById('filmStage');
+      const navButtons = [...document.querySelectorAll('[data-nav]')];
+      const views = [...document.querySelectorAll('[data-view]')];
+      const durations = [5000, 6000, 8000, 8000, 8000, 7000];
+      const phases = ['01 · OUVERTURE', '02 · HEADLINE', '03 · ÉCOSYSTÈME', '04 · SHOWCASE', '05 · PORTFOLIO', '06 · SIGNATURE'];
+      const titles = ['La marque apparaît', 'Les ambitions prennent de la vitesse', 'Les preuves s’alignent', 'Le portefeuille se met en mouvement', 'Du local à l’international', 'L’ambition de voir plus loin'];
+      const total = durations.reduce((a, b) => a + b, 0);
+      let current = 0;
+      let elapsed = 0;
+      let playing = false;
+      let raf = null;
+      let last = 0;
+
+      const t = (ms) => `00:${String(Math.max(0, Math.min(59, Math.floor(ms / 1000)))).padStart(2, '0')}`;
+      const overall = () => durations.slice(0, current).reduce((a, b) => a + b, 0) + elapsed;
+      const update = () => {
+        const value = overall();
+        const label = `${t(value)} / 00:42`;
+        timeReadout.textContent = label;
+        timecode.textContent = label;
+        sceneProgress.style.width = `${Math.min(100, (elapsed / durations[current]) * 100)}%`;
+      };
+      const setScene = (index, reset = true) => {
+        current = Math.max(0, Math.min(scenes.length - 1, index));
+        if (reset) elapsed = 0;
+        scenes.forEach((s, i) => { s.classList.toggle('active', i === current); s.setAttribute('aria-hidden', i === current ? 'false' : 'true'); });
+        chapters.forEach((chapter, i) => chapter.classList.toggle('active', i === current));
+        stage.dataset.scene = String(current);
+        currentPhase.textContent = phases[current];
+        currentTitle.textContent = titles[current];
+        update();
+      };
+      const pause = () => { playing = false; playButton.classList.remove('is-playing'); playLabel.textContent = current === scenes.length - 1 && elapsed >= durations[current] ? 'Rejouer le film' : 'Lancer le film'; cancelAnimationFrame(raf); };
+      const frame = (now) => {
+        if (!playing) return;
+        elapsed += Math.min(80, now - last); last = now;
+        if (elapsed >= durations[current]) {
+          if (current < scenes.length - 1) setScene(current + 1, true);
+          else { elapsed = durations[current]; pause(); update(); return; }
+        }
+        update(); raf = requestAnimationFrame(frame);
+      };
+      const play = () => { if (current === scenes.length - 1 && elapsed >= durations[current]) setScene(0, true); playing = true; playButton.classList.add('is-playing'); playLabel.textContent = 'Pause'; last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); };
+      const reset = () => { pause(); setScene(0, true); playLabel.textContent = 'Lancer le film'; };
+
+      playButton.addEventListener('click', () => playing ? pause() : play());
+      resetButton.addEventListener('click', reset);
+      stage.addEventListener('click', (event) => { if (!event.target.closest('a, button')) playing ? pause() : play(); });
+      chapters.forEach((chapter) => chapter.addEventListener('click', () => { setScene(Number(chapter.dataset.jump), true); play(); }));
+      const showView = (name) => { navButtons.forEach((button) => button.classList.toggle('active', button.dataset.nav === name)); views.forEach((view) => view.classList.toggle('active', view.dataset.view === name)); if (name !== 'film') pause(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+      navButtons.forEach((button) => button.addEventListener('click', () => showView(button.dataset.nav)));
+      setScene(0, true);
+    })();
+  </script>
+</body>
+</html>
