@@ -1,0 +1,6 @@
+node_modules/
+build/*.wav
+build/*.log
+out/stills/
+*.rgb
+.env
