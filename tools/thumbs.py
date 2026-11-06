@@ -46,6 +46,14 @@ SERIES = {
         'accent': C_GOLD,
         'disc': True,
     },
+    'kebemer-alerte': {
+        'imgs': ['image-search/k-b-mer-s-n-gal-h-pital-centre-de-sant-1.jpg',
+                 'image-search/k-b-mer-s-n-gal-h-pital-centre-de-sant-4.jpg'],
+        'title': ['KÉBÉMER :', '548 CAS'],
+        'sub': 'ALERTE SANITAIRE · SYNDROMES DIGESTIFS',
+        'tag': 'SANTÉ',
+        'accent': C_RED,
+    },
     'lfr-2026-rejet': {
         'imgs': ['image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-1.jpg',
                  'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-2.jpg'],
