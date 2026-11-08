@@ -54,6 +54,14 @@ SERIES = {
         'tag': 'SANTÉ',
         'accent': C_RED,
     },
+    'kebemer-naufrage': {
+        'imgs': ['image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
+                 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'],
+        'title': ['NAUFRAGE À', 'KÉBÉMER : 34 MORTS'],
+        'sub': 'ENCORE DES JEUNES PERDUS EN MER',
+        'tag': 'FAITS DIVERS',
+        'accent': C_RED,
+    },
     'lfr-2026-rejet': {
         'imgs': ['image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-1.jpg',
                  'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-2.jpg'],
