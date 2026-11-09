@@ -55,8 +55,8 @@ SERIES = {
         'accent': C_RED,
     },
     'kebemer-naufrage': {
-        'imgs': ['image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
-                 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'],
+        'imgs': ['image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
+                 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg'],
         'title': ['NAUFRAGE À', 'KÉBÉMER : 34 MORTS'],
         'sub': 'ENCORE DES JEUNES PERDUS EN MER',
         'tag': 'FAITS DIVERS',

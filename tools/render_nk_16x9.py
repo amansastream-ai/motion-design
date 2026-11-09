@@ -187,7 +187,7 @@ def ticker(img, t):
     text(d, (-off + sp, y), cycle, f, (214, 224, 236), anchor='lm')
 
 def intro_scene(t):
-    img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg'), W, H)
+    img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg'), W, H)
     img = blend_to_bg(img)
     dim(img, 0, 0, W, H, 122)
     vignette(img, 0, 0, W, H)
@@ -223,20 +223,20 @@ def point_scene(kind, t, t0):
         img.paste(patch, (x, 0))
 
     imgs = {
-        'p1': ('image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg',
-               'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'),
-        'p2': ('image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg',
-               'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--2.jpg'),
-        'p3': ('image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--1.jpg',
-               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'),
-        'p4': ('image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--2.jpg',
-               'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--3.jpg'),
-        'p5': ('image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg',
+        'p1': ('image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
                'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg'),
-        'p6': ('image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
-               'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'),
-        'p7': ('image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--3.jpg',
-               'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--2.jpg'),
+        'p2': ('image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'),
+        'p3': ('image-search/pirogue-en-bois-surcharg-e-migrants-mer--4.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'),
+        'p4': ('image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg'),
+        'p5': ('image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg'),
+        'p6': ('image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-3.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg'),
+        'p7': ('image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
+               'image-search/pirogue-en-bois-surcharg-e-migrants-mer--4.jpg'),
     }
     lpath, rpath = imgs[kind]
     insert_image('l', lpath, a=140)
@@ -261,7 +261,7 @@ def point_scene(kind, t, t0):
                '34 MORTS', C_RED, 'APS · dimanche 8 novembre'),
         'p2': ('POINT 02 · CHRONOLOGIE', 'VENDREDI, SAMEDI, DIMANCHE',
                'Tébène : 4 corps · Lompoul : une vingtaine · puis +11',
-               '4 → 21 → 34', C_STEEL, 'Repêchages successifs'),
+               'DE 4 À 34', C_STEEL, 'Repêchages successifs'),
         'p3': ('POINT 03 · LES VICTIMES', 'LÉONA ET THIÉPPE EN DEUIL',
                'La plupart des victimes du département de Kébémer',
                'DEUIL', C_STEEL, 'Identification en cours'),
@@ -345,7 +345,7 @@ def debate_scene(t, t0):
     return img
 
 def outro_scene(t, t0):
-    img = kb_src(os.path.join(ROOT, 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'), W, H)
+    img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'), W, H)
     img = blend_to_bg(img)
     dim(img, 0, 0, W, H, 165)
     d = ImageDraw.Draw(img, 'RGBA')

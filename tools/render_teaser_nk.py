@@ -79,7 +79,7 @@ def header_bar(img, W):
 
 def stage(t, mode, W, H):
     if t < 11.37:
-        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg'), W, H)
+        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg'), W, H)
         img = img.filter(ImageFilter.GaussianBlur(1.2))
         dim(img, W, H, 118)
         d = ImageDraw.Draw(img, 'RGBA')
@@ -116,7 +116,7 @@ def stage(t, mode, W, H):
                 text(d, (54 + fw / 2, 975), 'LA SUITE DANS NOTRE REPORTAGE',
                      Oswald(52), (255, 242, 238), anchor='mm')
     elif t < 15.8:
-        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'), W, H)
+        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg'), W, H)
         img = img.filter(ImageFilter.GaussianBlur(1.2))
         dim(img, W, H, 126)
         d = ImageDraw.Draw(img, 'RGBA')
@@ -130,7 +130,7 @@ def stage(t, mode, W, H):
         if P(t - 11.37, 0.2, 0.5) > 0:
             text(d, (x0, y2), 'Des disparus sont toujours recherchés', f2, C_MUT, stroke=2)
     elif t < 20.3:
-        img = kb_src(os.path.join(ROOT, 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg'), W, H)
+        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--4.jpg'), W, H)
         img = img.filter(ImageFilter.GaussianBlur(1.2))
         dim(img, W, H, 132)
         d = ImageDraw.Draw(img, 'RGBA')
@@ -145,7 +145,7 @@ def stage(t, mode, W, H):
         if P(t - 15.8, 0.2, 0.5) > 0:
             text(d, (x0, y2), 'Kébémer · région de Louga · SNGAL INFOS', f2, C_GOLD, stroke=2)
     else:
-        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg'), W, H)
+        img = kb_src(os.path.join(ROOT, 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg'), W, H)
         img = img.filter(ImageFilter.GaussianBlur(2.2))
         dim(img, W, H, 162)
         d = ImageDraw.Draw(img, 'RGBA')

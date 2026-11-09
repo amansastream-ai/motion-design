@@ -169,14 +169,14 @@ def frame(t):
     i, kind, t0, t1 = seg_at(t)
     appear = t - t0
     bg = {
-        'intro': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--4.jpg',
-        'j1': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg',
-        'j2': 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg',
-        'j3': 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--1.jpg',
-        'j4': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
-        'j5': 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--3.jpg',
-        'j6': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg',
-        'outro': 'image-search/plage-c-te-s-n-gal-pirogues-p-cheurs-oc--4.jpg',
+        'intro': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg',
+        'j1': 'image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-1.jpg',
+        'j2': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
+        'j3': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--3.jpg',
+        'j4': 'image-search/pirogue-chou-e-plage-s-n-gal-migrants-na-3.jpg',
+        'j5': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--4.jpg',
+        'j6': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--2.jpg',
+        'outro': 'image-search/pirogue-en-bois-surcharg-e-migrants-mer--1.jpg',
     }[kind]
     img = kb_src(os.path.join(ROOT, bg), W, H)
     img = blend_to_bg(img)
@@ -185,7 +185,7 @@ def frame(t):
     cards = {
         'intro': ('FAITS DIVERS · LOUGA', 'NAUFRAGE À KÉBÉMER', '34 morts · 1 rescapé · des disparus', 'PROVISOIRE', C_RED),
         'j1': ('BILAN PROVISOIRE', '34 MORTS', 'Un seul rescapé · disparus recherchés', '8 NOVEMBRE', C_RED),
-        'j2': ('CHRONOLOGIE', 'VENDREDI → DIMANCHE', 'Tébène · Lompoul · +11 corps', '4 → 21 → 34', C_STEEL),
+        'j2': ('CHRONOLOGIE', 'VENDREDI, DIMANCHE', 'Tébène · Lompoul · +11 corps', 'DE 4 À 34', C_STEEL),
         'j3': ('LES VICTIMES', 'LÉONA & THIÉPPE', 'Le département de Kébémer en deuil', 'DEUIL', C_STEEL),
         'j4': ('CONTEXTE', 'ROUTE DES CANARIES', '635 morts en cinq mois en 2026', '635 MORTS', C_WARM),
         'j5': ('RÉPONSES', 'LUTTE CONTRE LES PASSEURS', 'Coopération · insertion des jeunes', 'MOBILISATION', C_TEAL),
