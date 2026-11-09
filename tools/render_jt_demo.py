@@ -1,6 +1,7 @@
 """Démo JT SNGAL INFOS — présentatrice à l'antenne + reportage (16:9, 1:13).
-Aïssatou Ndiaye (voice-06) présente à l'image (bouche animée), puis les images
-+ la voix off (voice-02) comme d'habitude, sign-off présentatrice, outro.
+Aïssatou Ndiaye (voice-06) présente à l'image (VRAIE synchronisation levres,
+clips animes par tools/talking_face.py), puis les images + la voix off
+(voice-02) comme d'habitude, sign-off presentatrice, outro.
 Run: pytools/bin/python tools/render_jt_demo.py
 """
 import os
@@ -8,9 +9,6 @@ import sys
 import numpy as np
 import imageio_ffmpeg
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from presenter import AnchorFace
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
@@ -41,10 +39,11 @@ SEGS = [
     ('anchor2', 61.81, 66.50),
     ('outro', 66.50,  73.0),
 ]
-ANCHOR_CLIPS = {
-    'anchor1': ('audio/anchor-intro.mp3', 0.15),
-    'anchor2': ('audio/anchor-outro.mp3', 61.81),
+ANCHOR_VIDEOS = {
+    'anchor1': (os.path.join(ROOT, 'audio', 'anchor-intro-talking.mp4'), 0.0),
+    'anchor2': (os.path.join(ROOT, 'audio', 'anchor-outro-talking.mp4'), 61.81),
 }
+CLIP_FPS = 25.0
 
 _LOGO_CACHE = {}
 
@@ -129,33 +128,59 @@ def ticker(img, t):
     text(d, (-off + sp, y), cycle, f, (214, 224, 236), anchor='lm')
 
 
-# ---------- préparation présentatrice ----------
-FACE = AnchorFace()
-STATES = None          # états plein cadre
-ENV = {}               # enveloppes par segment anchor
+# ---------- lecture des clips presentatrice (lip-sync reel) ----------
+class ClipReader:
+    """Lecture sequentielle avec cache d'une frame (les segments sont lus dans l'ordre)."""
+    def __init__(self, path):
+        import cv2
+        self.cv2 = cv2
+        self.cap = cv2.VideoCapture(path)
+        self.last = -1
+        self.frame = None
+
+    def get(self, idx):
+        if idx == self.last and self.frame is not None:
+            return self.frame
+        if idx != self.last + 1:
+            self.cap.set(self.cv2.CAP_PROP_POS_FRAMES, idx)
+        ok, fr = self.cap.read()
+        if not ok:
+            self.cap.set(self.cv2.CAP_PROP_POS_FRAMES, max(0, idx - 1))
+            ok, fr = self.cap.read()
+        self.frame = fr
+        self.last = idx
+        return fr
+
+
+CLIPS = {}
+FOCUS_Y = 0.26
+
 
 def setup():
-    global STATES, ENV
-    STATES = FACE.panel_states(W, H, cy=0.26)
-    n = int(DUR * FPS)
-    for seg, (clip, t0) in ANCHOR_CLIPS.items():
-        seq = AnchorFace.frame_states(clip, FPS, n)
-        full = np.zeros(n)
-        off = int(t0 * FPS)
-        k = min(n - off, len(seq))
-        full[off:off + k] = seq[:k]
-        ENV[seg] = full
+    for k, (path, _t0) in ANCHOR_VIDEOS.items():
+        CLIPS[k] = ClipReader(path)
+
+
+def panelize(fr_bgr, zoom=1.0):
+    """Frame clip (portrait 1376x1712) -> panneau WxH (cover, biais vertical FOCUS_Y)."""
+    im = Image.fromarray(fr_bgr[:, :, ::-1])
+    sw, sh = im.size
+    scale = max(W / sw, H / sh) * zoom
+    nw, nh = int(sw * scale + 0.5), int(sh * scale + 0.5)
+    im = im.resize((nw, nh), Image.LANCZOS)
+    x = (nw - W) // 2
+    y = int((nh - H) * FOCUS_Y)
+    return im.crop((x, y, x + W, y + H)).convert('RGB')
 
 
 def anchor_scene(kind, t, t0):
     appear = P(t - t0, 0.02, 0.3)
-    n = int(DUR * FPS)
-    fi = min(n - 1, int(t * FPS))
-    s = ENV[kind][fi] if kind in ENV else 0.0
+    path, v0 = ANCHOR_VIDEOS[kind]
+    fi = max(0, int((t - v0) * CLIP_FPS))
+    fr = CLIPS[kind].get(fi)
     prog = P(t - t0, 0, 6)
-    zoom = 0.018 * ease(prog) + 0.004
-    bob = 0.0035 * np.sin(2 * np.pi * (t - t0) / 7.0)
-    img = AnchorFace.blend_frame(STATES, float(s), zoom=zoom, bob=bob).convert('RGB')
+    zoom = 1.008 + 0.012 * ease(prog)
+    img = panelize(fr, zoom=zoom)
 
     d = ImageDraw.Draw(img, 'RGBA')
     grad = Image.new('RGBA', (700, H), (0, 0, 0, 0))

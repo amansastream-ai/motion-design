@@ -1,0 +1,111 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Avatar creation & identity",
+      "description": "Invent or clone a presenter and vary its look — hero stills, camera angles, wardrobe/location variants, and clean reference frames.",
+      "skills": [
+        "avatar-invent",
+        "avatar-camera-angles",
+        "avatar-location",
+        "avatar-frames"
+      ]
+    },
+    {
+      "title": "Talking-head & reels",
+      "description": "Turn a script + an avatar into finished vertical reels — lip-synced talking-head scenes, style transfer, story reels, karaoke captions, and ambient sound design.",
+      "skills": [
+        "avatar-talking-video",
+        "avatar-reel-composer",
+        "caption-word-reveal",
+        "reel-restyle",
+        "video-remix",
+        "cuento-reel",
+        "avatar-ambient-sfx"
+      ]
+    },
+    {
+      "title": "B-roll",
+      "description": "Generate or find complementary B-roll — hyper-real clips, avatar action shots, real YouTube footage, website/terminal captures.",
+      "skills": [
+        "broll-generator",
+        "broll-story",
+        "broll-avatar-camera",
+        "broll-actor-copy",
+        "broll-finder",
+        "broll-web-capture",
+        "broll-browser-recorder",
+        "broll-terminal",
+        "broll-cursor",
+        "broll-core"
+      ]
+    },
+    {
+      "title": "Voice & audio",
+      "description": "Clone voices, isolate clean samples, and generate music and sound effects for reels.",
+      "skills": [
+        "voice-clone",
+        "voice-isolate",
+        "bg-music-hq",
+        "sound-effects"
+      ]
+    },
+    {
+      "title": "Video editing & analysis",
+      "description": "Compose reels, analyze scene structure, replace backgrounds, and transcribe video.",
+      "skills": [
+        "video-compose",
+        "video-scene-analysis",
+        "video-bg-replace",
+        "video-transcribe"
+      ]
+    },
+    {
+      "title": "Discovery & downloaders",
+      "description": "Find top-performing public reels by topic or brand, and batch-download videos from YouTube, TikTok, Instagram and Facebook.",
+      "skills": [
+        "reel-discovery",
+        "youtube-videos",
+        "tiktok-videos",
+        "instagram-videos",
+        "facebook-videos"
+      ]
+    },
+    {
+      "title": "Strategy & scripting",
+      "description": "Plan a content/channel strategy, write viral short-form scripts, plan the cuts/montage (Rule of Six), generate company-aware onboarding reel-script series ready to feed the reel pipeline, and apply luxury/HNWI sales psychology when scripting premium content or high-ticket web copy.",
+      "skills": [
+        "brand-content-strategy",
+        "viral-video-script",
+        "rule-of-six-edit",
+        "onboarding-script",
+        "luxury-hnwi-sales"
+      ]
+    },
+    {
+      "title": "Social posts & carousels",
+      "description": "Turn a topic + a brand into a finished Instagram carousel — research the winning carousel structure of competitors (Apify), decompose it slide-by-slide with Gemini vision, then generate on-brand 4:5 slides + caption + hashtags with the asset-generator engine.",
+      "skills": [
+        "carousel-generator"
+      ]
+    },
+    {
+      "title": "Documents & PDFs",
+      "description": "Deconstruct a premium reference PDF into a reusable design + narrative mold (palette, type roles, per-page archetypes, arc) with Gemini vision, then regenerate a brand-new on-topic multi-page PDF — crisp HTML text via Chromium, imagery via the asset-generator engine.",
+      "skills": [
+        "pdf-remix"
+      ]
+    },
+    {
+      "title": "Generation engines (shared)",
+      "description": "Shared model backends the pipeline skills call under the hood — image generation (GPT Image 2, Gemini asset-generator), audio-synced video (Seedance 2.0 via Higgsfield MCP), multi-character audio (Gemini TTS + SFX + score), and instrumental background music.",
+      "skills": [
+        "gpt-image-2",
+        "seedance-2",
+        "audio-theater",
+        "asset-generator",
+        "bg-music"
+      ]
+    }
+  ]
+}
