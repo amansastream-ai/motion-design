@@ -78,6 +78,20 @@ SERIES = {
         'tag': 'XIBAAR',
         'accent': C_WARM,
     },
+    'lfr2-decret': {
+        'imgs': ['image-search/lfr2-p1.jpg', 'image-search/lfr2-p4.jpg'],
+        'title': ['LFR 2026 :', 'PAR DÉCRET'],
+        'sub': 'EN VIGUEUR MALGRÉ LE REJET',
+        'tag': 'POLITIQUE',
+        'accent': C_RED,
+    },
+    'lfr2-decret-B': {
+        'imgs': ['image-search/lfr2-p3.jpg', 'image-search/lfr2-p2.jpg'],
+        'title': ['MALGRÉ', 'LE REJET'],
+        'sub': 'DÉCRET N° 2026-2416 · 19 NOVEMBRE',
+        'tag': 'POLITIQUE',
+        'accent': C_WARM,
+    },
     'vie-chere-greve': {
         'imgs': ['image-search/march-dakar-familles-denr-es-alimentaire-3.jpg',
                  'image-search/march-dakar-familles-denr-es-alimentaire-1.png',
