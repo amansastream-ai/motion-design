@@ -1,71 +1,90 @@
-# Kit réseaux — LFR 2026 : entrée en vigueur par décret
-SNGAL INFOS · 19 novembre 2026 · politique/budget
+# LFR 2026 : entrée en vigueur par décret — kit réseaux sociaux (SNGAL INFOS)
 
-## 1. Les faits (à respecter à la lettre)
-- Le **3 novembre 2026**, l'Assemblée nationale a **rejeté** le projet de loi de
-  finances rectificative (LFR) 2026 — **109 voix contre, 20 pour**.
-- Le **19 novembre 2026**, le président **Bassirou Diomaye Faye** a décidé de
-  **mettre la LFR 2026 en vigueur par décret** : **décret n° 2026-2416**.
-- Le communiqué est signé par **Oumar Samba Bâ**, ministre secrétaire général
-  de la Présidence de la République.
-- **Pourquoi polémique ?** Un texte rejeté par les députés est mis en vigueur
-  par la voie réglementaire. La question institutionnelle est posée.
-- Sources : Présidence de la République · APS · Gouvernement du Sénégal.
+**Publication** : « LFR 2026 : mise en vigueur par décret malgré le rejet de l'Assemblée »
+**Angle** : « Un texte rejeté par les députés mis en vigueur par décret : quel poids pour l'Assemblée ? »
+**Compte** : SNGAL INFOS · **Date de référence** : 19 novembre 2026
+**Crédit ligne** : Source : Présidence de la République · APS · Gouvernement du Sénégal
+**Vidéos** : `lfr2-decret-16x9.mp4` (1:32) · `lfr2-decret-9x16.mp4` (1:32) · teasers 30 s (16:9 + 9x16)
+**Miniatures** : `thumbs/lfr2-decret-thumb-{16x9,9x16,4x5}.jpg` (+ variante B : « MALGRÉ LE REJET »)
 
-## 2. Ligne éditoriale
-- Ton **sobre et factuel** ; on rapporte, on n'interprète pas.
-- Toujours rappeler les **deux dates** (3 nov = rejet · 19 nov = décret).
-- Formulations à utiliser : « entrée en vigueur par décret », « malgré le rejet
-  de l'Assemblée », « la question institutionnelle se pose ».
-- Formulations à ÉVITER : « coup d'État », « dictature », « forfaiture »
-  (jugements non sourcés) ; jamais de citation inventée.
+> Ton : sobre et factuel. Toujours rappeler les deux dates — **3 novembre** (rejet de l'Assemblée,
+> 109 voix contre, 20 pour) et **19 novembre** (décret n° 2026-2416). Sourcer chaque affirmation.
+> Éviter : « coup d'État », « forfaiture », « dictature » et toute citation non sourcée.
 
-## 3. Vidéos à promouvoir
-- Reportage 16:9 (1:32) : `videos/lfr2-decret-16x9.mp4`
-- Reportage 9:16 (1:32) : `videos/lfr2-decret-9x16.mp4`
-- Teaser 30 s : `videos/lfr2-decret-teaser-16x9.mp4` / `-9x16.mp4`
-- Miniatures : `thumbs/lfr2-decret-thumb-{16x9,9x16,4x5}.jpg` (variante B dispo)
+---
 
-## 4. Textes par plateforme
+## 1. YouTube (vidéo longue 16:9)
 
-### TikTok / Reels (vidéo 9:16 ou teaser)
-« Rejetée par les députés le 3 novembre… mise en vigueur par décret le 19.
-La LFR 2026 entre en application malgré l'Assemblée nationale. Décret
-n° 2026-2416. Le débat reste ouvert. #SNGALINFOS »
-Hashtags (3-5 de niche, JAMAIS #fyp) : #Senegal #LFR2026 #DiomayeFaye #politique
-#waañu (optionnel)
+**Titre (≤100 car.)**
+LFR 2026 : entrée en vigueur par décret malgré le rejet de l'Assemblée | SNGAL INFOS
 
-### Instagram (Reels + carrousel)
-« LFR 2026 : la loi de finances rectificative entre en vigueur par décret, deux
-semaines après son rejet par l'Assemblée nationale. Décret n° 2026-2416 du
-19 novembre 2026, communiqué de la Présidence signé par Oumar Samba Bâ. Une
-décision qui fait débat. »
-Hashtags (5 max) : #SNGALINFOS #Senegal #LFR2026 #AssembléeNationale #DiomayeFaye
+**Description**
+Le président Bassirou Diomaye Faye a décidé de mettre en vigueur la loi de finances rectificative (LFR) 2026 par décret, deux semaines après le rejet du texte par l'Assemblée nationale. Le décret n° 2026-2416, daté du 19 novembre 2026, a été annoncé par un communiqué de la Présidence de la République signé par Oumar Samba Bâ, ministre secrétaire général de la Présidence.
 
-### YouTube
-Titre : « LFR 2026 : ENTRÉE EN VIGUEUR PAR DÉCRET malgré le rejet de
-l'Assemblée » (≤ 60 caractères du résumé)
-Description : faits + dates + sources + lien du reportage.
-Chapitres : 0:00 Intro · 0:16 Le décret · 0:33 Du rejet au décret · 0:47 La
-polémique · 0:57 Le rôle de la LFR · 1:09 L'application · 1:18 La question.
-Miniature : variante A (« LFR 2026 : PAR DÉCRET ») ; bascule variante B si
-CTR < 4 % après 48 h.
+Rappel des faits : le 3 novembre 2026, les députés rejetaient le projet de LFR 2026 par 109 voix contre et 20 pour. Le président a ensuite choisi la voie réglementaire pour faire entrer le texte en vigueur, malgré ce rejet. Une décision qui fait polémique : comment un texte rejeté par les députés peut-il être mis en application par décret ? La question de la procédure institutionnelle se pose.
 
-### X / Facebook (1-2 hashtags max)
-« LFR 2026 : le président Diomaye Faye met le texte en vigueur par décret
-(n° 2026-2416, 19 novembre), deux semaines après le rejet de l'Assemblée
-nationale. Le débat institutionnel est ouvert. #SNGALINFOS »
-→ Prévoir un 2e tweet avec le chiffre-clé : « 109 voix contre, 20 pour : le
-rejet du 3 novembre. Seize jours plus tard, le décret. »
+À quoi sert une LFR ? Elle ajuste le budget de l'État en cours d'année : recettes, dépenses et priorités. Celle de 2026 s'applique désormais pour tout l'exercice, sans le vote des députés. Entre urgence économique et respect de la procédure, le débat reste ouvert.
 
-## 5. Calendrier de publication
-- **Pic d'audience : 18 h – 21 h** (heure de Dakar).
-- Teaser 30 s le matin (10 h) → reportage complet à 18 h 30.
-- Rappel « le débat reste ouvert » le lendemain midi (sondage/question en story).
+0:00 LFR 2026 entre en vigueur par décret
+0:17 Le décret n° 2026-2416
+0:34 Du rejet au décret
+0:47 Malgré le rejet : la polémique
+0:57 Le rôle de la LFR
+1:09 Le texte s'applique
+1:18 Le débat reste ouvert
 
-## 6. Rappels algorithmes 2026
-- TikTok : rétention/complétion ≥ 70 % (teaser court d'abord), 3-5 hashtags de
-  niche, jamais #fyp.
-- Instagram : 5 hashtags max, Reels < 30 s en teaser.
-- YouTube : rétention + CTR + chapitres (voir ci-dessus).
-- X / Facebook : 1-2 hashtags, publications factuelles avec source.
+Source : Présidence de la République · APS · Gouvernement du Sénégal.
+
+**Hashtags (3-5)** : #LFR2026 #Sénégal #DiomayeFaye #AssembléeNationale #SngalInfos
+
+---
+
+## 2. YouTube Shorts / TikTok / Instagram Reels (9:16, 1:32)
+
+**Titre** : LFR 2026 : par décret malgré l'Assemblée ? #LFR2026 #Sénégal
+
+**Légende (TikTok/Reels)** : Rejetée par les députés le 3 novembre… mise en vigueur par décret le 19. La LFR 2026 s'applique malgré l'Assemblée nationale. Décret n° 2026-2416. Le débat reste ouvert. Source : Présidence de la République · APS. #LFR2026 #DiomayeFaye #Sénégal #Politique #SngalInfos
+
+**Hashtags TikTok (3-5, jamais #fyp)** : #LFR2026 #Senegal #DiomayeFaye #Politique
+**Hashtags Reels (5 max)** : #LFR2026 #Sénégal #DiomayeFaye #AssembléeNationale #SngalInfos
+
+---
+
+## 3. Facebook (16:9 + texte)
+
+**Accroche** : 🇸🇳 LFR 2026 — la loi de finances rectificative entre en vigueur par décret.
+**Texte** : Le président Bassirou Diomaye Faye a mis la loi de finances rectificative 2026 en vigueur par le décret n° 2026-2416, daté du 19 novembre 2026. Le communiqué de la Présidence est signé par Oumar Samba Bâ, ministre secrétaire général de la Présidence. Deux semaines plus tôt, le 3 novembre, l'Assemblée nationale rejetait le texte par 109 voix contre et 20 pour. Une décision qui fait polémique : un texte rejeté par les députés est désormais appliqué par la voie réglementaire. La LFR ajuste le budget de l'État en cours d'année (recettes, dépenses, priorités) ; celle de 2026 s'appliquera donc sans le vote des députés. Entre urgence économique et respect de la procédure, le débat reste ouvert.
+Source : Présidence de la République · APS · Gouvernement du Sénégal.
+**Hashtags (1-2)** : #LFR2026 #Sénégal
+
+---
+
+## 4. X (Twitter)
+
+**Tweet** : 🇸🇳 LFR 2026 : le président Diomaye Faye met le texte en vigueur par décret (n° 2026-2416, 19 nov), 16 jours après le rejet de l'Assemblée (3 nov : 109 voix contre). Le débat institutionnel est ouvert. #LFR2026 #Sénégal
+
+**Tweet 2 (thread)** : 109 voix contre, 20 pour : le 3 novembre, les députés rejetaient la LFR 2026. Le 19 novembre, le décret n° 2026-2416 la met en vigueur. Quel poids reste-t-il au vote de l'Assemblée ? #LFR2026
+
+---
+
+## 5. Teasers 30 s (story/pubs courtes)
+
+**Texte écran** : REJETÉE LE 3 NOVEMBRE · PAR DÉCRET N° 2026-2416 · EN VIGUEUR MALGRÉ LE REJET · LA SUITE DANS NOTRE REPORTAGE
+**Légende** : Rejetée par les députés, mise en vigueur par décret. Le reportage complet est sur notre chaîne. #LFR2026 #Sénégal
+
+---
+
+## 6. Fenêtres de publication (rappels 2026)
+
+- **Ton** : sobre et factuel — deux dates toujours rappelées (3 nov · 19 nov), sources
+  systématiques, pas de jugement non sourcé sur les institutions.
+- **TikTok** : complétion ≥ 70 % ; 3-5 hashtags niche ; jamais #fyp.
+- **Instagram** : 5 hashtags max ; envois DM + temps de visionnage ; 4:5 en feed.
+- **YouTube** : rétention + CTR ; chapitrage ci-dessus ; 3-5 hashtags ; bascule miniature
+  variante B (« MALGRÉ LE REJET ») si CTR < 4 % après 48 h.
+- **X** : 1-2 hashtags ; le chiffre-clé (109 voix contre) en accroche.
+- **Facebook** : 1-2 hashtags ; accroche sobre.
+- **Fenêtres** : 18-21 h (heure du Sénégal) ; teaser le matin (10 h), vidéo longue à 18 h 30,
+  Short dans la foulée ; rappel « le débat reste ouvert » le lendemain midi (question en story).
+- **Suivi** : prévoir un post « mise à jour » si l'Assemblée réagit, si le Conseil
+  constitutionnel est saisi, ou si de nouveaux décrets d'application paraissent.
