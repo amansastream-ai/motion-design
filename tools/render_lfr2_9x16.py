@@ -1,4 +1,5 @@
-"""« Rejet de la LFR 2026 » — 9x16 Short (90 s). SNGAL INFOS + logo.
+"""Reportage « LFR 2026 : entrée en vigueur par décret » — 9:16 (1:32).
+SNGAL INFOS + logo. Voix off seule (sans journaliste).
 TIMING EXACT : voix dès 0,15 s · écarts 0,5 s · son jusqu'à la dernière image.
 Run: pytools/bin/python tools/render_lfr2_9x16.py
 """
@@ -16,27 +17,27 @@ Inter = lambda s, b=False: ImageFont.truetype(
     os.path.join(FDIR, 'Inter-600.ttf' if b else 'Inter-400.ttf'), s)
 
 W, H, FPS = 1080, 1920, 24
-DUR = 90.0
+DUR = 92.5
 
 C_BG = (7, 13, 22)
+C_LINE = (28, 41, 56)
 C_TXT = (232, 238, 246)
 C_MUT = (138, 154, 172)
 C_WARM = (232, 92, 42)
 C_GOLD = (232, 178, 42)
-C_STEEL = (110, 160, 220)
 C_TEAL = (42, 184, 162)
+C_STEEL = (110, 160, 220)
+C_RED = (214, 64, 48)
 
-# Frontières alignées sur les départs de voix (0,5 s d'écart max)
 SEGS = [
-    ('intro',  0,    11.48),  # a : 0.15 -> 10.98
-    ('j1',  11.48,  22.00),   # b : 11.48 -> 21.50
-    ('j2',  22.00,  30.60),   # c : 22.00 -> 30.10
-    ('j3',  30.60,  37.62),   # d : 30.60 -> 37.12
-    ('j4',  37.62,  49.85),   # f : 37.62 -> 49.35
-    ('j5',  49.85,  62.25),   # g : 49.85 -> 61.75
-    ('j6',  62.25,  74.05),   # h : 62.25 -> 73.55
-    ('j7',  74.05,  84.00),   # i : 74.05 -> 83.99
-    ('outro', 84.0,  90.0),   # stinger + logo (son jusqu'à la fin)
+    ('intro',  0,    16.81),
+    ('j1', 16.81,    33.55),
+    ('j2', 33.55,    46.97),
+    ('j3', 46.97,    56.98),
+    ('j4', 56.98,    68.90),
+    ('j5', 68.90,    77.93),
+    ('j6', 77.93,    87.14),
+    ('outro', 87.14, 92.5),
 ]
 
 _LOGO_CACHE = {}
@@ -65,15 +66,17 @@ def cover(img, w, h):
     scale = max(w / sw, h / sh)
     nw, nh = int(sw * scale + 0.5), int(sh * scale + 0.5)
     im = im.resize((nw, nh), Image.LANCZOS)
-    return im.crop(((nw - w) // 2, int((nh - h) * 0.38), (nw - w) // 2 + w, int((nh - h) * 0.38) + h))
+    x = (nw - w) // 2
+    y = int((nh - h) * 0.38)
+    return im.crop((x, y, x + w, y + h))
 
-def kb_src(path, w, h, cx=0.5, cy=0.4):
+def kb_src(path, w, h, cx=0.5, cy=0.42):
     im = Image.open(path).convert('RGB')
     if im.width < w * 0.72 or im.height < h * 0.72:
-        plate = cover(im, w, h).filter(ImageFilter.GaussianBlur(26))
-        plate = Image.blend(plate, Image.new('RGB', (w, h), C_BG), 0.30)
+        plate = cover(im, w, h).filter(ImageFilter.GaussianBlur(22))
+        plate = Image.blend(plate, Image.new('RGB', (w, h), C_BG), 0.32)
         sw, sh = im.size
-        scale = min(w * 0.86 / sw, h * 0.62 / sh)
+        scale = min(w * 0.82 / sw, h * 0.82 / sh)
         nw, nh = int(sw * scale), int(sh * scale)
         plate.paste(im.resize((nw, nh), Image.LANCZOS), (int((w - nw) * cx), int((h - nh) * cy)))
         return plate
@@ -86,135 +89,121 @@ def text(d, xy, s, f, fill, anchor=None, stroke=0):
 def textw(s, f):
     return f.getbbox(s)[2]
 
+def blend_to_bg(base):
+    grad = Image.new('RGB', (W, H))
+    gd = ImageDraw.Draw(grad)
+    for y in range(0, H, 2):
+        k = y / H
+        gd.rectangle([0, y, W, y + 2], fill=(int(6 + 10 * k), int(12 + 12 * k), int(20 + 14 * k)))
+    return Image.blend(base, grad, 0.45)
+
 def dim(img, x, y, w, h, a=120):
     ov = Image.new('RGBA', (w, h), (0, 0, 0, a))
     img.paste(ov, (x, y), ov)
 
-def header_v(img, tag):
+def header_bar(img):
     d = ImageDraw.Draw(img, 'RGBA')
-    d.rectangle([0, 0, W, 150], fill=(9, 15, 24, 230))
-    d.rectangle([0, 0, 14, 150], fill=C_WARM + (255,))
-    lg = logo(96)
-    img.paste(lg, (36, 27), lg)
-    text(d, (150, 75), 'SNGAL INFOS', Oswald(52), (242, 246, 252), anchor='lm')
-    d.rectangle([W - 330, 38, W - 40, 112], fill=(178, 32, 22, 235))
-    text(d, (W - 185, 75), tag, Inter(30, True), (255, 232, 226), anchor='mm')
+    d.rectangle([0, 0, W, 110], fill=(9, 15, 24, 232))
+    d.line([(0, 110), (W, 110)], fill=C_LINE + (255,), width=3)
+    d.rectangle([0, 0, 12, 110], fill=C_RED + (255,))
+    lg = logo(74)
+    img.paste(lg, (30, 18), lg)
+    text(d, (124, 55), 'SNGAL INFOS', Oswald(48), (242, 246, 252), anchor='lm')
+    d.rectangle([W - 320, 28, W - 30, 86], fill=(178, 32, 22, 235))
+    text(d, (W - 175, 57), 'LFR 2026 · 19 NOV', Inter(22, True), (255, 232, 226), anchor='mm')
 
-def ticker_v(img, t):
+def story_card(img, kicker, headline, sub, badge, accent, appear):
     d = ImageDraw.Draw(img, 'RGBA')
-    y = H - 130
-    d.rectangle([0, y, W, H], fill=(8, 13, 21, 238))
-    d.line([(0, y), (W, y)], fill=C_WARM + (255,), width=6)
-    items = ['LFR 2026 : REJETÉE', '109 VOIX CONTRE', '1 115 MD EN SUSPENS',
-             'FMI 2,2 MD $ EN QUESTION', 'SNGAL INFOS']
-    cycle = '  ●  '.join(items) + '  ●  '
-    f = Inter(36)
-    sp = textw(cycle, f)
-    off = int((t * 130) % sp)
-    text(d, (-off, y + 62), cycle, f, (214, 224, 236), anchor='lm')
-    text(d, (-off + sp, y + 62), cycle, f, (214, 224, 236), anchor='lm')
-
-def mini_card(t, t0, img_path, num, title, fact, verdict, accent, caveat=None):
-    img = kb_src(os.path.join(ROOT, img_path), W, H, cy=0.4)
-    dim(img, 0, 0, W, H, 112)
-    d = ImageDraw.Draw(img, 'RGBA')
-    appear = P(t - t0, 0, 0.3)
-    ph = int(ease(appear) * 480)
-    if ph > 2:
-        panel = Image.new('RGBA', (W, ph), (10, 16, 26, 238))
-        img.paste(panel, (0, 1330), panel)
-        d.line([(0, 1330), (W, 1330)], fill=accent + (220,), width=6)
-    if num:
-        text(d, (48, 1180), num, Oswald(150), accent, stroke=3)
-    k = ease(P(t - t0, 0.08, 0.4))
-    if k > 0:
-        size = 74
+    a = ease(P(appear, 0, 0.2))
+    if a <= 0:
+        return
+    ph = int(a * 420)
+    panel = Image.new('RGBA', (W, ph), (11, 18, 29, 238))
+    img.paste(panel, (0, H - 420), panel)
+    d.line([(0, H - 420), (W, H - 420)], fill=accent + (200,), width=4)
+    k1 = ease(P(appear, 0.06, 0.24))
+    if k1 > 0:
+        text(d, (54, H - 382 + (1 - k1) * 16), kicker, Inter(26, True), accent, stroke=2)
+    k2 = ease(P(appear, 0.12, 0.32))
+    if k2 > 0:
+        size = 58
         f = Oswald(size)
-        while textw(title, f) > W - 100 and size > 44:
+        while textw(headline, f) > W - 110 and size > 34:
             size -= 3
             f = Oswald(size)
-        text(d, (48, 1380 + (1 - k) * 20), title, f, C_TXT, stroke=2)
-        text(d, (48, 1520), fact, Inter(38), C_MUT)
-        if caveat:
-            text(d, (48, 1590), caveat, Inter(30), C_GOLD)
-    k2 = ease(P(t - t0, 0.3, 0.65))
-    if k2 > 0:
-        fw = textw(verdict, Oswald(46)) + 70
-        b = Image.new('RGBA', (fw, 100), accent + (int(235 * k2),))
-        img.paste(b, (W - 40 - fw, 1120), b)
-        d2 = ImageDraw.Draw(img, 'RGBA')
-        text(d2, (W - 40 - fw / 2, 1172), verdict, Oswald(46), (12, 16, 24), anchor='mm')
-    header_v(img, 'EN DIRECT')
-    ticker_v(img, t)
-    return img
+        text(d, (54, H - 322 + (1 - k2) * 24), headline, f, C_TXT, stroke=2)
+    k3 = ease(P(appear, 0.22, 0.44))
+    if k3 > 0 and sub:
+        text(d, (54, H - 228), sub, Inter(28), C_MUT)
+    k4 = ease(P(appear, 0.3, 0.55))
+    if k4 > 0 and badge:
+        fw = textw(badge, Oswald(34)) + 56
+        b = Image.new('RGBA', (fw, 72), accent + (int(235 * k4),))
+        img.paste(b, (54, H - 160), b)
+        text(d, (54 + fw / 2, H - 124), badge, Oswald(34), (12, 16, 24), anchor='mm')
+
+def outro_card(img, t, t0):
+    d = ImageDraw.Draw(img, 'RGBA')
+    text(d, (W // 2, 700), 'LFR 2026', Oswald(110), C_TXT, anchor='mm', stroke=2)
+    text(d, (W // 2, 820), 'PAR DÉCRET', Oswald(110), C_TXT, anchor='mm', stroke=2)
+    p = ease(P(t - t0, 0.1, 0.5))
+    bar = Image.new('RGBA', (int(640 * p), 10), C_RED + (255,))
+    img.paste(bar, (220, 910), bar)
+    for i, line in enumerate(['Décret n° 2026-2416 · 19 novembre 2026',
+                              'Bassirou Diomaye Faye · Oumar Samba Bâ',
+                              'Le débat reste ouvert']):
+        a = P(t - t0, 0.25 + i * 0.18, 0.7 + i * 0.18)
+        if a > 0:
+            text(d, (W // 2, 1000 + i * 78), line, Inter(36), C_TXT if a > 0.9 else C_MUT,
+                 anchor='mm')
+    a = P(t - t0, 1.1, 1.6)
+    if a > 0:
+        lg = logo(92)
+        img.paste(lg, (370, 1280), lg)
+        text(d, (W // 2, 1430), 'SNGAL INFOS', Oswald(64), C_GOLD, anchor='mm')
+        text(d, (W // 2, 1520), 'Le journal · SNGAL INFOS', Inter(26, True), C_MUT, anchor='mm')
 
 def frame(t):
     i, kind, t0, t1 = seg_at(t)
-    if kind == 'intro':
-        img = kb_src(os.path.join(ROOT, 'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-2.jpg'), W, H, cy=0.3)
-        dim(img, 0, 0, W, H, 130)
-        d = ImageDraw.Draw(img, 'RGBA')
-        for i2, line in enumerate(['LFR 2026 :', 'REJETÉE', 'PAR LES DÉPUTÉS']):
-            off = int((1 - ease(P(t, 0.1 + i2 * 0.1, 0.55 + i2 * 0.1))) * 40)
-            text(d, (60 + off, 560 + i2 * 175), line, Oswald(135), C_TXT, stroke=2)
-        a = P(t, 0.7, 1.2)
-        if a > 0:
-            bar = Image.new('RGBA', (int(700 * a), 12), C_WARM + (255,))
-            img.paste(bar, (60, 1140), bar)
-            text(d, (60, 1190), 'Revue de presse du 4 novembre', Inter(40), C_TXT, stroke=2)
-        header_v(img, 'EN DIRECT')
-        ticker_v(img, t)
-    elif kind == 'j1':
-        img = mini_card(t, t0, 'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-1.jpg',
-                        '01', '109 VOIX CONTRE', 'Rejet sans examen au fond, mardi 3 novembre',
-                        'REJETÉ', C_WARM, '20 pour · 3 abstentions')
-    elif kind == 'j2':
-        img = mini_card(t, t0, 'image-search/bourse-march-financier-salle-crans-cotat-1.jpg',
-                        '02', 'L\'ÉCONOMIE SOUS TENSION', 'Budget, projets, dépenses publiques',
-                        'ÉCONOMIE', C_GOLD, None)
-    elif kind == 'j3':
-        img = mini_card(t, t0, 'image-search/h-micycle-assembl-e-nationale-d-put-s-s--1.jpg',
-                        '03', 'TENSIONS POLITIQUES', 'Gouvernement et députés au grand jour',
-                        'TENSIONS', C_STEEL, None)
-    elif kind == 'j4':
-        img = mini_card(t, t0, 'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-3.jpg',
-                        '04', 'SINCÉRITÉ BUDGÉTAIRE', 'Déficit 7,6 % du PIB, fonds spéciaux',
-                        'BLOCAGE', C_GOLD, 'Selon le rapport de la commission')
-    elif kind == 'j5':
-        img = mini_card(t, t0, 'assets/press-conf.png',
-                        '05', 'LA RÉPONSE', 'Cheikh Diba dénonce un prétexte politique',
-                        'BRAS DE FER', C_STEEL, None)
-    elif kind == 'j6':
-        img = mini_card(t, t0, 'image-search/transport-bus-services-publics-dakar-s-n-3.jpg',
-                        '06', '1 115 MD EN SUSPENS', 'Routes, hôpitaux, filets sociaux · FMI menacé',
-                        'URGENT', C_WARM, 'Chiffres rapportés par la presse')
-    elif kind == 'j7':
-        img = mini_card(t, t0, 'image-search/assembl-e-nationale-s-n-gal-s-ance-d-put-4.webp',
-                        '07', 'QUELLES SUITES ?', 'La balle est entre les mains du président Faye',
-                        'À SUIVRE', C_TEAL, None)
+    appear = t - t0
+    bg = {
+        'intro': 'image-search/lfr2-p2.jpg',
+        'j1': 'image-search/lfr2-p1.jpg',
+        'j2': 'image-search/lfr2-p3.jpg',
+        'j3': 'image-search/lfr2-p4.jpg',
+        'j4': 'image-search/lfr2-p2.jpg',
+        'j5': 'image-search/lfr2-p1.jpg',
+        'j6': 'image-search/lfr2-p4.jpg',
+        'outro': 'image-search/lfr2-p3.jpg',
+    }[kind]
+    img = kb_src(os.path.join(ROOT, bg), W, H)
+    img = blend_to_bg(img)
+    dim(img, 0, 0, W, H, 120)
+
+    cards = {
+        'intro': ('DÉCISION OFFICIELLE', 'LFR 2026 PAR DÉCRET', 'Deux semaines après le rejet de l\'Assemblée', '2026-2416', C_RED),
+        'j1': ('LE DÉCRET', 'DÉCRET N° 2026-2416', 'Signé le 19 novembre 2026', '19 NOVEMBRE', C_RED),
+        'j2': ('CHRONOLOGIE', 'DU REJET AU DÉCRET', '3 novembre · 19 novembre', 'SEIZE JOURS', C_STEEL),
+        'j3': ('LA POLÉMIQUE', 'MALGRÉ LE REJET', 'Un texte rejeté remis en vigueur', 'POLÉMIQUE', C_WARM),
+        'j4': ('LE CONTEXTE', 'LE RÔLE DE LA LFR', 'Ajuste le budget de l\'État en cours d\'année', 'BUDGET 2026', C_STEEL),
+        'j5': ('APPLICATION', 'LE TEXTE S\'APPLIQUE', 'En vigueur pour tout l\'exercice', 'EN VIGUEUR', C_TEAL),
+        'j6': ('LA QUESTION', 'LE DÉBAT RESTE OUVERT', 'Urgence économique ou procédure ?', 'SNGAL INFOS', C_GOLD),
+    }
+    if kind != 'outro':
+        kicker, headline, sub, badge, accent = cards[kind]
+        story_card(img, kicker, headline, sub, badge, accent, appear)
     else:
-        img = kb_src(os.path.join(ROOT, 'assets/press-conf.png'), W, H)
-        dim(img, 0, 0, W, H, 150)
-        d = ImageDraw.Draw(img, 'RGBA')
-        text(d, (W / 2, 560), 'À SUIVRE', Oswald(115), C_TXT, anchor='mm', stroke=2)
-        text(d, (W / 2, 720), 'DE PRÈS', Oswald(115), C_GOLD, anchor='mm', stroke=2)
-        a = P(t - t0, 0.15, 0.6)
-        if a > 0:
-            lg = logo(90)
-            img.paste(lg, (int(W / 2 - 220), 950), lg)
-            text(d, (int(W / 2 - 110), 995), 'SNGAL INFOS', Oswald(56), C_GOLD, anchor='lm')
-            text(d, (W / 2, 1180), 'La suite sur SNGAL INFOS', Inter(42), C_TXT, anchor='mm', stroke=2)
-        header_v(img, 'EN DIRECT')
-        ticker_v(img, t)
+        outro_card(img, t, t0)
+    header_bar(img)
     return img
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'videos', 'lfr-2026-rejet-9x16.mp4')
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'videos', 'lfr2-decret-9x16.mp4')
     tmp = out + '.tmp.mp4'
     proc = imageio_ffmpeg.write_frames(
         tmp, (W, H), pix_fmt_in='rgb24', fps=FPS, codec='libx264', quality=None,
         macro_block_size=1, ffmpeg_log_level='error',
-        output_params=['-crf', '20', '-preset', 'medium', '-pix_fmt', 'yuv420p'])
+        output_params=['-crf', '19', '-preset', 'medium', '-pix_fmt', 'yuv420p'])
     proc.send(None)
     n = int(DUR * FPS)
     for fi in range(n):
@@ -223,12 +212,12 @@ def main():
             print(f'  frame {fi}/{n}')
     proc.close()
     import subprocess
-    subprocess.run([FFMPEG, '-y', '-i', tmp, '-i', os.path.join(ROOT, 'audio', 'lfr2-9x16-master.wav'),
+    subprocess.run([FFMPEG, '-y', '-i', tmp, '-i', os.path.join(ROOT, 'audio', 'lfr2-master.wav'),
                     '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ac', '2',
                     '-map', '0:v:0', '-map', '1:a:0', out],
                    capture_output=True, check=True)
     os.unlink(tmp)
-    print('wrote', out, f'{DUR:.0f}s')
+    print('wrote', out, f'{DUR:.1f}s')
 
 if __name__ == '__main__':
     main()
