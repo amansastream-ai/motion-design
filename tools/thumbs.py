@@ -6,6 +6,7 @@ import os
 import sys
 import math
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from glyphs import text_neq, textw_neq
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FDIR = os.path.join(ROOT, 'assets', 'fonts')
@@ -144,6 +145,24 @@ SERIES = {
         'tag': 'POLITIQUE',
         'accent': C_STEEL if False else (110, 160, 220),
     },
+    # « Séquestration présumée à Pikine » (nov 2026) — cadre judiciaire :
+    # ACCUSATIONS ≠ CULPABILITÉ en sous-titre des deux variantes (règle en vigueur).
+    'pikine-sequestration': {
+        'imgs': ['image-search/commissariat-police-gendarmerie-s-n-gal--1.jpg',
+                 'image-search/pikine-s-n-gal-rue-ville-banlieue-dakar-2.jpg'],
+        'title': ['SÉQUESTRATION', 'PRÉSUMÉE À PIKINE'],
+        'sub': 'ACCUSATIONS \u2260 CULPABILITÉ',
+        'tag': 'FAITS DIVERS',
+        'accent': C_RED if False else (214, 64, 48),
+    },
+    'pikine-sequestration-B': {
+        'imgs': ['image-search/palais-de-justice-tribunal-dakar-s-n-gal-2.jpg',
+                 'image-search/pikine-s-n-gal-rue-ville-banlieue-dakar-2.jpg'],
+        'title': ['PIKINE :', 'LE RÉCIT CHOQUANT'],
+        'sub': 'ACCUSATIONS \u2260 CULPABILITÉ',
+        'tag': 'FAITS DIVERS',
+        'accent': C_WARM if False else (232, 92, 42),
+    },
 }
 
 
@@ -278,10 +297,9 @@ def make_thumb(series_key, spec, fmt):
         d.rectangle([m, h - 70, m + tw, h - 26], fill=accent + (255,))
         d.text((m + tw / 2, h - 48), tag, font=Inter(22, True), fill=(12, 16, 24), anchor='mm')
         y = draw_text_block(d, img, m, int(h * 0.32), title, 108, C_TXT, 4, max_w=int(w * 0.52))
-        bar = Image.new('RGBA', (min(int(w * 0.44), textw(sub, Inter(30, True)) + 40), 10), accent + (255,))
+        bar = Image.new('RGBA', (min(int(w * 0.44), textw_neq(sub, Inter(30, True)) + 40), 10), accent + (255,))
         img.paste(bar, (m, y + 10), bar)
-        d.text((m, y + 42), sub, font=Inter(30, True), fill=accent, anchor='lt',
-               stroke_width=2, stroke_fill=(10, 12, 18))
+        text_neq(d, (m, y + 42), sub, Inter(30, True), accent, anchor='lt', stroke=2)
         if spec.get('disc'):
             disc = gold_disc(300)
             img.paste(disc, (w - 360, h // 2 - 150), disc)
@@ -301,10 +319,9 @@ def make_thumb(series_key, spec, fmt):
             y0 = int(h * 0.52)
             size = 132
         y = draw_text_block(d, img, m, y0, title, size, C_TXT, 5, max_w=w - 2 * m)
-        bar = Image.new('RGBA', (min(w - 2 * m, textw(sub, Inter(42, True)) + 56), 14), accent + (255,))
+        bar = Image.new('RGBA', (min(w - 2 * m, textw_neq(sub, Inter(42, True)) + 56), 14), accent + (255,))
         img.paste(bar, (m, y + 16), bar)
-        d.text((m, y + 60), sub, font=Inter(42, True), fill=accent, anchor='lt',
-               stroke_width=3, stroke_fill=(10, 12, 18))
+        text_neq(d, (m, y + 60), sub, Inter(42, True), accent, anchor='lt', stroke=3)
         if spec.get('disc'):
             disc = gold_disc(340 if fmt == '9x16' else 300)
             img.paste(disc, (w - (400 if fmt == '9x16' else 360), int(h * 0.30)), disc)
