@@ -163,6 +163,21 @@ SERIES = {
         'tag': 'FAITS DIVERS',
         'accent': C_WARM if False else (232, 92, 42),
     },
+    # « TAS : le Sénégal conserve son titre 2025 » (24 nov 2026) — Source : Afrik+1.
+    'tas-titre-2025': {
+        'imgs': ['image-search/ta-lions-trophee.jpg', 'image-search/ta-lions-parade.jpg'],
+        'title': ['LE SÉNÉGAL', 'CONSERVE SON TITRE'],
+        'sub': 'TAS : FINALE 1-0 RÉTABLIE',
+        'tag': 'SPORT',
+        'accent': C_WARM if False else (232, 178, 42),
+    },
+    'tas-titre-2025-B': {
+        'imgs': ['image-search/ta-lausanne.jpg', 'image-search/ta-lions-parade.jpg'],
+        'title': ['CHAMPION', "D'AFRIQUE 2025"],
+        'sub': 'DÉCISION DU TAS · 24 NOVEMBRE',
+        'tag': 'SPORT',
+        'accent': C_STEEL if False else (110, 160, 220),
+    },
 }
 
 
